@@ -1,0 +1,6 @@
+现有流派 (Current Approach),代表性工作 (Reference),核心局限性 (The Gap / Weakness),我的改进思路 (My Proposed Method),预期优势 (Expected Win)
+"流派 1: 纯自适应采样 (Pure Adaptive Sampling)","PINNacle (NeurIPS 2024), RAD, QRES","只关注空间上的残差大，忽略了时间的先后顺序。在激波传播初期，可能会错误地在后期乱加点，导致训练不稳定。","引入'时间屏蔽'机制：只在当前时间波前 (Wavefront) 附近进行高密度采样，不浪费算力在未来未知的区域。","采样效率更高，不再'盲目'加点。激波捕捉更锐利，无伪震荡。"
+"流派 2: 纯因果训练 (Pure Causal Training)","TCAS-PINN (Chinese Phys B 2024)","虽然强迫网络按时间顺序学，但采样点还是固定的（或随机的）。在激波面这种'极窄区域'，固定点数根本不够用，精度上限被锁死。","在因果 Loss 的基础上，动态增加'活跃区域'的采样点。即：网络学到哪一秒，就在哪一秒的激波处疯狂加点。","既稳（因果性保证收敛），又准（自适应保证精度）。完美解决 Burgers 方程的全部痛点。"
+"流派 3: 课程学习 (Curriculum Learning)","Curriculum-Enhanced (Mathematics 2025)","通过调节粘性系数 $\nu$ 来从易到难。这是一种'参数上的'课程，而不是'时空上的'课程。对于非参数化方程无效。","结合物理直觉的'时空课程'。我不改方程参数，我改网络的关注区域。先让网络看整体轮廓，再让它看细节纹理。","通用性更强，不依赖具体的物理参数 $\nu$。对于 Allen-Cahn 这种刚性方程效果拔群。"
+"流派 4: 基础架构 (Architecture Change)","PINNsFormer (2024), Fourier PINNs","试图靠改网络结构（加 Attention 或 Fourier）来暴力破解。模型变重了，训练变慢了，而且不仅是'看不清'的问题，是'学得慢'的问题。","保持轻量级 MLP 架构（训练快），把精力花在'数据喂养'（采样）上。好钢用在刀刃上，不搞花哨的架构。","训练速度快，显存占用低。更符合工程实际（能在普通显卡上跑）。"
+"我的终极方案 (My Integrated Approach)","(Proposed) Causal-Adaptive PINN","(N/A)","同时融合 [TCAS 的时间权重] + [PINNacle 的残差采样]。公式：$L = \sum w(t) \cdot L_{res}(x_{adaptive})$","集大成者。比 TCAS 更准，比 PINNacle 更稳。这是目前最符合物理直觉的解法。"

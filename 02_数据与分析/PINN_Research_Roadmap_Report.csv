@@ -1,0 +1,11 @@
+标准测试方程 (Benchmark),物理痛点 (Pain Point),改进模块 (What to Modify),具体改进策略 (How to Modify),优化效果 (Optimization Result),代表论文 (Evidence)
+"Burgers Equation (伯格斯方程)","激波 (Shock Wave)","采样策略 (Sampling)","自适应采样 (Adaptive Sampling)","在激波附近自动加密采样点，消除伪震荡，降低 L2 误差。","PINNacle (NeurIPS 2024), RAR"
+"Burgers Equation (伯格斯方程)","时间累积误差","损失函数 (Loss)","时间因果 Loss (Causal Loss)","强制网络按时间 t=0->T 顺序学习，防止误差随时间指数级放大。","TCAS-PINN (2024)"
+"Allen-Cahn (相场方程)","极强刚性 (Stiff)","训练流程 (Training Loop)","课程学习 (Curriculum Learning)","先训练平滑方程 ($\epsilon=0.1$)，再逐步逼近真实方程 ($\epsilon=0.001$)，解决不收敛问题。","Curriculum-Enhanced (2025)"
+"Allen-Cahn (相场方程)","梯度消失","网络架构 (Architecture)","注意力机制 (Attention)","给残差大的区域分配更大的梯度权重，防止平滑区域主导训练。","Loss-attentional PINN (JCP 2024)"
+"Helmholtz Equation (亥姆霍兹)","高频震荡 (High Freq)","输入层 (Input Embedding)","傅里叶特征映射 (Fourier Features)","将坐标 $x$ 映射为 $\sin(kx)$，强行引入高频分量，解决谱偏差。","Fourier PINNs (2024)"
+"Helmholtz Equation (亥姆霍兹)","边界难以满足","约束方式 (Constraints)","硬约束 (Hard Constraints)","构造满足 BC 的试函数 (Ansatz)，使得边界误差恒为 0，网络只解内部。","DC-PINNs (2024)"
+"Navier-Stokes (NS 方程)","复杂几何/湍流","采样策略 (Sampling)","混合采样 (Gradient+Residual)","不仅在残差大的地方加点，还在解变化快 (梯度大) 的地方加点，捕捉涡旋结构。","Self-adaptive weighting (2025)"
+"Navier-Stokes (NS 方程)","计算量过大","模型架构 (Architecture)","神经算子 (Neural Operator)","从学习'解'变为学习'算子'，一次训练后可秒级推理新工况。","Poseidon / FNO (2024)"
+"High-D Heat (高维热传导)","维度灾难","网络架构 (Architecture)","张量分解 (Tensor Decomp)","将网络拆分为多个低维子网 (Separable)，参数量从指数级降为线性级。","Separable DeepONet (CMAME 2024)"
+"Inverse Problems (反问题)","多解/陷入局部最优","优化算法 (Optimizer)","混合优化 (Hybrid Opt)","先用遗传算法 (GA) 全局搜索参数，再用 Adam/L-BFGS 微调。","Enhanced Hybrid PINN (2025)"

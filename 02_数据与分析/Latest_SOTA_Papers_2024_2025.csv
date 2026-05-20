@@ -1,0 +1,59 @@
+论文标题 (Title),年份,细分领域 (Sub-Domain),具体方程 (Specific PDE),核心方法/架构 (Method/Arch)
+"CompNO: A Novel Foundation Model approach",2026,基础模型,通用 PDE,Compositional Neural Operator
+"Review of physics-informed neural networks in hemodynamics",2026,生物医学,血液动力学,Review / Application
+"MORPH: PDE Foundation Models with Arbitrary Data Modality",2025,基础模型,任意模态 (1D-3D),Multi-modal Transformer
+"Reward-Model-Driven Reasoning for PDE Foundation Models",2025,基础模型,推理,RLHF-like / Reward Model
+"Physics-informed Temporal Alignment for Auto-regressive PDE Foundation Models",2025,基础模型,时空动力学,Temporal Alignment
+"Using Physics-Informed neural networks for solving Navier-Stokes equations",2025,流体工程,Navier-Stokes (3D),Hard BCs + Real Geometry
+"Physics-Informed Diffusion Models",2025,生成模型,Navier-Stokes (湍流),Diffusion Model
+"Curriculum-Enhanced Adaptive Sampling for Physics-Informed Neural Networks",2025,训练策略,Allen-Cahn (刚性),Curriculum Learning
+"Physics-informed neural networks for complex fluids",2025,流体 (非牛顿),Oldroyd-B,Constitutive Constraints
+"Decomposed Fourier Neural Operator (D-FNO)",2025,算子/高维,3D Navier-Stokes,Tensor Decomp on FNO
+"Physics-Informed Geometry-Aware Neural Operator",2025,算子/几何,参数化几何,Geometry-Attention
+"Hybrid Finite-Difference PINN (HFD-PINN)",2025,混合方法,热传导,FDM + PINN
+"Self-adaptive weighting and sampling for physics-informed neural networks",2025,采样/加权,顶盖驱动空腔流,Gradient + Residual
+"Multi-head physics-informed neural networks for learning functional priors",2025,不确定性,随机 PDE,Multi-head Ensemble
+"An enhanced hybrid adaptive physics-informed neural network",2025,反问题,参数识别,Hybrid Opt (GA + Adam)
+"NDAWL-PINN: a new non-dimensionalization and multi-task learning approach",2025,流体 (浅水),浅水波方程,Multi-task Learning
+"Biomechanical investigations of cancer",2025,生物力学,肿瘤刚度,Biomechanical Model
+"Physics-Informed Neural Networks in Materials Modeling and Design",2025,材料科学,材料设计,Review / Materials
+"Physics-Informed Neural Networks (PINN) for Advanced Thermal Profile Prediction",2025,热能工程,热分布,Fourier Networks
+"Variational physics-informed neural operator (VINO)",2025,算子学习,变分问题,Variational Loss
+"Kolmogorov–Arnold-informed neural network (KAINN)",2025,架构创新,通用 PDE,KAN (Kolmogorov-Arnold)
+"CoPINN: Cognitive physics-informed neural networks",2025,认知推理,通用 PDE,Cognitive Mechanism
+"CuPINN: Optimizing PINNs through curvature minimization",2025,优化,通用 PDE,Curvature Minimization
+"Gradient Alignment in Physics-informed Neural Networks",2025,多目标优化,通用 PDE,Gradient Alignment
+"PINNacle: A Comprehensive Benchmark of Physics-Informed Neural Networks",2024,基准测试,Burgers / NS / Heat,Benchmark Study
+"TCAS-PINN: Temporal causality-based adaptive sampling",2024,因果性/采样,Burgers,Causal Loss
+"Loss-attentional physics-informed neural networks",2024,收敛性,波动方程,Attention Mechanism
+"DC-PINNs: Physics-Informed Neural Networks for Solving Derivative-Constrained PDEs",2024,硬约束,Helmholtz,Hard Constraint Ansatz
+"Fourier PINNs: From Strong Boundary Conditions to Adaptive Fourier Bases",2024,谱偏差,Burgers (激波),Adaptive Fourier Features
+"Annealed adaptive importance sampling method in PINNs",2024,高维/采样,高维热传导,Annealed Importance Sampling
+"Separable physics-informed DeepONet: Breaking the curse of dimensionality",2024,高维/算子,反应扩散 (High-D),Tensor Decomp DeepONet
+"PINNsFormer: A Transformer-Based Framework For Physics-Informed Neural Networks",2024,架构创新,通用 PDE,Transformer
+"SGM-PINN: Sampling Graphical Models for Faster Training",2024,采样效率,热仿真 (芯片),Graph Model Sampling
+"PICL: Physics informed contrastive learning for partial differential equations",2024,对比学习,通用 PDE,Contrastive Loss
+"Fourier warm start for physics-informed neural networks",2024,初始化,通用 PDE,Warm Start
+"Preconditioning for physics-informed neural networks",2024,优化,通用 PDE,Preconditioner
+"RBF-PINN: Non-Fourier positional embedding in physics-informed neural networks",2024,特征编码,通用 PDE,RBF Embedding
+"Score-based physics-informed neural networks for high-dimensional Fokker-Planck equations",2024,高维,Fokker-Planck,Score Matching
+"Investigation of compressor cascade flow using physics-informed neural networks",2024,流体工程,压缩机流场,Engineering Application
+"Exact enforcement of temporal continuity in sequential physics-informed neural networks",2024,时间连续性,时序 PINN,Time-Sequential Hard Constraint
+"Multiple scattering simulation via physics-informed neural networks",2024,波动,散射问题,Complex PINN
+"Anti-derivatives approximator for enhancing physics-informed neural networks",2024,逼近理论,通用 PDE,Anti-derivative NN
+"GMC-PINNs: A new general Monte Carlo PINNs method",2024,不规则区域,分数阶 PDE,Monte Carlo Sampling
+"CEENs: Causality-enforced evolutional networks for solving time-dependent PDEs",2024,因果性,含时 PDE,Evolutionary Strategy
+"PTPI-DL-ROMs: Pre-trained physics-informed deep learning-based reduced order models",2024,降阶模型,参数化 PDE,Deep Learning ROM
+"Closed-form symbolic solutions: A new perspective on solving PDEs",2024,符号回归,通用 PDE,Symbolic AI
+"RoPINN: Region optimized physics-informed neural networks",2024,局部优化,激波/高梯度,Region-based Weights
+"Interface PINNs (I-PINNs): A physics-informed neural networks framework for interface problems",2024,界面问题,多介质流,Interface Conditions
+"Parameterized physics-informed neural networks for parameterized PDEs",2024,参数化,参数化 PDE,Parametric PINN
+"Development of backward compatible physics-informed neural networks",2024,误差控制,含时 PDE,Backward Compatibility
+"Improved physics-informed neural networks for the reinterpreted discrete fracture model",2024,地质/断裂,离散裂隙模型,Fracture PINN
+"How does PDE order affect the convergence of PINNs?",2024,理论分析,高阶 PDE,Convergence Theory
+"AT-PINN-HC: A refined time-sequential method incorporating hard-constraint strategies",2024,结构动力学,振动方程,Hard Constraints + Time-Seq
+"Poseidon: Efficient Foundation Models for PDEs",2024,基础模型,通用 PDE,Multiscale Transformer
+"PINNs for Medical Image Analysis",2024,医学影像,图像配准,Registration NN
+"Machine Learning in Biomaterials",2024,材料科学,生物材料,Review
+"Physics-Informed neural network solver for numerical analysis in geoengineering",2024,岩土工程,地质力学,Mesh-free Solver
+"ClimODE: Climate and Weather Forecasting with Physics-informed Neural ODEs",2024,气候/气象,气候预测,Neural ODE
