@@ -1,0 +1,60 @@
+# 模块2: 因果训练效果验证
+# 继承自 default.yaml，覆盖特定参数
+
+inherit: default.yaml
+
+experiment:
+  name: module2_causal_training
+  description: 验证因果训练能防止误差传播
+
+# 参数网格搜索
+grid:
+  time_steps: [10, 20, 50]
+  seed: [42, 43, 44]  # 3个随机种子
+
+# 方法对比
+methods:
+  - name: standard_pinn
+    description: 标准PINN (无因果)
+    model.type: standard_pinn
+    causal.enabled: false
+    gradient_sampling.enabled: false
+    
+  - name: sa_pinns
+    description: SA-PINNs (自适应权重，无因果)
+    model.type: standard_pinn
+    causal.enabled: false
+    loss.adaptive_weights: true
+    gradient_sampling.enabled: false
+    
+  - name: tcas_pinn
+    description: TCAS-PINN (硬门控因果)
+    model.type: standard_pinn
+    causal.enabled: true
+    causal.mode: hard
+    gradient_sampling.enabled: false
+    
+  - name: g2cf_pinn
+    description: G2CF-PINN (软门控因果)
+    model.type: g2cf_pinn
+    causal.enabled: true
+    causal.mode: soft
+    gradient_sampling.enabled: true
+
+# 评估指标
+eval:
+  metrics:
+    - relative_l2_error
+    - shock_position_error
+    - causal_consistency
+    - time_step_loss_curve
+
+# 成功标准
+success_criteria:
+  causal_consistency: 0.95  # 因果一致性>95%
+  error_reduction: 0.30  # 长时误差降低30%+
+
+# 输出
+output:
+  table: Table_2
+  figure: Figure_4

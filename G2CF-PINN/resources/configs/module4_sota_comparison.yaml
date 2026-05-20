@@ -1,0 +1,69 @@
+# 模块4: 端到端SOTA对比
+# 继承自 default.yaml，覆盖特定参数
+
+inherit: default.yaml
+
+experiment:
+  name: module4_sota_comparison
+  description: 证明G2CF-PINN整体优于现有方法
+
+# 多方程测试
+equations:
+  - name: burgers
+    nu: 0.0318  # 0.01/pi
+  - name: allen_cahn
+  - name: euler_sod
+
+# 方法对比
+methods:
+  - name: standard_pinn
+    description: 标准PINN (Raissi et al., 2019)
+    model.type: standard_pinn
+    causal.enabled: false
+    gradient_sampling.enabled: false
+    
+  - name: dpinn
+    description: DPINN (Lei et al., 2025)
+    model.type: dpinn
+    
+  - name: ci_pinn
+    description: CI-PINN (Wang & Yang, 2024)
+    model.type: ci_pinn
+    
+  - name: scale_pinn
+    description: Scale-PINN (Chiu et al., 2026)
+    model.type: scale_pinn
+    
+  - name: g2cf_pinn
+    description: G2CF-PINN (Ours)
+    model.type: g2cf_pinn
+    causal.enabled: true
+    gradient_sampling.enabled: true
+
+# 统一超参数
+training:
+  max_epochs: 10000
+  early_stopping:
+    enabled: true
+    patience: 100
+
+# 参数网格搜索
+grid:
+  seed: [42, 43, 44]  # 3个随机种子
+
+# 评估指标
+eval:
+  metrics:
+    - relative_l2_error
+    - shock_position_error
+    - total_training_time
+    - inference_time
+
+# 成功标准
+success_criteria:
+  best_on_equations: 2  # 至少在2个方程上取得最佳
+
+# 输出
+output:
+  table: Table_4
+  figures: [Figure_6, Figure_7]

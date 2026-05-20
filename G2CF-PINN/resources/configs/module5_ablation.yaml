@@ -1,0 +1,53 @@
+# 模块5: 消融研究
+# 继承自 default.yaml，覆盖特定参数
+
+inherit: default.yaml
+
+experiment:
+  name: module5_ablation
+  description: 证明每个模块的必要性
+
+# 固定随机种子
+grid:
+  seed: [42]  # 消融研究用固定种子
+
+# 消融变体
+methods:
+  - name: g2cf_full
+    description: G2CF-PINN (完整)
+    model.type: g2cf_pinn
+    causal.enabled: true
+    gradient_sampling.enabled: true
+    
+  - name: g2cf_no_causal
+    description: G2CF-PINN w/o 因果训练
+    model.type: g2cf_pinn
+    causal.enabled: false
+    gradient_sampling.enabled: true
+    
+  - name: g2cf_no_gradient
+    description: G2CF-PINN w/o 梯度引导
+    model.type: g2cf_pinn
+    causal.enabled: true
+    gradient_sampling.enabled: false
+    
+  - name: g2cf_autodiff
+    description: G2CF-PINN w/o 解析梯度 (用autodiff)
+    model.type: g2cf_pinn_autodiff
+    causal.enabled: true
+    gradient_sampling.enabled: true
+
+# 评估指标
+eval:
+  metrics:
+    - relative_l2_error
+    - total_training_time
+    - causal_consistency
+
+# 成功标准
+success_criteria:
+  component_contribution: 0.05  # 每个组件贡献>5%
+
+# 输出
+output:
+  table: Table_5

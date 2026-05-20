@@ -74,12 +74,31 @@ G2CF-PINN 是一个用于求解含激波偏微分方程的神经网络框架，�
 
 ```
 G2CF-PINN/
-├── README.md                # 本文件
-├── TECHNICAL_REPORT.md      # 详细技术报告
-├── IDEA_REPORT.md           # 创意生成报告
-├── LITERATURE_SURVEY.md     # 文献综述
-├── LITERATURE_DETAILS.md    # 文献详情
-└── NOVELTY_REPORT.md        # 新颖性报告
+├── README.md                  # 本文件
+├── TECHNICAL_REPORT.md        # 详细技术报告
+├── IDEA_REPORT.md             # 创意生成报告
+├── LITERATURE_SURVEY.md       # 文献综述
+├── LITERATURE_DETAILS.md      # 文献详情
+├── NOVELTY_REPORT.md          # 新颖性报告
+├── refine-logs/               # 方案细化日志
+│   ├── EXPERIMENT_PLAN.md     # 实验计划 (7个模块, 309组实验)
+│   ├── EXPERIMENT_TRACKER.md  # 实验进度追踪
+│   └── MANIFEST.md            # 研究清单
+└── resources/                 # 实验资源 (可直接迁移到计算环境)
+    ├── README.md              # 资源使用说明
+    ├── requirements.txt       # Python依赖
+    ├── docs/
+    │   └── RESOURCE_REQUIREMENTS.md  # 算力需求分析
+    ├── configs/               # 实验配置文件
+    │   ├── default.yaml       # 默认配置
+    │   └── module{1-7}_*.yaml # 各模块配置
+    └── scripts/               # 训练与提交脚本
+        ├── train.py           # 统一训练脚本
+        ├── run_experiments.sh # 批量实验
+        ├── submit_parallel.sh # 多GPU并行
+        ├── submit_slurm.sh    # SLURM集群
+        ├── submit_autodl.sh   # AutoDL云GPU
+        └── collect_results.py # 结果分析
 ```
 
 ---

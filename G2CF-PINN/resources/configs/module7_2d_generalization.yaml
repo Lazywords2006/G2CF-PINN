@@ -1,0 +1,64 @@
+# 模块7: 2D方程泛化性 (附录)
+# 继承自 default.yaml，覆盖特定参数
+
+inherit: default.yaml
+
+experiment:
+  name: module7_2d_generalization
+  description: 证明方法在2D问题上仍有效
+
+# 2D问题设置
+equations:
+  - name: heat_2d
+    domain:
+      x_min: 0.0
+      x_max: 1.0
+      y_min: 0.0
+      y_max: 1.0
+      t_min: 0.0
+      t_max: 1.0
+    boundary: irregular  # 不规则边界
+    
+  - name: poisson_2d
+    domain:
+      x_min: 0.0
+      x_max: 1.0
+      y_min: 0.0
+      y_max: 1.0
+    geometry: complex  # 复杂几何
+
+# 方法对比
+methods:
+  - name: standard_pinn
+    description: 标准PINN
+    model.type: standard_pinn_2d
+    causal.enabled: false
+    gradient_sampling.enabled: false
+    
+  - name: phygeonet
+    description: PhyGeoNet (几何自适应CNN)
+    model.type: phygeonet
+    
+  - name: g2cf_pinn
+    description: G2CF-PINN
+    model.type: g2cf_pinn_2d
+    causal.enabled: true
+    gradient_sampling.enabled: true
+
+# 参数网格搜索
+grid:
+  seed: [42, 43, 44]  # 3个随机种子
+
+# 评估指标
+eval:
+  metrics:
+    - relative_l2_error
+    - total_training_time
+
+# 成功标准
+success_criteria:
+  better_than_standard: true  # 优于标准PINN
+
+# 输出
+output:
+  table: Table_A2
