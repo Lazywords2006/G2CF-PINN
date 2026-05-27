@@ -24,6 +24,7 @@ build/
 
 # IDE
 .idea/
+.claude/
 *.swp
 *.swo
 
@@ -33,3 +34,6 @@ build/
 # Temp files
 *.tmp
 *.bak
+
+# Sandbox cache
+.sandbox-home/
