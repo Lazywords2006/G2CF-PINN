@@ -1,158 +1,48 @@
-# PINN & PNE 研究项目
+# 神经网络求解二维 Bloch–Schrödinger PDE
 
-**项目类型**: 学术研究  
-**研究方向**: 物理信息神经网络 (PINN) 求解偏微分方程 (PDE)  
-**主方法**: G2CF-PINN (梯度引导因果傅里叶物理信息神经网络)  
-**最后更新**: 2026-05-20
+本工作区只保留一条当前研究主线：使用无标签神经网络求解二维参数化
+Bloch–Schrödinger 本征偏微分方程，并直接学习最低两条相交能带共同张成的 rank-2
+谱簇，而不是强行给每条能带固定编号。
 
----
+## 从这里开始
 
-## 📁 项目结构
+1. [通俗 HTML 总览](00_项目总览/03_研究进展与实验结果.html)：网络、PDE、P5 结果、
+   投稿判断、算力和论文图片；
+2. [当前状态与下一步](00_项目总览/01_当前状态与下一步_20260824.md)：五分钟内看懂现在该做什么；
+3. [当前代码主线](03_当前主线_BlockKyFanPINN/README.md)：权威代码仓库、证据与运行边界；
+4. [当前投稿准备](04_SCI三区投稿准备/README.md)：最新投稿判断、下一阶段实验与写作骨架；
+5. [GitHub 代码仓库](https://github.com/Lazywords2006/PINN-PDE)：可复现源码和已审计证据。
 
-```
-PINN&PNE/
-├── README.md                    # 本文件
-├── RESEARCH_BRIEF.md            # 研究简介
-├── G2CF-PINN/                   # 主研究方向
-│   ├── README.md                # 方向说明
-│   ├── TECHNICAL_REPORT.md      # 技术报告
-│   ├── IDEA_REPORT.md           # 创意报告
-│   ├── LITERATURE_SURVEY.md     # 文献综述
-│   ├── LITERATURE_DETAILS.md    # 文献详情
-│   └── NOVELTY_REPORT.md        # 新颖性报告
-├── 01_文献库/                   # 参考文献
-│   ├── 完整文献库/              # 完整PDF文献
-│   ├── 精选近期文献/            # 精选近期重要文献
-│   └── BibTeX引用库/            # BibTeX引用文件
-├── 02_数据与分析/               # 数据表格和分析
-│   ├── 神经网络解偏微分方程.xlsx
-│   ├── Full_30_Papers_By_Equation.xlsx
-│   └── ...
-├── 03_历史研究/                 # 历史研究提案和报告
-│   ├── Research_Proposal_Causal_Adaptive.md
-│   └── PINN_Statistics_Report.md
-└── 04_补充材料/                 # 补充材料
-    └── ...
-```
+## 当前结论（2026-08-24）
 
----
+- **课题没有跑题。** 网络确实在求解二维本征 PDE 的谱簇；
+- **工程链路可信。** P5 在 AMD MI300X / ROCm 上完成 36/36 个 validation run，权威
+  证据包已独立审计，`audit_pass=true`；
+- **旧候选方法停止。** 低频 ROM 相对基础 anchor 的 near-cluster 误差改善 10.58%，
+  但不如等算力 long-anchor，且 gap-scan 回退 6.47%，冻结判定为
+  `P5_PROMOTION_STOP`；
+- **本机可做小测。** 2026-08-02 在 Apple M4 / MPS 上完成 12/12 工程烟测，状态
+  `SMOKE_PASS`；它只证明本机能做开发与小规模验证，不是 CUDA 正式结果；
+- **当前不能投稿。** 低频 ROM 不能再作为标题、摘要或核心贡献，frozen final 保持关闭；
+- **下一步先验证风险可检测性。** 简单 residual、内部/外部谱隙阈值接近随机；Gram
+  condition 只有弱信号。只有新的无标签风险分数与条件校正小测同时通过 near 与 gap
+  门槛，才租一张 4090/5090 扩大实验。
 
-## 🎯 主研究方向: G2CF-PINN
+## 整理后的目录
 
-### 核心创新
+- `00_项目总览/`：唯一的人类阅读入口和下一步清单；
+- `01_文献库/`：170 份本地 PDF、当前主线必读包、BibTeX 与哈希；
+- `03_当前主线_BlockKyFanPINN/`：权威代码仓库快捷入口，不再混放旧实验副本；
+- `04_SCI三区投稿准备/`：只在根层放 P5 后的最新投稿材料；
+- `05_历史路线摘要/`：STOP/REVISE 路线和 2026-07-29 旧工程快照；
+- `06_投稿筛查/`：历史预警名单，仅作辅助，投稿前必须重新核验；
+- 各目录中的 `90_历史*`：保留旧材料以便追溯，但不代表当前结论。
 
-**解析梯度加速** — 用傅里叶特征的闭式导数替代 autodiff，计算效率提升 10-100x
+## 事实与安全边界
 
-### 方法概述
-
-G2CF-PINN (Gradient-Guided Causal Fourier Physics-Informed Neural Network) 是一个用于求解含激波偏微分方程的神经网络框架，通过三个核心模块解决传统PINNs的谱偏差和传播失效问题：
-
-1. **傅里叶特征嵌入**: 解决谱偏差问题，让网络能够捕捉高频信息
-2. **解析梯度计算**: 利用傅里叶特征的闭式导数，替代 autodiff 计算，大幅提升效率
-3. **因果训练损失**: 解决传播失效问题，确保时间步之间的因果关系
-4. **梯度引导自适应采样**: 预判激波位置，在关键区域密集采样
-
-### 与现有方法对比
-
-| 特性 | DPINN | FastLSQ | CI-PINN | **G2CF-PINN** |
-|------|-------|---------|---------|---------------|
-| 傅里叶特征 | ✅ | ✅ | ❌ | ✅ |
-| 解析导数 | ❌ | ✅ | ❌ | ✅ |
-| 因果训练 | ❌ | ❌ | ❌ | ✅ |
-| 梯度引导采样 | ❌ | ❌ | ❌ | ✅ |
-| 非线性PDE | ✅ | ❌ | ✅ | ✅ |
-| 守恒性 | ❌ | ❌ | ✅ | 可选 |
-
----
-
-## 📊 研究进度
-
-### 已完成
-
-- [x] 创意生成和筛选
-- [x] 文献综述和分析
-- [x] 新颖性检查
-- [x] 技术方案设计
-- [x] 代码架构设计
-
-### 进行中
-
-- [ ] 原型实现
-- [ ] 实验验证
-- [ ] 结果分析
-
-### 待完成
-
-- [ ] 论文撰写
-- [ ] 代码开源
-- [ ] 投稿准备
-
----
-
-## 🔬 关键参考文献
-
-1. **DPINN**: Lei, G., et al. (2025). Discontinuity-aware KAN-based physics-informed neural networks. arXiv:2507.08338.
-
-2. **FastLSQ**: Sulc, A. (2026). FastLSQ: Solving PDEs in One Shot via Fourier Features with Exact Analytical Derivatives. arXiv:2602.10541.
-
-3. **CI-PINN**: Wang, Y., & Yang, S. (2024). Coupled Integral PINN for Discontinuity. arXiv:2411.11276.
-
-4. **Scale-PINN**: Chiu, P.-H., et al. (2026). Scale-PINN: Learning Efficient Physics-Informed Neural Networks Through Sequential Correction. arXiv:2602.19475.
-
----
-
-## 📈 预期结果
-
-| 指标 | 标准 PINN | G2CF-PINN | 改进 |
-|------|-----------|-----------|------|
-| 单次梯度计算时间 | ~50ms | ~5ms | 10x 加速 |
-| 总训练时间 (Burgers) | ~2小时 | ~30分钟 | 4x 加速 |
-| 相对 L2 误差 | 2-3% | 1-2% | 精度提升 |
-| 采样点利用率 | 60% | 85% | 效率提升 |
-
----
-
-## 🛠️ 技术栈
-
-- **深度学习框架**: PyTorch
-- **编程语言**: Python 3.9+
-- **可视化**: Matplotlib, Seaborn
-- **版本控制**: Git
-- **实验管理**: Weights & Biases (可选)
-
----
-
-## 📝 使用说明
-
-### 查看研究方向
-
-```bash
-cd G2CF-PINN
-cat README.md
-```
-
-### 查看技术报告
-
-```bash
-cat G2CF-PINN/TECHNICAL_REPORT.md
-```
-
-### 查看文献库
-
-```bash
-ls 01_文献库/完整文献库/
-```
-
----
-
-## 📧 联系方式
-
-如有问题或建议，请通过以下方式联系：
-
-- **邮箱**: [待补充]
-- **GitHub**: [待补充]
-
----
-
-**项目创建时间**: 2026-05-20  
-**最后更新时间**: 2026-05-20
+- 权威代码位于 `PINN-PDE` 独立 Git 仓库；本工作区中的旧工程已归档，不再运行；
+- P5 是 validation 上的机制筛选负结果，不是 frozen-final 成绩；
+- 不修改旧门槛、不挑选更好看的 checkpoint、不把增加训练步数称作创新；
+- 不把 Ky Fan、trace、Grassmann、Bloch ROM、fallback 或 projector quantum geometry
+  单独声称为本文首创；
+- 当前只需要一张消费级 GPU，禁止在新机制小测前直接烧完整正式矩阵。

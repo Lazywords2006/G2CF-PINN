@@ -1,0 +1,64 @@
+{
+  "status": "SMOKE_GATE_PASS_NOT_PAPER_RESULT",
+  "scope": "mechanism_falsification_only",
+  "suite_id": "block_kyfan_falsification_smoke_v2",
+  "suite_sha256": "f703afe8e1595d5b1dad6aa9cbd1902dd1d7cb0ae1203c74f486b1c1df0e45e6",
+  "seeds": [
+    701,
+    702,
+    703
+  ],
+  "paired_comparisons": 36,
+  "checkpoint_binding": "legacy_unbound_explicit",
+  "thresholds_locked_for_reproducible_rebuild": {
+    "maximum_dual_projector_mean": 0.18,
+    "minimum_relative_reduction": 0.2,
+    "minimum_seed_point_win_rate": 0.8,
+    "maximum_training_time_multiplier": 1.6,
+    "maximum_orthogonality_error": 1e-05
+  },
+  "threshold_timing": "Locked after the original smoke results were observed; this is a reproducible post-hoc engineering gate, not a preregistered statistical endpoint.",
+  "checks": {
+    "dual_mean": true,
+    "relative_reduction": true,
+    "paired_win_rate": true,
+    "training_time_multiplier": true,
+    "orthogonality": true
+  },
+  "metrics": {
+    "dual_projector_mean": 0.1277760298014747,
+    "stop_gradient_projector_mean": 0.2214064765311982,
+    "relative_reduction": 0.42288937612233807,
+    "wins": 36,
+    "win_rate": 1.0,
+    "dual_training_seconds_total": 32.85021899896674,
+    "stop_gradient_training_seconds_total": 24.360432710003806,
+    "training_time_multiplier": 1.3485072038755919,
+    "maximum_orthogonality_error": 1.9498283121421878e-07
+  },
+  "objective_note": "The archived 2026-07-29 smoke used rank-normalized Ky Fan trace. For fixed rank two this has the same minimizer as the true trace; current code reports and optimizes the true rank sum.",
+  "limitations": [
+    "Apple MPS only",
+    "three seeds and one trained potential family",
+    "not a preregistered final test",
+    "cannot support a journal claim without the CUDA two-family matrix",
+    "archived training summaries lack per-seed final checkpoint SHA binding"
+  ],
+  "input_sha256": {
+    "benchmarks/falsification_smoke_v2.json": "f703afe8e1595d5b1dad6aa9cbd1902dd1d7cb0ae1203c74f486b1c1df0e45e6",
+    "results/mgs_ab_20260729/dual_path/summary.json": "59ff46fe87b499c6f391e0bd7a8791632d3766bd424d0f3358188d327de28db3",
+    "results/mgs_ab_20260729/stop_gradient/summary.json": "b02435fe8079f8b3f749bad99ec1196d65bc406a79418ef5d8b3204b905a727d",
+    "results/mgs_ab_20260729/v2_eval_reverified/dual_path/seed_701/summary.json": "3ab3c24642ed4d74d3cf72fd886edbac9161580d126deb7ad079b3193228176c",
+    "results/mgs_ab_20260729/v2_eval_reverified/dual_path/seed_701/per_parameter.csv": "91687b4ad9a67faea1ee51617be8d3aa53838c4cfeda36c37e375c9205a8da4d",
+    "results/mgs_ab_20260729/v2_eval_reverified/dual_path/seed_702/summary.json": "eca15877ad282dde6abfbca0865b274fa649c278a243c49fd13a89e73917f7e8",
+    "results/mgs_ab_20260729/v2_eval_reverified/dual_path/seed_702/per_parameter.csv": "f243a25fadb8d81424d6d1f9da8bca75d578634c9476fc2d94efbedd0b2ce3b1",
+    "results/mgs_ab_20260729/v2_eval_reverified/dual_path/seed_703/summary.json": "7693fe4ec51b0521762e3dafa59d07ed31804835edee8496fb5b27e621e823a5",
+    "results/mgs_ab_20260729/v2_eval_reverified/dual_path/seed_703/per_parameter.csv": "1897d43e886eb7c26892b29f39fad9d9cf48c6223e5d6f6799bc359e1b1d4e3a",
+    "results/mgs_ab_20260729/v2_eval_reverified/stop_gradient/seed_701/summary.json": "79d20e172495d4aa58f1c76e27f9544bd50066a858e6b3ca88078023b53dacc0",
+    "results/mgs_ab_20260729/v2_eval_reverified/stop_gradient/seed_701/per_parameter.csv": "b3a9452c72b2254011a93b15a5860310d30630e1d4355d2ea15540b2cb4d1dc9",
+    "results/mgs_ab_20260729/v2_eval_reverified/stop_gradient/seed_702/summary.json": "929968ad71651d4e93fffd393cf663400ff7f797dba0cb8ebf095a4da92aa071",
+    "results/mgs_ab_20260729/v2_eval_reverified/stop_gradient/seed_702/per_parameter.csv": "72a940198986c2adfdf47f0fcae755f7fd5525fa010b851bc1a8fddb9582145b",
+    "results/mgs_ab_20260729/v2_eval_reverified/stop_gradient/seed_703/summary.json": "342baf7a01c778cd3b6f5733ff295728bd5e6c3c9b864c587ac59d53a0430774",
+    "results/mgs_ab_20260729/v2_eval_reverified/stop_gradient/seed_703/per_parameter.csv": "489de1aa37adc72d5a3cd1c32dd33a451db6f093ec32590bf511f85b7a342902"
+  }
+}

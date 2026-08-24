@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="二维 Bloch–Schrödinger 神经 PDE 谱簇求解器：P5 权威审计、投稿判断与下一步方案。">
+  <link rel="icon" href="data:,">
+  <title>神经网络解二维 PDE｜P5 独立审计后的论文总报告</title>
+  <style>
+    :root {
+      --paper: #f7f4ed;
+      --paper-deep: #eee8dc;
+      --surface: #fffdf8;
+      --surface-2: #f3eee4;
+      --ink: #2c2b27;
+      --muted: #6d6960;
+      --line: #ddd5c7;
+      --line-dark: #c9bead;
+      --accent: #c45f3b;
+      --accent-deep: #974329;
+      --accent-soft: #f4e1d7;
+      --green: #26715a;
+      --green-soft: #dfeee7;
+      --red: #a8443d;
+      --red-soft: #f3dfdc;
+      --blue: #426a7d;
+      --blue-soft: #e1ebef;
+      --shadow: 0 22px 60px rgba(67, 55, 38, .08);
+      --radius: 18px;
+      --sidebar: 244px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 84% 5%, rgba(196, 95, 59, .09), transparent 25rem),
+        linear-gradient(90deg, rgba(83, 69, 48, .025) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, 28px 28px, auto;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-size: 16px;
+      line-height: 1.72;
+    }
+    a { color: var(--accent-deep); text-underline-offset: 3px; }
+    a:hover { color: var(--accent); }
+    img, svg { max-width: 100%; }
+    button, select { font: inherit; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--sidebar);
+      padding: 30px 20px;
+      overflow-y: auto;
+      background: rgba(247, 244, 237, .94);
+      border-right: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+      z-index: 20;
+    }
+    .brand { padding: 4px 8px 24px; border-bottom: 1px solid var(--line); }
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      color: #fff;
+      background: var(--accent);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      box-shadow: 0 10px 28px rgba(196, 95, 59, .22);
+    }
+    .brand strong { display: block; font-size: 15px; }
+    .brand span { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .nav-label {
+      margin: 24px 8px 8px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .nav-links { display: grid; gap: 3px; }
+    .nav-links a {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      padding: 8px 10px;
+      color: var(--muted);
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 13px;
+      transition: .18s ease;
+    }
+    .nav-links a span:first-child { color: var(--line-dark); font-variant-numeric: tabular-nums; }
+    .nav-links a:hover, .nav-links a.active { color: var(--ink); background: var(--surface); }
+    .nav-links a.active span:first-child { color: var(--accent); }
+    .side-note {
+      margin-top: 24px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(255, 253, 248, .7);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .mobile-nav {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      padding: 10px 14px;
+      background: rgba(247, 244, 237, .95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+    .mobile-nav select {
+      width: 100%;
+      padding: 10px 12px;
+      color: var(--ink);
+      border: 1px solid var(--line-dark);
+      border-radius: 10px;
+      background: var(--surface);
+    }
+
+    main {
+      width: min(1160px, calc(100% - var(--sidebar)));
+      margin-left: var(--sidebar);
+      padding: 42px clamp(24px, 4vw, 66px) 80px;
+    }
+    section { scroll-margin-top: 22px; margin-bottom: 72px; }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+    .section-head > * { min-width: 0; }
+    .eyebrow {
+      margin: 0 0 7px;
+      color: var(--accent-deep);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3 { margin: 0; line-height: 1.18; letter-spacing: -.025em; }
+    h1 { max-width: 900px; font-size: clamp(38px, 6.1vw, 78px); }
+    h2 { font-size: clamp(28px, 3.4vw, 44px); }
+    h3 { font-size: 19px; }
+    p { margin: 0 0 14px; }
+    .lead { max-width: 860px; color: var(--muted); font-size: clamp(18px, 2vw, 23px); }
+    .small { color: var(--muted); font-size: 13px; }
+    .fine { color: var(--muted); font-size: 11px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .hero {
+      position: relative;
+      min-height: 80vh;
+      display: grid;
+      align-content: center;
+      padding: 56px 0 24px;
+    }
+    .hero::after {
+      content: "PDE";
+      position: absolute;
+      top: 18px;
+      right: 0;
+      color: rgba(196, 95, 59, .065);
+      font: 900 clamp(90px, 17vw, 230px)/1 ui-monospace, monospace;
+      letter-spacing: -.12em;
+      pointer-events: none;
+    }
+    .hero > * { position: relative; z-index: 1; }
+    .hero .lead { margin: 22px 0 32px; }
+    .answer-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+      max-width: 1020px;
+    }
+    .answer {
+      min-width: 0;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, .88);
+      box-shadow: var(--shadow);
+    }
+    .answer .label {
+      display: inline-flex;
+      margin-bottom: 12px;
+      color: var(--accent-deep);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+    .answer strong { display: block; margin-bottom: 8px; font-size: 22px; line-height: 1.35; }
+    .hero-verdict {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .pill, .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: fit-content;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+    .pill::before, .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .good { color: var(--green); background: var(--green-soft); }
+    .stop { color: var(--red); background: var(--red-soft); }
+    .pending { color: var(--blue); background: var(--blue-soft); }
+    .fact { color: var(--accent-deep); background: var(--accent-soft); }
+
+    .card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .card-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .card, .panel {
+      min-width: 0;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+    .card h3, .panel h3 { margin-bottom: 9px; }
+    .card p:last-child, .panel p:last-child { margin-bottom: 0; }
+    .card-number { color: var(--accent); font: 800 11px/1.2 ui-monospace, monospace; letter-spacing: .08em; margin-bottom: 20px; }
+    .metric strong { display: block; font-size: 34px; letter-spacing: -.04em; }
+    .metric span { color: var(--muted); font-size: 13px; }
+
+    .callout {
+      margin: 18px 0;
+      padding: 20px 22px;
+      border-left: 4px solid var(--accent);
+      border-radius: 0 14px 14px 0;
+      background: var(--accent-soft);
+    }
+    .callout strong { color: var(--accent-deep); }
+    .callout.green { border-left-color: var(--green); background: var(--green-soft); }
+    .callout.green strong { color: var(--green); }
+    .callout.red { border-left-color: var(--red); background: var(--red-soft); }
+    .callout.red strong { color: var(--red); }
+
+    .formula {
+      margin: 18px 0;
+      padding: 21px;
+      overflow-x: auto;
+      border: 1px solid var(--line-dark);
+      border-radius: 14px;
+      color: #34322e;
+      background: var(--surface-2);
+      font: 600 clamp(15px, 2vw, 21px)/1.65 "Times New Roman", "Songti SC", serif;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .plain-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1fr);
+      align-items: stretch;
+      gap: 8px;
+      margin: 20px 0;
+    }
+    .flow-box { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+    .flow-box b { display: block; margin-bottom: 6px; }
+    .arrow { display: grid; place-items: center; color: var(--accent); font-size: 22px; }
+
+    .table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); }
+    table { width: 100%; min-width: 680px; border-collapse: collapse; }
+    th, td { padding: 13px 15px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { color: var(--muted); background: var(--surface-2); font-size: 12px; letter-spacing: .03em; }
+    td { font-size: 14px; }
+    tr:last-child td { border-bottom: 0; }
+    .best { color: var(--green); font-weight: 800; }
+    .warning { color: var(--red); font-weight: 800; }
+
+    .bar-list { display: grid; gap: 12px; margin-top: 18px; }
+    .bar-row { display: grid; grid-template-columns: 150px minmax(100px, 1fr) 78px; align-items: center; gap: 12px; }
+    .bar-row label { color: var(--muted); font-size: 13px; }
+    .bar-track { height: 11px; overflow: hidden; border-radius: 99px; background: var(--surface-2); }
+    .bar-fill { width: var(--w); height: 100%; border-radius: inherit; background: var(--accent); }
+    .bar-row.pwe .bar-fill { background: var(--green); }
+    .bar-row output { font: 700 13px/1 ui-monospace, monospace; text-align: right; }
+
+    .timeline { display: grid; gap: 12px; }
+    .step {
+      display: grid;
+      grid-template-columns: 110px minmax(0, 1fr) 110px;
+      gap: 18px;
+      align-items: start;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+    .step > * { min-width: 0; }
+    .step .when { color: var(--accent); font: 800 12px/1.4 ui-monospace, monospace; }
+    .step b { display: block; margin-bottom: 4px; }
+    .step em { justify-self: end; color: var(--muted); font-size: 11px; font-style: normal; font-weight: 800; }
+
+    .compare {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+    .compare .panel:first-child { background: #fbf2ef; border-color: #e5c7bf; }
+    .compare .panel:last-child { background: #edf5f1; border-color: #bfd7cb; }
+    ul.clean { margin: 12px 0 0; padding-left: 20px; }
+    ul.clean li { margin: 7px 0; }
+
+    .paper-list { display: grid; gap: 10px; }
+    .paper {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr) minmax(0, .9fr);
+      gap: 16px;
+      min-width: 0;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--surface);
+    }
+    .paper > * { min-width: 0; }
+    .paper b { font-size: 14px; }
+    .paper p { margin: 0; color: var(--muted); font-size: 13px; }
+    .paper .role { color: var(--ink); }
+
+    .verdict-box {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 26px;
+      align-items: center;
+      padding: 28px;
+      border: 1px solid #e1bcb5;
+      border-radius: var(--radius);
+      background: var(--red-soft);
+    }
+    .verdict-big { color: var(--red); font-size: clamp(42px, 7vw, 84px); font-weight: 900; line-height: .92; letter-spacing: -.08em; }
+
+    .gate-list { counter-reset: gate; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+    .gate { counter-increment: gate; position: relative; min-width: 0; padding: 16px 16px 16px 48px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+    .gate::before { content: counter(gate); position: absolute; left: 15px; top: 14px; display: grid; place-items: center; width: 23px; height: 23px; border-radius: 50%; color: #fff; background: var(--accent); font-size: 11px; font-weight: 800; }
+
+    .figure-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .figure-card { min-width: 0; padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+    .fig { display: inline-block; margin-bottom: 14px; color: var(--accent); font: 800 11px/1 ui-monospace, monospace; }
+    .figure-card h3 { margin-bottom: 8px; }
+
+    .resource-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .resource {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-width: 0;
+      padding: 16px 18px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--surface);
+      text-decoration: none;
+    }
+    .resource:hover { border-color: var(--accent); color: var(--ink); }
+    .resource span { min-width: 0; }
+    .resource b, .resource small { display: block; }
+    .resource small { margin-top: 3px; color: var(--muted); }
+    .resource i { color: var(--accent); font-style: normal; font-size: 18px; }
+
+    details { border: 1px solid var(--line); border-radius: 13px; background: var(--surface); }
+    summary { cursor: pointer; padding: 14px 17px; font-weight: 800; }
+    details > div { padding: 0 17px 16px; color: var(--muted); }
+    footer { padding-top: 26px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+
+    @media (max-width: 1000px) {
+      .sidebar { display: none; }
+      .mobile-nav { display: block; }
+      main { width: 100%; margin-left: 0; padding-top: 28px; }
+      section { scroll-margin-top: 76px; }
+      .hero { min-height: auto; padding-top: 48px; }
+    }
+    @media (max-width: 760px) {
+      body { font-size: 15px; }
+      main { padding-inline: 16px; }
+      section { margin-bottom: 56px; }
+      .section-head { display: block; }
+      .answer-grid, .card-grid, .card-grid.two, .compare, .gate-list, .figure-grid, .resource-grid { grid-template-columns: 1fr; }
+      .plain-flow { grid-template-columns: 1fr; }
+      .arrow { transform: rotate(90deg); }
+      .paper { grid-template-columns: 1fr; gap: 6px; }
+      .step { grid-template-columns: 1fr; gap: 7px; }
+      .step em { justify-self: start; }
+      .verdict-box { grid-template-columns: 1fr; }
+      .bar-row { grid-template-columns: 110px minmax(80px, 1fr) 70px; gap: 8px; }
+      .answer, .card, .panel { padding: 18px; }
+      .hero::after { display: none; }
+    }
+    @media print {
+      body { background: #fff; }
+      .sidebar, .mobile-nav { display: none; }
+      main { width: 100%; margin: 0; padding: 20px; }
+      section { break-inside: avoid; margin-bottom: 36px; }
+      a { color: inherit; text-decoration: none; }
+      .card, .panel, .paper, .resource, .table-wrap { box-shadow: none; }
+    }
+    #latest > article { scroll-margin-top: 24px; margin-bottom: 72px; }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" aria-label="页面章节">
+    <div class="brand">
+      <div class="brand-mark">K₂</div>
+      <strong>神经 PDE 论文工作台</strong>
+      <span>P5 审计与本机小测版 · 2026-08-24</span>
+    </div>
+    <p class="nav-label">从结论开始</p>
+    <nav class="nav-links">
+      <a href="#latest-answer"><span>01</span><span>网络与 PDE</span></a>
+      <a href="#latest-audit"><span>02</span><span>证据是否可信</span></a>
+      <a href="#latest-results"><span>03</span><span>P5 真实结果</span></a>
+      <a href="#latest-meaning"><span>04</span><span>结果说明什么</span></a>
+      <a href="#latest-verdict"><span>05</span><span>投稿判断</span></a>
+      <a href="#latest-next"><span>06</span><span>新方向与小测</span></a>
+      <a href="#latest-compute"><span>07</span><span>需要的算力</span></a>
+      <a href="#latest-figures"><span>08</span><span>论文需要的图</span></a>
+      <a href="#latest-papers"><span>09</span><span>期刊论文佐证</span></a>
+      <a href="#latest-files"><span>10</span><span>证据与材料</span></a>
+    </nav>
+    <div class="side-note">绿色＝已经真实完成；蓝色＝下一步计划；红色＝当前不能宣称。页面尽量先说结论，公式和完整证据放在链接材料中。</div>
+  </aside>
+
+  <div class="mobile-nav">
+    <select id="mobile-section" aria-label="选择页面章节">
+      <option value="#latest-answer">01 · 网络与 PDE</option>
+      <option value="#latest-audit">02 · 证据是否可信</option>
+      <option value="#latest-results">03 · P5 真实结果</option>
+      <option value="#latest-meaning">04 · 结果说明什么</option>
+      <option value="#latest-verdict">05 · 投稿判断</option>
+      <option value="#latest-next">06 · 新方向与小测</option>
+      <option value="#latest-compute">07 · 需要的算力</option>
+      <option value="#latest-figures">08 · 论文需要的图</option>
+      <option value="#latest-papers">09 · 期刊论文佐证</option>
+      <option value="#latest-files">10 · 证据与材料</option>
+    </select>
+  </div>
+
+  <main>
+    <section id="latest">
+      <article class="hero" id="latest-answer">
+        <p class="eyebrow">先把最重要的答案说清楚</p>
+        <h1>用什么神经网络？<br>解什么偏微分方程？</h1>
+        <p class="lead">当前使用 A-GTROMNet 候选：周期坐标 SiLU MLP、物理低能 anchor、低频 Fourier ROM 分支和 generalized-trace 无标签损失，求解二维参数化 Bloch–Schrödinger 本征偏微分方程的最低 rank-2 谱簇。</p>
+        <div class="answer-grid">
+          <article class="answer">
+            <span class="label">神经网络</span>
+            <strong>A-GTROMNet（本轮被检验候选）</strong>
+            <p>输入二维位置、Bloch 波矢与周期势参数，输出两个复值周期函数构成的子空间。训练不读取参考本征函数标签。</p>
+            <span class="status stop">P5 未支持其为最终方法</span>
+          </article>
+          <article class="answer">
+            <span class="label">偏微分方程</span>
+            <strong>二维 Bloch–Schrödinger 本征 PDE</strong>
+            <p>目标不是追踪容易交换编号的单条能带，而是求最低两条能带共同张成、在 Dirac 交叉附近仍良定的二维谱簇。</p>
+            <span class="status good">课题没有跑题</span>
+          </article>
+        </div>
+        <div class="formula">[ ½(−i∇ + k)<sup>T</sup>G(−i∇ + k) + V<sub>μ</sub>(x) ]u<sub>j</sub> = E<sub>j</sub>u<sub>j</sub>，x ∈ [0,2π)<sup>2</sup>，周期边界</div>
+        <div class="hero-verdict">
+          <span class="pill good">36/36 正式运行完成</span>
+          <span class="pill good">权威证据独立审计 PASS</span>
+          <span class="pill stop">P5 科学判定 STOP</span>
+          <span class="pill pending">整个课题可换机制继续</span>
+        </div>
+      </article>
+
+      <article id="latest-audit">
+        <div class="section-head"><div><p class="eyebrow">Evidence integrity</p><h2>这次结果是否可信？</h2></div><span class="status good">AUDIT PASS</span></div>
+        <div class="callout green"><p><strong>可信。</strong>主控没有照抄远端 summary，而是从压缩包内 36 个 final checkpoint、metrics CSV、result JSON 和 manifest 重新计算。外层 SHA、275 个包内文件、运行身份矩阵、逐 run 指标、汇总门槛与最终状态全部一致。</p></div>
+        <div class="card-grid">
+          <article class="card metric"><strong>36 / 36</strong><span>6 方法 × 2 势族 × 3 seeds，0 失败</span></article>
+          <article class="card metric"><strong>32</strong><span>每个 run 的独立 validation 参数点</span></article>
+          <article class="card metric"><strong>audit_pass</strong><span>true；无缺失、意外或篡改文件</span></article>
+        </div>
+        <div class="table-wrap" style="margin-top:14px"><table><tbody>
+          <tr><th>证据 SHA-256</th><td class="mono">56891c5740eb94c62299b72869d790a1cbdee6abda3fae2903ed822f5e405101</td></tr>
+          <tr><th>执行环境</th><td>AMD MI300X / ROCm，PyTorch 2.10，HIP 7.2，源码 commit c04c433，工作树干净</td></tr>
+          <tr><th>冻结 final</th><td>未打开；STOP 状态下继续保持关闭</td></tr>
+        </tbody></table></div>
+        <div class="callout" style="margin-top:14px"><p><strong>本机也已验证：</strong>2026-08-02 在 Apple M4 / MPS 上完成 6 方法 × 2 势族的 12/12 工程 smoke，核心运行约 1.42 秒，最大正交误差 3.08×10<sup>−7</sup>，状态为 <span class="mono">SMOKE_PASS</span>。MPS 不支持正式复核所需的 float64 和原生复数 QR，所以该结果只证明本机适合开发与小测，不进入论文 CUDA 主结果。</p></div>
+      </article>
+
+      <article id="latest-results">
+        <div class="section-head"><div><p class="eyebrow">Authoritative P5 results</p><h2>P5 正式结果：越低越好</h2></div><span class="status fact">MI300X / ROCm 实测</span></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>方法</th><th>near-cluster</th><th>gap-scan</th><th>结论</th></tr></thead>
+          <tbody>
+            <tr><td><strong>低频 ROM 候选</strong></td><td>0.11018</td><td>0.14920</td><td>有局部收益，但未过机制与安全门槛</td></tr>
+            <tr><td>基础 anchor</td><td>0.12323</td><td class="best">0.14013</td><td>gap-scan 最安全的非 ROM 基线</td></tr>
+            <tr><td>宽网络 anchor</td><td>0.11910</td><td>0.15098</td><td>参数量匹配控制</td></tr>
+            <tr><td><strong>长训练 anchor</strong></td><td class="best">0.10616</td><td>0.15930</td><td>near 反超候选，但不是新机制</td></tr>
+            <tr><td>无 anchor 低频 ROM</td><td>0.17171</td><td>0.21828</td><td>明显退化，anchor 是关键</td></tr>
+            <tr><td>高频 ROM</td><td>0.12110</td><td>0.14783</td><td>频率结构对照</td></tr>
+          </tbody>
+        </table></div>
+        <div class="card-grid" style="margin-top:14px">
+          <article class="card metric"><strong>+10.58%</strong><span>候选相对基础 anchor 的 near 改善</span></article>
+          <article class="card metric"><strong>−3.79%</strong><span>候选相对 long-anchor 的 near 改善，实际为退化</span></article>
+          <article class="card metric"><strong>+6.47%</strong><span>候选相对最佳 anchor 的 gap-scan 误差增加</span></article>
+        </div>
+      </article>
+
+      <article id="latest-meaning">
+        <div class="section-head"><div><p class="eyebrow">What the data means</p><h2>为什么是 STOP，而不是“差一点就成功”？</h2></div></div>
+        <div class="compare">
+          <article class="panel"><h3>已经被数据支持的事实</h3><ul class="clean">
+            <li>神经网络能稳定训练并求出二维 PDE 的 rank-2 谱簇；</li>
+            <li>物理 anchor 很重要：去掉后误差明显变大；</li>
+            <li>低频 ROM 对部分 near、IID、exact 与 OOD 点确实有帮助；</li>
+            <li>工程、正交、Gram 稳定性和证据链均通过。</li>
+          </ul></article>
+          <article class="panel"><h3>不能再宣称的内容</h3><ul class="clean">
+            <li>不能说低频 ROM 的结构本身稳定优于等算力控制；</li>
+            <li>不能说候选在谱隙扫描区域没有回退；</li>
+            <li>不能把训练 665 步的 anchor 包装成新算法；</li>
+            <li>不能把 validation 的负结果写成 frozen-final 成绩。</li>
+          </ul></article>
+        </div>
+        <div class="callout red"><p><strong>逐点证据：</strong>候选相对 anchor 总体胜 117/192 个配对，但在 gap-scan 只胜 9/36。相对等算力 long-anchor 只胜 92/192。问题不是“程序没跑起来”，而是核心因果主张经不起公平控制。</p></div>
+      </article>
+
+      <article id="latest-verdict">
+        <div class="section-head"><div><p class="eyebrow">Publication verdict</p><h2>现在能不能发表？</h2></div></div>
+        <div class="verdict-box">
+          <div class="verdict-big">当前方法<br>不能投</div>
+          <div><h3>课题能继续，低频 ROM 主线应停止</h3><p>现有结果可以写进研究记录、消融或负结果，但不足以支撑“提出的新方法优于强基线”的期刊核心贡献。继续扩大同一方法的实验矩阵只会增加成本，不会修复创新性。</p><p><strong>SCI 四区：</strong>新机制小测通过、完整基线与正式 final 完成后才有条件评估。<br><strong>SCI 三区：</strong>还需要更强的机制解释、风险理论或下游量子几何价值。</p></div>
+        </div>
+        <div class="gate-list">
+          <div class="gate"><b>机制归因失败</b><span>候选没有优于等算力 long-anchor。</span></div>
+          <div class="gate"><b>安全门槛失败</b><span>gap-scan 相对最佳 anchor 回退 6.47%。</span></div>
+          <div class="gate"><b>创新不能换名字解决</b><span>long-anchor 只是更长训练预算。</span></div>
+          <div class="gate"><b>final 仍关闭</b><span>没有资格生成论文最终成绩。</span></div>
+        </div>
+      </article>
+
+      <article id="latest-next">
+        <div class="section-head"><div><p class="eyebrow">Next mechanism</p><h2>下一步不是继续堆 ROM，而是先识别失效</h2></div><span class="status pending">待小范围验证</span></div>
+        <p class="lead" style="font-size:18px">建议的新候选暂称“失效感知的条件谱簇校正器”：anchor 负责稳定主预测；只有在无标签风险信号表明局部校正可靠时才启用修正；高风险点回退 PWE。它现在只是研究假设，不是已经成立的创新。</p>
+        <div class="callout red"><p><strong>简单风险指标已经先被淘汰：</strong>PDE residual AUROC 0.541、外部谱隙倒数 0.411、内部谱隙倒数 0.457，均接近或差于随机；Gram condition AUROC 0.583、AP 0.535，只有弱信号。gap-scan 的候选退化率达到 75%。因此不能直接写“谱隙小就回退”，必须在独立开发集验证组合风险量。</p></div>
+        <div class="plain-flow">
+          <div class="flow-box"><b>Anchor 主预测</b><span>保留当前最稳定的神经 PDE 底座</span></div><div class="arrow">→</div>
+          <div class="flow-box"><b>无标签风险分数</b><span>PDE residual、Gram、预测外部间隔、chart 角度、多视图不一致</span></div><div class="arrow">→</div>
+          <div class="flow-box"><b>条件动作</b><span>低风险直接输出；可修正区域局部校正；高风险回退 PWE</span></div>
+        </div>
+        <div class="timeline" style="margin-top:18px">
+          <div class="step"><span class="when">小测 1</span><div><b>风险可检测性</b><span>建立独立 risk-development suite；不读取真值 projector，只用推理时可获得特征。建议 AUROC 至少 0.70 且两势族方向一致。</span></div><em>先做</em></div>
+          <div class="step"><span class="when">小测 2</span><div><b>条件路由</b><span>与 anchor、long-anchor、static ROM 公平比较；统一参数和 wall-clock 预算。</span></div><em>通过后做</em></div>
+          <div class="step"><span class="when">成功线</span><div><b>三个门槛同时通过</b><span>near 相对 long-anchor 至少改善 5%；gap 不超过最佳基线 2%；每个势族均改善且至少 5/6 配对获胜。</span></div><em>GO / STOP</em></div>
+        </div>
+        <div class="callout"><p><strong>停止条件：</strong>风险排序接近随机、只能依赖真值谱隙，或条件路由不能同时改善 near 与 gap，就停止这个方向，不打开 final。</p></div>
+      </article>
+
+      <article id="latest-compute">
+        <div class="section-head"><div><p class="eyebrow">Compute plan</p><h2>还需要什么显卡，准备几张？</h2></div></div>
+        <div class="callout green"><p><strong>一张显卡即可，不需要多卡。</strong>下一步先做风险分析和小型机制验测，RTX 4060 8GB 已够；若小测明确 GO，再租一张 RTX 4090/5090 加速完整矩阵。MI300X 已完成 P5，不需要为旧方法再租。</p></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>阶段</th><th>推荐设备</th><th>数量</th><th>预算口径</th></tr></thead>
+          <tbody>
+            <tr><td>逐点风险分析、画图</td><td>Mac M4 / CPU</td><td>0 张租赁卡</td><td>本地完成</td></tr>
+            <tr><td>新机制 3-seed 小测</td><td>RTX 4060 8GB</td><td class="best">1 张</td><td>约数小时；先校准真实 wall-clock</td></tr>
+            <tr><td>通过后完整 promotion</td><td>RTX 4090 24GB 或 5090 32GB</td><td class="best">1 张</td><td>按小时短租、自动关机、持续回传 checkpoint</td></tr>
+            <tr><td>float64 / 高 cutoff 终审</td><td>4090/5090；必要时 A100</td><td>1 张</td><td>只复核关键 3 seeds</td></tr>
+          </tbody>
+        </table></div>
+        <p class="small" style="margin-top:12px">当前模型参数量约 0.9–1.1 万，显存不是瓶颈。更强卡的价值是节省正式矩阵时间，不是算法必须依赖大显存。12 CPU 核、40–80 GB 本地/云端可用存储足够。</p>
+      </article>
+
+      <article id="latest-figures">
+        <div class="section-head"><div><p class="eyebrow">Paper figures</p><h2>若新机制通过，论文需要哪些图？</h2></div></div>
+        <div class="figure-grid">
+          <article class="figure-card"><span class="fig">FIG 01</span><h3>方法总流程</h3><p>PDE 输入、anchor、无标签风险、条件校正与 PWE 回退。</p></article>
+          <article class="figure-card"><span class="fig">FIG 02</span><h3>能带与谱簇</h3><p>两势族的势场、Dirac 能带、内部交叉与外部谱隙。</p></article>
+          <article class="figure-card"><span class="fig">FIG 03</span><h3>误差热图</h3><p>k 平面 reference、预测和 projector 绝对误差，统一色标。</p></article>
+          <article class="figure-card"><span class="fig">FIG 04</span><h3>主结果分布</h3><p>IID、exact、near、OOD、gap-scan 的 violin/box 与 seed 配对线。</p></article>
+          <article class="figure-card"><span class="fig">FIG 05</span><h3>风险—覆盖曲线</h3><p>风险分数覆盖多少样本时，保留样本的误差如何变化；与随机排序对比。</p></article>
+          <article class="figure-card"><span class="fig">FIG 06</span><h3>失败点定位</h3><p>候选−anchor 逐点差值，明确 gap-scan 的退化区域。</p></article>
+          <article class="figure-card"><span class="fig">FIG 07</span><h3>消融与因果控制</h3><p>anchor、long、static ROM、风险模块、条件校正、fallback 逐项移除。</p></article>
+          <article class="figure-card"><span class="fig">FIG 08</span><h3>精度—成本 Pareto</h3><p>参数量、训练时间、推理时间、回退率与 many-query break-even。</p></article>
+          <article class="figure-card"><span class="fig">FIG 09</span><h3>量子几何用途</h3><p>projector quantum metric 的参考、预测与误差。</p></article>
+        </div>
+      </article>
+
+      <article id="latest-papers">
+        <div class="section-head"><div><p class="eyebrow">Peer-reviewed anchors</p><h2>写论文应重点参考哪些期刊工作？</h2></div></div>
+        <div class="paper-list">
+          <article class="paper"><b>Wang &amp; Xie<br><a href="https://doi.org/10.1016/j.jcp.2024.112928">JCP 2024</a></b><p class="role">无标签 trace / Ky Fan 神经子空间的核心基线。</p><p>我们的差异必须落在参数化二维 Bloch 简并谱簇与可验证的新机制，不能把 trace 称为首创。</p></article>
+          <article class="paper"><b>Grubišić et al.<br><a href="https://doi.org/10.1007/s00211-022-01339-3">Numer. Math. 2023</a></b><p class="role">支持内部本征值可交叉、外部隔离谱簇仍良定的理论表述。</p><p>它是数学理论，不是神经求解器。</p></article>
+          <article class="paper"><b>Chang et al.<br><a href="https://doi.org/10.1145/3731148">ACM TOG 2025</a></b><p class="role">参数化神经本征分析、重数与模态交换的高水平平行论文。</p><p>它动态重排具体模态；我们直接评价固定秩 Bloch projector。</p></article>
+          <article class="paper"><b>Horger et al.<br><a href="https://doi.org/10.1051/m2an/2016025">M2AN 2017</a></b><p class="role">多重本征值与 reduced eigenspace 的误差评估依据。</p><p>可用于约束风险量的数学写法。</p></article>
+          <article class="paper"><b>Riffaud et al.<br><a href="https://doi.org/10.1016/j.jcp.2024.113677">JCP 2025</a></b><p class="role">误差指标触发高精度回退的期刊级相邻机制。</p><p>只能佐证 fallback 合理；不能替代我们自己的风险校准实验。</p></article>
+          <article class="paper"><b>Mera &amp; Mitscherling<br><a href="https://doi.org/10.1103/PhysRevB.106.165133">PRB 2022</a></b><p class="role">简并谱簇的 projector quantum geometry。</p><p>提供下游物理价值，而非神经训练方法。</p></article>
+        </div>
+      </article>
+
+      <article id="latest-files">
+        <div class="section-head"><div><p class="eyebrow">Local evidence</p><h2>最新材料从这里进入</h2></div></div>
+        <div class="resource-grid">
+          <a class="resource" href="01_当前状态与下一步_20260824.md"><span><b>当前状态与行动清单</b><small>五分钟看懂下一步</small></span><i>↗</i></a>
+          <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/docs/P5-INDEPENDENT-AUDIT.zh-CN.md"><span><b>P5 独立审计报告</b><small>哈希、重算、逐点失败和下一步边界</small></span><i>↗</i></a>
+          <a class="resource" href="../04_SCI三区投稿准备/00_当前投稿判断_20260824.md"><span><b>当前投稿判断</b><small>为什么现在不能投、缺什么</small></span><i>↗</i></a>
+          <a class="resource" href="../04_SCI三区投稿准备/01_下一阶段实验计划_20260824.md"><span><b>下一阶段实验计划</b><small>风险可检测性、条件校正和成功线</small></span><i>↗</i></a>
+          <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/README.md"><span><b>代码与复现入口</b><small>网络、PDE、脚本和设备说明</small></span><i>↗</i></a>
+        </div>
+        <div class="callout green" style="margin-top:18px"><p><strong>最终判断：</strong>真实二维神经 PDE 课题成立，P5 数据与 STOP 结论可信；低频 ROM 不再作为主创新。下一笔算力只用于风险可检测性通过后的新机制，不再重复旧 P5。</p></div>
+      </article>
+    </section>
+    <footer>
+      本页更新至 2026-08-24，并严格区分“真实实测”“文献事实”和“待验证假设”。最终结论：课题没有跑题；P5 证据可信但科学结论为 STOP；低频 ROM 不再作为主创新；先验证无标签风险可检测性和条件校正，再决定是否租单张 GPU 扩大实验。
+    </footer>
+  </main>
+
+  <script>
+    const select = document.getElementById('mobile-section');
+    select?.addEventListener('change', (event) => {
+      const target = document.querySelector(event.target.value);
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    const links = [...document.querySelectorAll('.nav-links a')];
+    const sections = [...document.querySelectorAll('#latest > article[id]')];
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${visible.target.id}`));
+      if (select) select.value = `#${visible.target.id}`;
+    }, { rootMargin: '-18% 0px -68% 0px', threshold: [0, .15, .4] });
+    sections.forEach((section) => observer.observe(section));
+  </script>
+</body>
+</html>

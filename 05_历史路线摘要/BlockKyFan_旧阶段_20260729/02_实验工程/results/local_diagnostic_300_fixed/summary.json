@@ -1,0 +1,68 @@
+{
+  "status": "COMPLETE",
+  "scope": "experiment_output_requires_scientific_gate_review",
+  "config": {
+    "name": "local_diagnostic_300_fixed",
+    "method": "block_kyfan",
+    "device": "mps",
+    "seeds": [
+      102
+    ],
+    "steps": 300,
+    "points": 256,
+    "parameter_batch": 4,
+    "width": 48,
+    "hidden_layers": 3,
+    "learning_rate": 0.002,
+    "anchor_kind": "correct",
+    "residual_weight": 0.01,
+    "residual_start_fraction": 0.8,
+    "eval_grid_side": 13,
+    "reference_cutoff": 4,
+    "checkpoint_every": 100,
+    "resume": false,
+    "output_dir": "results/local_diagnostic_300_fixed"
+  },
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.8.0",
+    "cuda": null,
+    "device_name": "mps"
+  },
+  "runs": [
+    {
+      "seed": 102,
+      "device": "mps",
+      "initial_loss": -0.13840870559215546,
+      "final_loss": -0.1062995046377182,
+      "elapsed_seconds": 9.466212124971207,
+      "peak_memory_bytes": 233728,
+      "mean_projector_sine_error": 0.35393675205539865
+    }
+  ],
+  "aggregate": [
+    {
+      "case": "interpolation",
+      "projector_mean": 0.2469339854135303,
+      "projector_std": 0.0,
+      "residual_mean": 0.1728925108909607,
+      "residual_std": 0.0
+    },
+    {
+      "case": "symmetric_cluster",
+      "projector_mean": 0.334901753170789,
+      "projector_std": 0.0,
+      "residual_mean": 0.24814718961715698,
+      "residual_std": 0.0
+    },
+    {
+      "case": "extrapolation",
+      "projector_mean": 0.4799745175818766,
+      "projector_std": 0.0,
+      "residual_mean": 0.4252079725265503,
+      "residual_std": 0.0
+    }
+  ],
+  "mean_projector_sine_error": 0.35393675205539865,
+  "std_projector_sine_error": 0.0
+}

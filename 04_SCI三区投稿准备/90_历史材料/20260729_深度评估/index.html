@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23d66d4b'/%3E%3Cpath d='M19 40V20h15c8 0 12 4 12 10s-4 10-12 10H19zm8-6h7c3 0 5-1 5-4s-2-4-5-4h-7v8z' fill='%23fffdf8'/%3E%3C/svg%3E">
+  <title>神经 PDE 论文深度评估｜2026-07-29</title>
+  <style>
+    :root {
+      --paper: #f7f4ed;
+      --paper-2: #efe9dd;
+      --ink: #292925;
+      --muted: #6f6b61;
+      --line: #d8d0c2;
+      --orange: #d66d4b;
+      --orange-soft: #f1d7c8;
+      --olive: #66705a;
+      --olive-soft: #dde2d5;
+      --red: #a34d40;
+      --red-soft: #f1d8d1;
+      --blue: #4c6870;
+      --blue-soft: #dce7e7;
+      --white: #fffdf8;
+      --shadow: 0 18px 50px rgba(50, 44, 35, .08);
+      --radius: 18px;
+      --sidebar: 248px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 82% 4%, rgba(214,109,75,.10), transparent 25rem),
+        linear-gradient(90deg, rgba(41,41,37,.025) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, 48px 48px, auto;
+      font-family: ui-serif, Georgia, "Songti SC", "STSong", serif;
+      line-height: 1.65;
+    }
+
+    a { color: inherit; }
+    button, select { font: inherit; }
+    .shell { min-height: 100vh; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 20;
+      width: var(--sidebar);
+      padding: 26px 18px;
+      display: flex;
+      flex-direction: column;
+      background: rgba(42, 41, 37, .97);
+      color: #f7f2e8;
+      border-right: 1px solid rgba(255,255,255,.08);
+    }
+
+    .brand {
+      padding: 4px 8px 22px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      color: #f2a47f;
+      font: 700 13px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .brand strong { display: block; font-size: 16px; line-height: 1.25; }
+    .brand span { display: block; margin-top: 6px; color: #bdb8ae; font: 12px/1.5 ui-sans-serif, system-ui, sans-serif; }
+
+    .side-nav {
+      margin: 20px 0;
+      padding-right: 4px;
+      overflow: auto;
+      scrollbar-width: thin;
+    }
+    .side-nav a {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 9px;
+      align-items: center;
+      padding: 9px 10px;
+      margin: 2px 0;
+      border-radius: 9px;
+      color: #c9c4ba;
+      text-decoration: none;
+      font: 13px/1.3 ui-sans-serif, system-ui, sans-serif;
+      transition: background .2s ease, color .2s ease;
+    }
+    .side-nav a span:first-child { color: #8e8a82; font: 11px/1 ui-monospace, monospace; }
+    .side-nav a:hover, .side-nav a.active { color: #fffaf0; background: rgba(255,255,255,.09); }
+    .side-nav a.active span:first-child { color: #f2a47f; }
+
+    .side-foot {
+      margin-top: auto;
+      padding: 14px 8px 0;
+      border-top: 1px solid rgba(255,255,255,.12);
+      color: #a9a49b;
+      font: 11px/1.55 ui-sans-serif, system-ui, sans-serif;
+    }
+    .side-foot a { display: block; margin-top: 8px; color: #f3b08e; text-decoration: none; }
+
+    .mobile-nav { display: none; }
+
+    main { margin-left: var(--sidebar); }
+    .section {
+      width: min(1180px, calc(100% - 52px));
+      margin: 0 auto;
+      padding: 76px 0;
+      scroll-margin-top: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .section:last-child { border-bottom: 0; }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--orange);
+      font: 700 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 930px; margin-bottom: 18px; font-size: clamp(40px, 5.4vw, 76px); line-height: 1.02; letter-spacing: -.045em; }
+    h2 { margin-bottom: 16px; font-size: clamp(29px, 3.5vw, 48px); line-height: 1.08; letter-spacing: -.035em; }
+    h3 { margin-bottom: 9px; font-size: 19px; line-height: 1.25; }
+    .lead { max-width: 860px; color: var(--muted); font-size: clamp(17px, 1.8vw, 22px); line-height: 1.55; }
+    .small { color: var(--muted); font: 13px/1.55 ui-sans-serif, system-ui, sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .accent { color: var(--orange); }
+
+    .hero {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 24px;
+      padding-bottom: 24px;
+    }
+    .hero-head { display: flex; justify-content: space-between; gap: 24px; align-items: start; }
+    .date-chip {
+      flex: none;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,253,248,.65);
+      font: 12px/1 ui-monospace, monospace;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .hero-card, .card {
+      min-width: 0;
+      background: rgba(255,253,248,.85);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero-card { padding: clamp(22px, 3vw, 34px); }
+    .hero-card.method { grid-row: span 2; }
+    .card-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font: 700 11px/1.2 ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .card-label::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+    .method-name { margin-bottom: 12px; font-size: clamp(26px, 3vw, 42px); line-height: 1.06; letter-spacing: -.035em; }
+    .formula {
+      padding: 18px;
+      margin: 18px 0;
+      border-left: 3px solid var(--orange);
+      background: var(--paper-2);
+      overflow-wrap: anywhere;
+      font: clamp(13px, 1.4vw, 17px)/1.75 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .verdict-line { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .verdict-big { font-size: clamp(25px, 3vw, 40px); line-height: 1.1; }
+    .pill, .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font: 700 11px/1 ui-sans-serif, system-ui, sans-serif;
+      white-space: nowrap;
+    }
+    .pill.go, .status.measured { color: #46503e; background: var(--olive-soft); }
+    .pill.stop, .status.pending { color: var(--red); background: var(--red-soft); }
+    .pill.fact, .status.literature { color: var(--blue); background: var(--blue-soft); }
+    .status.history { color: #7a5b32; background: #eee0c5; }
+    .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+    .metric { padding: 13px 12px; border-top: 1px solid var(--line); }
+    .metric strong { display: block; font: 700 clamp(19px, 2.2vw, 29px)/1.1 ui-sans-serif, system-ui, sans-serif; letter-spacing: -.03em; }
+    .metric span { display: block; margin-top: 5px; color: var(--muted); font: 11px/1.35 ui-sans-serif, system-ui, sans-serif; }
+
+    .legend { display: flex; gap: 8px; flex-wrap: wrap; margin: 25px 0 0; }
+    .section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .46fr); gap: 40px; align-items: end; margin-bottom: 34px; }
+    .section-head p { margin-bottom: 0; color: var(--muted); }
+    .grid-2, .grid-3, .grid-4 { display: grid; gap: 16px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card { padding: 22px; box-shadow: none; }
+    .card p:last-child { margin-bottom: 0; }
+    .card-number { margin-bottom: 22px; color: var(--orange); font: 12px/1 ui-monospace, monospace; }
+    .callout {
+      margin-top: 18px;
+      padding: 22px 24px;
+      border-radius: 14px;
+      background: var(--ink);
+      color: var(--white);
+    }
+    .callout strong { color: #f3a581; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout.light { color: var(--ink); background: var(--orange-soft); }
+    .callout.light strong { color: var(--red); }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+      margin: 28px 0;
+    }
+    .flow-item { position: relative; padding: 18px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); }
+    .flow-item:not(:last-child)::after { content: "→"; position: absolute; z-index: 2; right: -11px; top: 50%; transform: translateY(-50%); color: var(--orange); font-weight: 800; }
+    .flow-item b { display: block; margin-bottom: 6px; font-size: 14px; }
+    .flow-item span { color: var(--muted); font: 12px/1.45 ui-sans-serif, system-ui, sans-serif; }
+
+    .evidence-banner {
+      display: grid;
+      grid-template-columns: 1.05fr 1.05fr .7fr;
+      gap: 1px;
+      margin: 24px 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--line);
+      box-shadow: var(--shadow);
+    }
+    .evidence-banner article { padding: 23px; background: var(--white); }
+    .evidence-banner b { display: block; margin-bottom: 8px; font-size: 16px; }
+    .evidence-banner p { margin-bottom: 0; color: var(--muted); font: 13px/1.55 ui-sans-serif, system-ui, sans-serif; }
+    .evidence-banner .decision { background: var(--ink); color: var(--white); }
+    .evidence-banner .decision b { color: #f3a581; }
+    .evidence-banner .decision p { color: #d8d2c8; }
+
+    .evidence-chain {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin: 26px 0;
+      counter-reset: journal-step;
+    }
+    .evidence-step {
+      counter-increment: journal-step;
+      position: relative;
+      min-height: 250px;
+      padding: 19px 17px 17px;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--orange);
+      border-radius: 14px;
+      background: rgba(255,253,248,.9);
+    }
+    .evidence-step::before {
+      content: counter(journal-step, decimal-leading-zero);
+      display: block;
+      margin-bottom: 24px;
+      color: var(--orange);
+      font: 700 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .evidence-step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      z-index: 2;
+      top: 28px;
+      right: -9px;
+      color: var(--orange);
+      font-weight: 800;
+    }
+    .evidence-step h3 { min-height: 48px; font-size: 17px; }
+    .evidence-step p { color: var(--muted); font: 12px/1.5 ui-sans-serif, system-ui, sans-serif; }
+    .evidence-step .paper-link {
+      display: block;
+      margin-top: 8px;
+      color: var(--blue);
+      font: 700 11px/1.4 ui-sans-serif, system-ui, sans-serif;
+      text-decoration-color: var(--orange);
+      text-underline-offset: 3px;
+    }
+    .claim-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 16px; margin-top: 18px; }
+    .claim-grid .card:first-child { border-top: 4px solid var(--red); }
+    .claim-grid .card:last-child { border-top: 4px solid var(--olive); }
+    .evidence-resource { margin-top: 16px; }
+
+    .bar-chart { display: grid; gap: 13px; margin-top: 20px; }
+    .bar-row { display: grid; grid-template-columns: 148px 1fr 82px; gap: 12px; align-items: center; }
+    .bar-row label { font: 12px/1.25 ui-sans-serif, system-ui, sans-serif; }
+    .bar-track { height: 14px; border-radius: 999px; background: var(--paper-2); overflow: hidden; }
+    .bar-fill { height: 100%; width: var(--w); border-radius: inherit; background: var(--orange); }
+    .bar-row.best .bar-fill { background: var(--olive); }
+    .bar-row.history .bar-fill { background: #b69c6b; }
+    .bar-row output { text-align: right; font: 700 12px/1 ui-monospace, monospace; }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--white); }
+    table { width: 100%; border-collapse: collapse; font: 13px/1.45 ui-sans-serif, system-ui, sans-serif; }
+    th, td { padding: 13px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); background: var(--paper-2); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    td strong { font-family: ui-serif, Georgia, "Songti SC", serif; font-size: 14px; }
+    td a { text-decoration-color: var(--orange); text-underline-offset: 3px; }
+
+    .scoreboard { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .score { padding: 28px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--white); }
+    .score.yes { border-top: 5px solid var(--olive); }
+    .score.no { border-top: 5px solid var(--red); }
+    .score .big { margin: 8px 0 14px; font-size: clamp(35px, 5vw, 66px); line-height: 1; letter-spacing: -.05em; }
+    ul.clean { list-style: none; padding: 0; margin: 16px 0 0; }
+    ul.clean li { position: relative; padding: 8px 0 8px 21px; border-top: 1px solid var(--line); }
+    ul.clean li::before { content: "·"; position: absolute; left: 4px; top: 6px; color: var(--orange); font-size: 22px; }
+
+    .timeline { counter-reset: phase; display: grid; gap: 12px; }
+    .phase { counter-increment: phase; display: grid; grid-template-columns: 48px 180px 1fr auto; gap: 16px; align-items: center; padding: 18px; border: 1px solid var(--line); border-radius: 13px; background: var(--white); }
+    .phase::before { content: counter(phase, decimal-leading-zero); color: var(--orange); font: 700 13px/1 ui-monospace, monospace; }
+    .phase b { font-size: 15px; }
+    .phase span { color: var(--muted); font: 13px/1.45 ui-sans-serif, system-ui, sans-serif; }
+    .phase em { color: var(--muted); font: 11px/1.2 ui-monospace, monospace; font-style: normal; }
+
+    .figure-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .figure-card { min-height: 154px; padding: 17px; border: 1px solid var(--line); border-radius: 13px; background: var(--white); }
+    .figure-card .fig { color: var(--orange); font: 700 10px/1 ui-monospace, monospace; }
+    .figure-card h3 { margin-top: 10px; font-size: 16px; }
+    .figure-card p { color: var(--muted); font: 12px/1.5 ui-sans-serif, system-ui, sans-serif; }
+
+    .resource-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    .resource {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 17px 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--white);
+      text-decoration: none;
+    }
+    .resource:hover { border-color: var(--orange); }
+    .resource b { display: block; font-size: 14px; }
+    .resource span { color: var(--muted); font: 11px/1.45 ui-sans-serif, system-ui, sans-serif; }
+    .resource i { color: var(--orange); font-style: normal; }
+
+    .footer { padding: 40px 0 56px; color: var(--muted); font: 12px/1.6 ui-sans-serif, system-ui, sans-serif; }
+
+    @media (max-width: 1040px) {
+      :root { --sidebar: 214px; }
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .figure-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .evidence-chain { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .evidence-step { min-height: 0; }
+      .evidence-step:last-child { grid-column: 1 / -1; }
+      .evidence-step:not(:last-child)::after { display: none; }
+    }
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-card.method { grid-row: auto; }
+    }
+    @media (max-width: 800px) {
+      .sidebar { display: none; }
+      .mobile-nav { display: flex; position: sticky; top: 0; z-index: 30; gap: 10px; align-items: center; padding: 11px 14px; color: var(--white); background: rgba(42,41,37,.96); }
+      .mobile-nav label { font: 11px/1 ui-monospace, monospace; }
+      .mobile-nav select { flex: 1; min-width: 0; padding: 8px 10px; color: var(--white); background: #3b3934; border: 1px solid #5e5a51; border-radius: 8px; }
+      main { margin-left: 0; }
+      .section { width: min(100% - 30px, 720px); padding: 56px 0; }
+      .hero { min-height: auto; padding-top: 48px; }
+      .hero-grid, .section-head, .scoreboard { grid-template-columns: 1fr; }
+      .hero-card.method { grid-row: auto; }
+      .section-head { gap: 10px; }
+      .flow { grid-template-columns: 1fr; }
+      .flow-item:not(:last-child)::after { content: "↓"; right: 20px; top: auto; bottom: -14px; transform: none; }
+      .grid-3 { grid-template-columns: 1fr; }
+      .evidence-banner, .claim-grid { grid-template-columns: 1fr; }
+      .evidence-chain { grid-template-columns: 1fr; }
+      .evidence-step:last-child { grid-column: auto; }
+      .phase { grid-template-columns: 36px 1fr; }
+      .phase span, .phase em { grid-column: 2; }
+    }
+    @media (max-width: 560px) {
+      h1 { font-size: 40px; }
+      .hero-head { display: block; }
+      .date-chip { display: inline-block; margin-top: 12px; }
+      .metric-row { grid-template-columns: repeat(2, 1fr); }
+      .grid-2, .grid-4, .figure-grid, .resource-list { grid-template-columns: 1fr; }
+      .bar-row { grid-template-columns: 108px 1fr 67px; gap: 7px; }
+      .card, .hero-card { padding: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" aria-label="报告章节选择器">
+      <div class="brand">
+        <div class="brand-mark">P₂</div>
+        <strong>神经 PDE 论文工作台</strong>
+        <span>深度评估 · 证据门控版</span>
+      </div>
+      <nav class="side-nav">
+        <a href="#answer"><span>01</span><span>先看答案</span></a>
+        <a href="#journal-proof"><span>02</span><span>期刊证据链</span></a>
+        <a href="#problem"><span>03</span><span>网络与 PDE</span></a>
+        <a href="#evidence"><span>04</span><span>真实烟测</span></a>
+        <a href="#literature"><span>05</span><span>75 篇文献</span></a>
+        <a href="#latest"><span>06</span><span>2026 最新审计</span></a>
+        <a href="#novelty"><span>07</span><span>创新边界</span></a>
+        <a href="#verdict"><span>08</span><span>投稿判断</span></a>
+        <a href="#upgrade"><span>09</span><span>升级方案</span></a>
+        <a href="#experiment"><span>10</span><span>正式实验</span></a>
+        <a href="#compute"><span>11</span><span>算力预算</span></a>
+        <a href="#figures"><span>12</span><span>发表图表</span></a>
+        <a href="#roadmap"><span>13</span><span>执行路线</span></a>
+        <a href="#files"><span>14</span><span>报告与证据</span></a>
+      </nav>
+      <div class="side-foot">
+        结论口径：开发实测、文献事实与待运行内容严格分开。
+        <a href="答辩用_深度评估与下一阶段.html">打开 HTML 答辩稿 →</a>
+      </div>
+    </aside>
+
+    <div class="mobile-nav">
+      <label for="section-select">章节</label>
+      <select id="section-select" aria-label="跳转到报告章节">
+        <option value="#answer">先看答案</option>
+        <option value="#journal-proof">期刊证据链</option>
+        <option value="#problem">网络与 PDE</option>
+        <option value="#evidence">真实烟测</option>
+        <option value="#literature">75 篇文献</option>
+        <option value="#latest">2026 最新审计</option>
+        <option value="#novelty">创新边界</option>
+        <option value="#verdict">投稿判断</option>
+        <option value="#upgrade">升级方案</option>
+        <option value="#experiment">正式实验</option>
+        <option value="#compute">算力预算</option>
+        <option value="#figures">发表图表</option>
+        <option value="#roadmap">执行路线</option>
+        <option value="#files">报告与证据</option>
+      </select>
+    </div>
+
+    <main>
+      <section class="section hero" id="answer">
+        <div class="hero-head">
+          <div>
+            <p class="eyebrow">Deep assessment · evidence gated</p>
+            <h1>用了什么网络，<br>解什么 PDE？</h1>
+            <p class="lead">一张无标签坐标神经变分网络，求解二维参数化 Bloch–Schrödinger 本征偏微分方程，并直接学习内部简并的最低 rank-2 谱投影。</p>
+          </div>
+          <span class="date-chip">2026-07-29</span>
+        </div>
+
+        <div class="hero-grid">
+          <article class="hero-card method">
+            <div class="card-label">使用的神经网络</div>
+            <h2 class="method-name">Dual-path anchored<br>Ky Fan coordinate network</h2>
+            <p>SiLU MLP 接收周期坐标、Bloch 波矢与势参数，输出两个复值周期场。正式候选为 4 层、宽度 96/128；本次 MPS smoke 使用 3×48 小网络。网络通过 Ky Fan 变分目标训练，<strong>不使用本征子空间标签</strong>；主输出不是两条被强行编号的能带，而是基底不变 projector。</p>
+            <div class="formula">(s, k, ξ) → coordinate MLP → orthonormal frame Q<sub>θ</sub> → P<sub>θ</sub> = Q<sub>θ</sub>Q<sub>θ</sub><sup>*</sup></div>
+            <p class="small">准确归类：label-free parametric coordinate neural variational eigensolver。它属于真实神经 PDE 本征求解，但不是普通点态 residual PINN。</p>
+          </article>
+
+          <article class="hero-card">
+            <div class="card-label">求解的二维 PDE</div>
+            <div class="formula">[½(−i∇+k)<sup>T</sup>G(−i∇+k)+V(s;ξ)]u<sub>j</sub> = λ<sub>j</sub>u<sub>j</sub><br>s ∈ [0,2π)<sup>2</sup>，周期边界</div>
+            <p class="small">允许内部 gap λ₂−λ₁=0；要求外部 gap λ₃−λ₂&gt;0。目标是最低双带共同张成的谱簇 P₂。</p>
+          </article>
+
+          <article class="hero-card">
+            <div class="card-label">当前判断</div>
+            <div class="verdict-line">
+              <strong class="verdict-big">继续：YES</strong><span class="pill go">SMOKE GO</span>
+              <strong class="verdict-big">投稿：NO</strong><span class="pill stop">EVIDENCE GAP</span>
+            </div>
+            <div class="metric-row">
+              <div class="metric"><strong>0.1278</strong><span>V2 dual-path 误差</span></div>
+              <div class="metric"><strong>42.29%</strong><span>较旧 MGS 降低</span></div>
+              <div class="metric"><strong>45/45</strong><span>当前自动测试通过</span></div>
+              <div class="metric"><strong>25–45h</strong><span>路线 B · RTX 5090 估算 · 未运行/待校准</span></div>
+            </div>
+            <p class="small" style="margin:12px 0 0">2026 增量审计后：P3、两势族、强基线与量子几何全部过门槛后，才成为 SCI 四区候选；SCI 三区只是完成下游物理价值与理论闭环后的冲刺目标。</p>
+          </article>
+        </div>
+
+        <div class="legend" aria-label="证据状态图例">
+          <span class="status measured">● 已实测</span>
+          <span class="status literature">● 文献核验</span>
+          <span class="status history">● 旧机制证据</span>
+          <span class="status pending">● 待运行 / 不可宣称</span>
+        </div>
+      </section>
+
+      <section class="section" id="journal-proof">
+        <div class="section-head">
+          <div><p class="eyebrow">Peer-reviewed mechanism evidence</p><h2>这不是凭空机制：正式期刊证据链</h2></div>
+          <p><span class="status literature">同行评审依据</span> 文献能够证明数学对象和各个算法部件合理，不能替代本文尚未完成的 P3/CUDA 因果实验。</p>
+        </div>
+
+        <div class="evidence-banner" aria-label="当前算法、PDE 与证据结论">
+          <article>
+            <div class="card-label">网络 / 算法</div>
+            <b>无标签轻量坐标 MLP + 数值求积/自动微分的 Ky Fan 神经谱子空间</b>
+            <p>周期 Fourier 特征用于输入编码，三平面波只作低阶 anchor，PWE 用于参考解/基线；主方法不是 Fourier–Galerkin 离散。已验测底座为 dual-path anchored Ky Fan；拟议 P3 再加入 M-度量 Grassmann 多图册、cluster-specific 风险估计与 PWE 回退。</p>
+          </article>
+          <article>
+            <div class="card-label">求解对象</div>
+            <b>二维参数化 Bloch–Schrödinger 本征 PDE</b>
+            <p>在周期边界下求最低双带共同张成的 rank-2 简并谱簇投影 P₂；允许簇内 λ₁=λ₂，但要求目标簇与 λ₃ 保持外部谱隙。</p>
+          </article>
+          <article class="decision">
+            <div class="card-label">证据结论</div>
+            <b>机制有先例，组合待证</b>
+            <p>不是凭空构造；也没有期刊论文替本文提前证明完整闭环有效。</p>
+          </article>
+        </div>
+
+        <div class="evidence-chain" aria-label="五段正式期刊证据链">
+          <article class="evidence-step">
+            <h3>交叉处应学习整个谱簇</h3>
+            <p>外部谱隙存在时，内部本征值可交叉，而完整 eigenspace / projector 仍是良定目标。</p>
+            <a class="paper-link" href="https://doi.org/10.1007/s00211-022-01339-3">Grubišić et al. · Numerische Mathematik 2023 ↗</a>
+          </article>
+          <article class="evidence-step">
+            <h3>无标签 trace 神经子空间可训练</h3>
+            <p>神经 trial space 可直接最小化 generalized trace，并通过小型 Ritz/Galerkin 问题读出多个本征对。</p>
+            <a class="paper-link" href="https://doi.org/10.1016/j.jcp.2024.112928">Wang &amp; Xie · JCP 2024 ↗</a>
+          </article>
+          <article class="evidence-step">
+            <h3>Bloch ROM 与 residual/gap 有数值依据</h3>
+            <p>波矢参数能带可用 reduced basis；多重本征值的误差评估需要 residual 与外部 gap，并按完整簇入基。</p>
+            <a class="paper-link" href="https://doi.org/10.1103/PhysRevE.76.046704">Pau · Physical Review E 2007 ↗</a>
+            <a class="paper-link" href="https://doi.org/10.1051/m2an/2016025">Horger et al. · ESAIM: M2AN 2017 ↗</a>
+          </article>
+          <article class="evidence-step">
+            <h3>风险触发高保真回退已有先例</h3>
+            <p>廉价误差指标可路由 ROM→FOM；ML、ROM 与 FOM 也可组成误差感知的分层可靠体系。</p>
+            <a class="paper-link" href="https://doi.org/10.1016/j.jcp.2024.113677">Riffaud · JCP 2025 ↗</a>
+            <a class="paper-link" href="https://doi.org/10.1137/22M1493318">Haasdonk et al. · SIAM JSC 2023 ↗</a>
+          </article>
+          <article class="evidence-step">
+            <h3>简并多带物理量应由 projector 定义</h3>
+            <p>Grassmann quantum metric 与多态 projector calculus 给出基底不变的简并谱簇几何评价。</p>
+            <a class="paper-link" href="https://doi.org/10.1103/PhysRevB.106.165133">Mera &amp; Mitscherling · PRB 2022 ↗</a>
+            <a class="paper-link" href="https://doi.org/10.1103/qscv-qxqt">Mitscherling et al. · PRB 2025 ↗</a>
+          </article>
+        </div>
+
+        <div class="callout light">
+          <p><strong>最接近的期刊级平行论文：</strong><a href="https://doi.org/10.1145/3731148">Shape Space Spectra · ACM TOG 2025 ↗</a> 已用一组联合训练的无标签参数神经场（每个模态对应一个 MLP）进行变分 PDE eigenanalysis，并处理 multiplicity/mode crossover；它们共同构成跨形状族 ROM 并动态追踪具体模态，而本文拟用一张网络直接学习 Bloch fixed-rank projector。<a href="https://doi.org/10.1016/j.jcp.2025.114605">FieldTNN · JCP 2026 ↗</a> 则证明二/三维 Maxwell 本征 PDE 的神经多本征对方法能够在正式期刊发表。</p>
+        </div>
+
+        <div class="callout">
+          <p><strong>最重要的边界：</strong>本次核验没有发现一篇同时包含“无标签坐标网络 + 二维 Bloch 内部精确简并 + fixed-rank projector + cluster 风险路由 + PWE fallback + projector quantum geometry”的完全同构期刊论文。正因为没有完全相同的工作，才保留组合创新空间；也正因为没有，P3/CUDA 实验必须亲自证明整套机制有效。</p>
+        </div>
+
+        <div class="claim-grid">
+          <article class="card">
+            <div class="card-label">不能写成我们的创新</div>
+            <p>eigenspace/projector 目标、Ky Fan/trace、神经 trial subspace、Bloch ROM、residual/gap 指标、ROM/FOM fallback，以及 projector quantum metric 本身，都已有正式期刊先例。</p>
+          </article>
+          <article class="card">
+            <div class="card-label">通过实验后可保留的贡献</div>
+            <p>为二维 Bloch 精确内部简并设计一套<strong>无标签、基底不变、失效感知</strong>的神经谱簇求解闭环：在线可计算的 block residual + 外部 gap surrogate + chart disagreement 联合风险，自动触发 PWE 回退，并以 projector error、risk–coverage–cost 与量子几何验证物理可用性。</p>
+          </article>
+        </div>
+
+        <a class="resource evidence-resource" href="12_创新机制正式期刊证据链.md"><span><b>阅读完整正式期刊证据链</b><span>逐篇说明“证明了什么、不能证明什么”，以及本文必须补的因果实验</span></span><i>↗</i></a>
+        <a class="resource evidence-resource" href="../../01_文献库/00_当前主线必读/10_创新机制期刊证据链/README.md"><span><b>打开本地核心论文包</b><span>5 篇新增公开全文、3 篇已封存核心论文、DOI 和 SHA-256</span></span><i>↗</i></a>
+      </section>
+
+      <section class="section" id="problem">
+        <div class="section-head">
+          <div><p class="eyebrow">Problem formulation</p><h2>这确实是神经网络解 PDE</h2></div>
+          <p>网络直接表示二维周期场，损失由微分算子与变分原理给出。Fourier/PWE 只用于冻结测试的参考解与低保真 anchor，不是训练标签。</p>
+        </div>
+        <div class="grid-3">
+          <article class="card"><div class="card-number">01 / INPUT</div><h3>坐标与参数</h3><p>周期坐标 s=(s₁,s₂)、Bloch 波矢 k，以及 harmonic 或 Gaussian honeycomb 势参数 ξ。</p></article>
+          <article class="card"><div class="card-number">02 / NETWORK</div><h3>坐标神经场</h3><p>周期特征编码 + 4 层、96/128 宽 SiLU MLP，输出两个复值 correction 场的实部与虚部。</p></article>
+          <article class="card"><div class="card-number">03 / OUTPUT</div><h3>谱投影而非带标签</h3><p>P₂=Σ<sub>j=1</sub><sup>2</sup>u<sub>j</sub>u<sub>j</sub><sup>*</sup>。簇内任意 U(2) 旋转给出同一 rank-2 不变谱子空间的等价本征基。</p></article>
+        </div>
+        <div class="flow" aria-label="方法流程">
+          <div class="flow-item"><b>低阶物理 anchor</b><span>当前为固定 3-wave；参数化 3/9-wave 属 P3 待实现</span></div>
+          <div class="flow-item"><b>神经 correction</b><span>学习 anchor 漏掉的分量</span></div>
+          <div class="flow-item"><b>dual-path / Grassmann</b><span>保持 θ 梯度，隔离空间导数</span></div>
+          <div class="flow-item"><b>Ky Fan trace</b><span>无标签最小化低能谱簇</span></div>
+          <div class="flow-item"><b>projector + Ritz readout</b><span>同秩只读出能量；须以 m=3/4&gt;r=2 冗余子空间选最低 2 维，才可能校正投影</span></div>
+        </div>
+        <div class="callout"><p><strong>真正的研究问题：</strong>当两条能带在 K 点无法稳定编号时，能否让一张无标签网络学习仍然连续、良定的 rank-2 谱簇？</p></div>
+      </section>
+
+      <section class="section" id="evidence">
+        <div class="section-head">
+          <div><p class="eyebrow">Measured development evidence</p><h2>V2 小范围验测：机制值得继续</h2></div>
+          <p><span class="status measured">Apple MPS 实测</span> 3 个全新种子、300 steps、12 个 harmonic V2 点；它是开发门槛，不是论文主结果。</p>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <h3>Projector sine error ↓</h3>
+            <div class="bar-chart" aria-label="方法误差条形图">
+              <div class="bar-row"><label>anchor-only</label><div class="bar-track"><div class="bar-fill" style="--w:100%"></div></div><output>0.346692</output></div>
+              <div class="bar-row"><label>9-mode PWE</label><div class="bar-track"><div class="bar-fill" style="--w:52.9%"></div></div><output>0.183268</output></div>
+              <div class="bar-row best"><label>25-mode PWE</label><div class="bar-track"><div class="bar-fill" style="--w:7.1%"></div></div><output>0.024473</output></div>
+              <div class="bar-row history"><label>旧 stop-gradient</label><div class="bar-track"><div class="bar-fill" style="--w:63.9%"></div></div><output>0.221406</output></div>
+              <div class="bar-row"><label>新 dual-path</label><div class="bar-track"><div class="bar-fill" style="--w:36.9%"></div></div><output>0.127776</output></div>
+            </div>
+          </article>
+          <article class="card">
+            <h3>为什么判定 GO</h3>
+            <div class="grid-2">
+              <div class="metric"><strong>3/3</strong><span>seed 全部改善，无 NaN</span></div>
+              <div class="metric"><strong>36/36</strong><span>全部 seed × point 改善</span></div>
+              <div class="metric"><strong>1.35×</strong><span>训练时间倍率，低于 2× 门槛</span></div>
+              <div class="metric"><strong>&lt;2e−7</strong><span>最大正交误差</span></div>
+            </div>
+            <p class="small">分 split：IID 0.126446 · exact 0.110898 · near 0.110848 · strict OOD 0.162912。当前代码 45/45 测试通过。</p>
+          </article>
+        </div>
+        <div class="callout light"><p><strong>尺度与边界：</strong>归档 MPS smoke 使用 trace/r；固定 r=2 时与真 trace 具有相同极小化器，不改变 A/B 排序。当前代码已改为 true trace。该 gate 是结果后锁定、可重建的工程门槛，<strong>不是正式统计预注册</strong>。最新 CPU V2 仅用 10 steps 验证训练—checkpoint—评估链路，不用于精度判断。25-mode PWE 仍约好 5.2 倍；Gaussian、强 block 基线与正式 CUDA 统计尚未完成。</p></div>
+      </section>
+
+      <section class="section" id="literature">
+        <div class="section-head">
+          <div><p class="eyebrow">Literature audit</p><h2>75 篇核心矩阵，真实性单独留痕</h2></div>
+          <p><span class="status literature">文献事实</span> 基础审计阶段为 156 份 PDF / 154 个唯一版本；后续新增 9 份 2026 增量全文和 5 份创新机制证据全文。当前文献库共 170 份 PDF，SHA-256 去重后 167 个唯一版本；基础附录与两个增量包独立封存，不伪装成同一次检索。</p>
+        </div>
+        <div class="grid-4">
+          <article class="card"><div class="card-number">CORE MATRIX</div><h3>75 篇</h3><p>每篇记录题名、年份、venue、状态、identifier、本地 PDF、共同点、差异与研究角色。</p></article>
+          <article class="card"><div class="card-number">FORMAL JOURNALS</div><h3>54 篇</h3><p>含 1 篇 ACM TOG/SIGGRAPH；投稿判断不依赖博客或二手综述。</p></article>
+          <article class="card"><div class="card-number">LOCAL EVIDENCE</div><h3>170 PDF</h3><p>167 个唯一文件版本；基础 156 份附录、2026 增量 9 份与机制证据 5 份分开记录 SHA-256。</p></article>
+          <article class="card"><div class="card-number">DOI AUDIT</div><h3>50 条批检</h3><p>44 条直接题名匹配；6 条受 429 限流，已按出版社/单条页面边界标注，不伪造。</p></article>
+        </div>
+        <div class="table-wrap" style="margin-top:20px">
+          <table>
+            <thead><tr><th>最危险近邻</th><th>它已经完成</th><th>本文剩余差异</th><th>论文中的角色</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Chang et al.</strong><br>ACM TOG 2025</td><td>无标签变分坐标网络、参数族、多模态、重数与交换</td><td>固定秩 projector、Bloch PDE、物理 correction chart</td><td>最危险平行论文；不能误称其为监督方法</td></tr>
+              <tr><td><strong>Wang &amp; Xie</strong><br>JCP 2024</td><td>无标签 generalized trace、多本征子空间</td><td>单网络跨 Bloch/势参数与内部简并簇</td><td>必须同预算实现的强基线</td></tr>
+              <tr><td><strong>Dai et al.</strong><br>CNSNS 2026</td><td>神经 trial subspace、trace/min-max、Galerkin</td><td>直接参数化低秩场与 projector-first</td><td>强神经子空间基线</td></tr>
+              <tr><td><strong>Cheng et al.</strong><br>IJMS 2025</td><td>期刊级 Bloch–Floquet 色散 PINN</td><td>内部简并固定秩谱簇与 basis invariance</td><td>应用与实验呈现模板</td></tr>
+              <tr><td><strong>Ryu et al.</strong><br>NeurIPS 2025</td><td>无序 block orbital-minimization neural method</td><td>局部 Bloch 参数族、anchor 与 gap-aware 诊断</td><td>必须纳入的 unordered block 对照</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small" style="margin-top:14px">完整逐篇分析见 <a href="01_75篇文献真实性与重叠矩阵.csv">01_75篇文献真实性与重叠矩阵.csv</a>；调研口径见 <a href="02_文献综合_创新边界与写作参考.md">文献综合报告</a>。</p>
+        <div class="callout light"><p><strong>不要机械写成“94 篇”。</strong> 另有 19 篇 2026 增量矩阵，用来审计最新威胁与升级动作；其中部分论文与 75 篇矩阵在研究角色上重叠。两张表应分别报告口径，而不是简单相加充当唯一文献数。</p></div>
+      </section>
+
+      <section class="section" id="latest">
+        <div class="section-head">
+          <div><p class="eyebrow">2026 incremental audit</p><h2>价值窗口变窄，但没有关闭</h2></div>
+          <p><span class="status literature">19 篇增量文献事实</span> 新论文确认参数化神经本征空间仍是活跃问题，同时压缩了裸 A-KyFanNet 能安全宣称的创新范围。</p>
+        </div>
+
+        <div class="scoreboard">
+          <article class="score yes">
+            <span class="pill go">TOPIC STILL VALUABLE</span>
+            <div class="big">继续</div>
+            <p>二维 Bloch 内部简并 fixed-rank projector、无标签物理 chart 与可校准 fallback 的完整组合，本次仍未发现同构。</p>
+          </article>
+          <article class="score no">
+            <span class="pill stop">CURRENT PAPER NOT READY</span>
+            <div class="big">不投稿</div>
+            <p>eigenspace、Grassmann、Ritz、无标签参数基、普通 adaptivity 与 band surrogate 均已有强正式近邻。</p>
+          </article>
+        </div>
+
+        <div class="callout" style="margin-top:16px"><p><strong>裸 A-KyFanNet 被进一步压缩：</strong>dual-path 修复仍是可信的已实测工程底座，但“anchor + Ky Fan + projector”本身不足以构成 2026 年期刊级方法贡献。必须升级成 P3 统一机制，并让 projector 支持逐带方法不稳定的下游物理量。</p></div>
+
+        <div class="table-wrap" style="margin-top:20px">
+          <table>
+            <thead><tr><th>2026 正式近邻</th><th>已经覆盖</th><th>对当前论文的直接影响</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Boundary-aware Neural Model Reduction</strong><br>SIGGRAPH 2026</td><td>无标签变分坐标网络跨形状/边界参数学习 PDE reduced bases</td><td>最大整体近邻；不能再把“单网络 + 参数族 + 无标签 eigenbasis”作为贡献</td></tr>
+              <tr><td><strong>NEO</strong> · SIGGRAPH 2026<br><strong>Subspace Regression</strong> · ICLR 2026</td><td>rotation-invariant eigenspace、mass-aware/Ritz、冗余 basis 与参数 Grassmann 回归</td><td>质量矩阵、冗余 rank、Grassmann 与 Ritz 都必须作为组成部分或对照</td></tr>
+              <tr><td><strong>Wave-vector explicit Hybrid FNO</strong><br>Computers &amp; Structures 2026</td><td>监督 FEM 能带频率代理、显式 wave vector、跨分辨率泛化</td><td>是应用级 band surrogate 对照，不是 eigenspace/projector 的监督上界；后者应由 Subspace Regression / NEO 类方法承担</td></tr>
+              <tr><td><strong>vRBA</strong> · npj AI 2026<br><strong>Function-space architectures</strong> · NMI 2026</td><td>residual adaptivity 的统一变分解释；质量/求积与离散一致性</td><td>vRBA 压缩普通 RAR 创新空间；NMI 对 eigensolver 是低直接威胁、高工程相关，要求 M-weighting 与跨网格收敛</td></tr>
+              <tr><td><strong>Eig-PIELM / TFPM-inspired NN</strong><br>CMAME 2026 / JCAM online/in press 2026</td><td>低成本完整谱；问题适配局部基 + correction 与理论。TFPM 文献正式卷为 JCAM 490 (2027)</td><td>新增效率强参照；写作应给出 problem-adapted basis、理论和失败边界</td></tr>
+              <tr><td><strong>Projection-gauge Berry / valley curvature</strong><br>Physical Review B 2026</td><td>外部有隙 occupied subspace 的 projector、非阿贝尔连接与量子几何；并非专门处理 exact internal degeneracy</td><td>为 quantum metric / closed Wilson-loop spectrum 提供二级依据；局部 PWE probe 已做，神经预测与最终 reference validation 均待运行</td></tr>
+              <tr><td><strong>Active Sampling of Interpolation Points</strong><br>IJNME 2026 · 10.1002/nme.70227</td><td>用 residual-driven 参数/频率主动采样识别 dominant subspaces</td><td>“主动选择困难参数”不是创新；差异必须落在可计算的 gap surrogate、chart validity、校准与 fallback 联合机制</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid-2" style="margin-top:16px">
+          <article class="card">
+            <div class="card-label">仍可保留的窄窗口</div>
+            <p>无 eigenspace 标签 + 二维 Bloch–Schrödinger PDE + exact internal degeneracy + fixed-rank projector + symmetry-preserving metric Grassmann charts + gap/chart routing 与数值 fallback。</p>
+          </article>
+          <article class="card">
+            <div class="card-label">2026 后的发表条件</div>
+            <p><strong>Q4：</strong>P3、两势族、强基线、最终参考解和统计全部通过后，成为有条件候选。<br><strong>Q3：</strong>是冲刺目标；还需量子几何下游价值、理论边界与风险路由形成完整证据链。</p>
+          </article>
+        </div>
+
+        <div class="callout light">
+          <p><span class="status measured">REFERENCE-ONLY LOCAL FEASIBILITY PROBE · GO</span></p>
+          <p><strong>Apple CPU float64 PWE 量子几何探针，不是神经网络训练。</strong> 已检查 cutoff 4/6/8/10 与 Δk=0.02/0.01/0.005。cutoff 10、Δk=0.005 时，harmonic 的 g<sub>xx</sub>=1.711619790、g<sub>ext</sub>=0.3614872924；Gaussian 的 g<sub>xx</sub>=12.33365574、g<sub>ext</sub>=0.1144962330。Gaussian cutoff 8→10 差约 0.22%，Δk 0.01→0.005 差约 0.30%。</p>
+          <p><strong>严格判定：</strong>两个势族的 cluster quantum metric 非零且初步收敛，因此“继续验证这个下游任务” <strong>GO</strong>；这还不是最终 reference validation。独立脚本、CSV 与 metadata 的 SHA-256 已一致封存，CSV 也已记录 ‖P²−P‖、Hermiticity 和曲率虚部；但当前方形 Fourier cutoff 不是 symmetry-closed mode set，且 Gaussian 内部 gap 随 cutoff 非单调。正式 reference 仍须用对称闭合壳层与 K 邻域/路径重跑，并把这些诊断随 shell / Δk 报成收敛表。</p>
+          <p><strong>停止线：</strong>rank-2 trace Berry curvature 约为 0，因此“非零总曲率 / Chern”卖点 <strong>STOP</strong>。只有 trace/Chern form、闭合 Wilson-loop 谱等量可以直接称 gauge-invariant；连接本身依赖规范，非阿贝尔曲率矩阵是 gauge-covariant。</p>
+        </div>
+
+        <p class="small" style="margin-top:14px"><span class="status pending">尚未完成</span> P3、神经预测 quantum metric、Wilson-loop 与 Maxwell 扩展仍待验证；不宣称“首创”，不把 reference probe 写成神经实验结果。</p>
+      </section>
+
+      <section class="section" id="novelty">
+        <div class="section-head">
+          <div><p class="eyebrow">Novelty boundary</p><h2>零件都有人做过，创新只能来自完整机制</h2></div>
+          <p>Ky Fan、神经子空间、参数本征、Bloch 网络、Dirac 点、crossing 与 Grassmann 回归都不能单独写成“首次”。</p>
+        </div>
+        <div class="grid-2">
+          <article class="card">
+            <div class="card-label">不能单独作为创新</div>
+            <ul class="clean">
+              <li>用 trace / Ky Fan 一次求多个本征态</li>
+              <li>把 Gram–Schmidt、注意力或新激活接到 PINN</li>
+              <li>研究 honeycomb、Dirac 点或 Bloch 周期边界</li>
+              <li>处理 mode switching 或直接回归 eigenspace</li>
+              <li>只证明正确 anchor 比随机初始化更好</li>
+            </ul>
+          </article>
+          <article class="card">
+            <div class="card-label">可以被实验支持的联合贡献</div>
+            <ul class="clean">
+              <li>无 eigenspace 标签的一张参数坐标网络</li>
+              <li>二维 Bloch PDE 的内部精确简并 rank-2 projector</li>
+              <li>参数相关低保真 Bloch 谱簇作为 Grassmann chart</li>
+              <li>dual-path retraction 分离 θ 梯度与空间自动微分</li>
+              <li>可计算的低阶 gap surrogate + block residual + chart validity 风险路由与 fallback</li>
+            </ul>
+          </article>
+        </div>
+        <div class="callout"><p><strong>安全表述：</strong>“在本次核验的公开文献中，未发现同时满足全部条件的完整同构方法。” 不写“世界首创”，不写“SOTA”，直到冻结正式矩阵支持。</p></div>
+      </section>
+
+      <section class="section" id="verdict">
+        <div class="section-head">
+          <div><p class="eyebrow">Publication decision</p><h2>课题可继续，论文不能现在投</h2></div>
+          <p>这是两个不同问题：烟测已经支持下一轮小 pilot；但期刊需要两势族、强基线、可靠参考解、公平统计和正式 CUDA 证据。</p>
+        </div>
+        <div class="scoreboard">
+          <article class="score yes"><span class="pill go">RESEARCH GO</span><div class="big">继续</div><p>问题没有跑题，dual-path 修订产生稳定正信号，研究对象和失败条件都能被清楚定义。</p><ul class="clean"><li>3/3 新 seed 稳定</li><li>exact / near / OOD 均改善</li><li>额外成本仅 35%</li><li>下一步可被 3-seed CUDA pilot 证伪</li></ul></article>
+          <article class="score no"><span class="pill stop">SUBMISSION NO</span><div class="big">暂缓</div><p>当前结果只到开发 smoke；旧正式协议有重叠、假 near-crossing、统计与梯度缺陷。</p><ul class="clean"><li>Gaussian 正式结果缺失</li><li>Wang–Xie / Dai / OMM 强基线缺失</li><li>25-mode PWE 数值误差约低 5.2 倍</li><li>ROM-Grassmann 核心机制仍待实现</li></ul></article>
+        </div>
+        <div class="grid-3" style="margin-top:16px">
+          <article class="card"><h3>SCI 四区</h3><p><strong>通过 P3 全证据链后才是候选。</strong> 两势族、强 block 对照、最终参考收敛、公平统计、量子几何与效率报告缺一不可。</p></article>
+          <article class="card"><h3>SCI 三区</h3><p><strong>属于冲刺目标。</strong> 除多图册度量 Grassmann 与风险/fallback 外，还要证明 projector 下游物理价值，并给出清楚理论边界。</p></article>
+          <article class="card"><h3>创新强度</h3><p><strong>当前弱—中等。</strong> 升级机制、理论界与可复现实验全部成立后，才可评为中等。</p></article>
+        </div>
+      </section>
+
+      <section class="section" id="upgrade">
+        <div class="section-head">
+          <div><p class="eyebrow">Recommended route B · P3</p><h2>多图册度量 Grassmann + gap/chart confidence + projector quantum geometry</h2></div>
+          <p>不更换二维 Bloch PDE，也不靠换成 KAN/FNO/Transformer 增加表面复杂度；升级重点是几何机制、失败置信和 projector 特有物理任务。</p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <span class="status measured">已实测底座</span>
+            <h3 style="margin-top:12px">dual-path anchored Ky Fan</h3>
+            <p>MPS smoke：0.127776 对旧 stop-gradient 0.221406，36/36 点—种子改善。它只支持“继续做 P3 pilot”，不是 P3 或论文主结果。</p>
+          </article>
+          <article class="card">
+            <span class="status pending">待实现 / 待验证</span>
+            <h3 style="margin-top:12px">P3 multi-chart metric Grassmann</h3>
+            <p>参数相关 ROM charts、M-weighted retraction、gap–chart curriculum、风险校准与 fallback 尚未真实运行；quantum metric 仅完成 PWE 局部可行性探针，最终参考验证与神经预测均待运行。</p>
+          </article>
+        </div>
+
+        <div class="grid-4">
+          <article class="card"><div class="card-number">P3.1 / METRIC CHART</div><h3>参数 ROM + 质量度量</h3><p>对称闭合 3/9-wave A(μ)；若 A*MA=I，先令 Z=(I−AA*M)N，再做 Q=(A+Z)(I+Z*MZ)<sup>−1/2</sup>；不能使用欧氏投影 (I−AA*)N，主角也必须 M-weighted。</p></article>
+          <article class="card"><div class="card-number">P3.2 / ROUTING</div><h3>多图册 Grassmann</h3><p>用 3-wave、9-wave 或邻域 chart；最大主角接近 90° 时路由切换，而非强行外推单 chart。</p></article>
+          <article class="card"><div class="card-number">P3.3 / CONFIDENCE</div><h3>可计算风险与 fallback</h3><p>常规推理只用 block residual、低阶 PWE/ROM gap surrogate、chart angle 与 chart disagreement；高风险样本转冗余 trial-subspace 局部校正或高 cutoff PWE。真 ΔKF 与高 cutoff gap 只做离线校准。</p></article>
+          <article class="card"><div class="card-number">P3.4 / PHYSICS</div><h3>Projector quantum geometry</h3><p>局部探针确认两势族 quantum metric 非零且初步收敛；最终对称闭合 reference 与神经预测仍待验证。只有外部 gap 保持开启时，rank-2 cluster 与 Wilson-loop 才保持良定；trace Berry≈0，停止非零总曲率/Chern 主张。</p></article>
+        </div>
+        <div class="formula">A<sup>*</sup>MA=I，Z=(I−AA<sup>*</sup>M)N，Q=(A+Z)(I+Z<sup>*</sup>MZ)<sup>−1/2</sup>，P=QQ<sup>*</sup>M<br>ŝ(μ)=w₁R<sub>block</sub>/(ĝ<sub>ROM</sub>+ε)+w₂tan²θ<sub>M,max</sub>(A,Q)+w₃d<sub>chart</sub></div>
+        <p class="small"><strong>ŝ 是风险估计，不是数学证书。</strong> Δ<sub>KF</sub>=Tr(Q*HQ)−Σλ<sub>i</sub> 与真实外部 gap 需要参考本征值，只能用于离线校准/理论图，不能冒充无标签在线分数。核心验证线：M-度量正交与 basis invariance；chart 覆盖和失败边界；risk–coverage 校准；33/65/129（必要时 257）网格一致性；神经 projector 对量子度量的误差与稳定性。</p>
+      </section>
+
+      <section class="section" id="experiment">
+        <div class="section-head">
+          <div><p class="eyebrow">Formal protocol</p><h2>正式实验必须形成四条证据链</h2></div>
+          <p>最终测试 640 点；harmonic 与 localized Gaussian 两个势族各 320 点。主比较 10 seed，长尾消融至少 3 seed。</p>
+        </div>
+        <div class="grid-4">
+          <article class="card"><div class="card-number">A / REPRESENTATION</div><h3>projector vs ordered bands</h3><p>exact/near crossing 附近的连续性、wrong-cluster rate 与主角误差。</p></article>
+          <article class="card"><div class="card-number">B / OPTIMIZATION</div><h3>dual-path / Grassmann</h3><p>相对 stop-gradient 的精度、梯度正确性、稳定性与时间成本。</p></article>
+          <article class="card"><div class="card-number">C / PRIOR</div><h3>anchor 贡献拆分</h3><p>anchor-only、wrong anchor、U(2) 旋转、同秩 Ritz readout、m=3/4&gt;r=2 冗余 trial-subspace correction 与 neural correction。</p></article>
+          <article class="card"><div class="card-number">D / UTILITY</div><h3>精度—成本位置</h3><p>PWE/ROM、无标签 block 网络、推理延迟与包含高风险 fallback 成本的 many-query break-even。</p></article>
+        </div>
+        <div class="table-wrap" style="margin-top:20px">
+          <table>
+            <thead><tr><th>冻结 split / 每势族</th><th>点数</th><th>定义</th><th>要回答的问题</th></tr></thead>
+            <tbody>
+              <tr><td>IID hidden</td><td>96</td><td>训练盒内 LHS，全新 seed</td><td>插值能力</td></tr>
+              <tr><td>exact cluster</td><td>32</td><td>K 点、对称破缺 0、参考 g<sub>int</sub>≈0</td><td>内部精确简并</td></tr>
+              <tr><td>near cluster</td><td>64</td><td>0&lt;g<sub>int</sub>≤0.01 且 g<sub>ext</sub>≥0.05</td><td>主 endpoint</td></tr>
+              <tr><td>strict OOD</td><td>64</td><td>至少一维超出训练盒 10%–20%</td><td>参数外泛化</td></tr>
+              <tr><td>gap scan</td><td>64</td><td>覆盖不同外部 gap</td><td>理论界与失败边界</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout light"><p><strong>主指标：</strong>e<sub>P</sub>=‖P̂−P*‖<sub>F</sub>/√(2r)，rank r=2 时分母为 2。<strong>建议冻结的成功线：</strong>两势族相对最强无标签神经基线改善 15%–20%，且 near 绝对误差 &lt;0.08（目标 &lt;0.05）；10 seed 中至少 8 个同方向，95% CI 不跨 0。置信机制另报告 Spearman/Kendall、AU-risk–coverage、coverage@risk 与 coverage@e<sub>P</sub>≤0.08 及 bootstrap CI，不能只写“趋势明显”。</p></div>
+      </section>
+
+      <section class="section" id="compute">
+        <div class="section-head">
+          <div><p class="eyebrow">Compute plan · estimate only</p><h2>路线 B：RTX 5090 约 25–45 小时；RTX 4090 暂估 35–60 小时</h2></div>
+          <p><span class="status pending">全部是估算 / 未运行</span> 两种卡尚未完成同配置校准，不能把卡时混写或当成真实训练时间；首个 CUDA pilot 后必须用实测重算。</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>路线 B 阶段</th><th>RTX 5090 估算</th><th>RTX 4090 暂估</th><th>运行状态</th><th>决策</th></tr></thead>
+            <tbody>
+              <tr><td><strong>P3 两势族 × 3 seed pilot</strong></td><td>2–4 GPU h</td><td>3–6 GPU h</td><td>未运行</td><td>RTX 4060 同阶段另估 6–12 h；任一卡都须先校准</td></tr>
+              <tr><td><strong>P3 + 强基线 10 seed</strong></td><td>8–16 GPU h</td><td>12–22 GPU h</td><td>未运行</td><td>仅在 pilot GO 后运行</td></tr>
+              <tr><td><strong>confidence / quantum geometry / 消融</strong></td><td>10–17 GPU h</td><td>14–22 GPU h</td><td>神经实验未运行</td><td>局部 probe GO；最终 reference 与神经 projector 比较待做</td></tr>
+              <tr><td><strong>参考收敛 / float64 / 效率审计</strong></td><td>5–8 GPU h</td><td>6–10 GPU h</td><td>未运行</td><td>最关键项可短租 A100 复核</td></tr>
+              <tr><td><strong>路线 B 总规划</strong></td><td><strong>25–45 GPU h</strong></td><td><strong>35–60 GPU h</strong></td><td><strong>估算 / 待校准</strong></td><td>以同 seed、同配置 CUDA pilot 实测重算</td></tr>
+              <tr><td><strong>可选 Maxwell 扩展</strong></td><td><strong>额外 8–20 GPU h</strong></td><td>未校准</td><td><strong>估算 / 未运行</strong></td><td>只在路线 B 主结果成立后考虑</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid-3" style="margin-top:16px">
+          <article class="card"><h3>优先 RTX 5090</h3><p><strong>RTX 5090 32GB</strong>：先预留 2–4 小时跑 3-seed pilot；25–45 小时全路线仍是未运行估算。</p></article>
+          <article class="card"><h3>4090 / 本地 4060</h3><p><strong>RTX 4090 24GB</strong> pilot 暂估 3–6 小时；<strong>RTX 4060</strong> 暂估 6–12 小时。显存预计够，但必须分别校准。</p></article>
+          <article class="card"><h3>Maxwell 不是第一步</h3><p>RTX 5090 上额外 8–20 GPU h 只是规划估算。先验证 Schrödinger P3 与量子几何，再决定是否扩大 PDE 范围。</p></article>
+        </div>
+        <p class="small" style="margin-top:14px">历史 RTX 4090 仅能支持规模判断：旧主模型峰值约 486 MB，慢基线约 1.6–2.1 GB。它不构成路线 B 的真实时间测量。</p>
+      </section>
+
+      <section class="section" id="figures">
+        <div class="section-head">
+          <div><p class="eyebrow">Publication figures</p><h2>论文需要的 14 组图片</h2></div>
+          <p>图片必须服务于主张：表示是否稳定、机制为何有效、相对基线是否公平、何时失败，而不只是画“预测看起来很像”。</p>
+        </div>
+        <div class="figure-grid">
+          <article class="figure-card"><span class="fig">FIG 01</span><h3>方法总图</h3><p>ROM anchor → M-orthogonal neural correction → Grassmann/dual-path → projector + same-rank Ritz readout / m&gt;r correction。</p></article>
+          <article class="figure-card"><span class="fig">FIG 02</span><h3>势场与 Dirac 谱簇</h3><p>两势族、K 附近 λ₁/λ₂/λ₃ surface、g<sub>int</sub>/g<sub>ext</sub>。</p></article>
+          <article class="figure-card"><span class="fig">FIG 03</span><h3>k 平面误差热图</h3><p>本文、最强神经基线、差值；统一色阶。</p></article>
+          <article class="figure-card"><span class="fig">FIG 04</span><h3>主结果分布</h3><p>violin/box + 原始点 + seed 配对线，不只画均值柱状图。</p></article>
+          <article class="figure-card"><span class="fig">FIG 05</span><h3>基不变场</h3><p>projector density/kernel 的参考、预测与绝对误差。</p></article>
+          <article class="figure-card"><span class="fig">FIG 06</span><h3>离线理论界</h3><p>用高 cutoff 参考值画 Δ<sub>KF</sub>/g<sub>ext</sub> 对 e<sub>P</sub><sup>2</sup>；明确它不是在线无标签证书。</p></article>
+          <article class="figure-card"><span class="fig">FIG 07</span><h3>核心消融</h3><p>anchor、wrong、U(2)、stop-grad、dual、ROM-Grassmann forest plot。</p></article>
+          <article class="figure-card"><span class="fig">FIG 08</span><h3>精度—成本 Pareto</h3><p>PWE/ROM/网络的 latency、训练成本与 projector error。</p></article>
+          <article class="figure-card"><span class="fig">FIG 09</span><h3>Break-even 曲线</h3><p>T<sub>train</sub>+N·(T<sub>infer</sub>+p<sub>fallback</sub>T<sub>PWE</sub>)；若永不摊销则如实报告。</p></article>
+          <article class="figure-card"><span class="fig">FIG 10</span><h3>收敛与可信度</h3><p>cutoff 8/12/16、网格 33/65/129、训练点敏感性。</p></article>
+          <article class="figure-card"><span class="fig">FIG 11</span><h3>失败边界</h3><p>外部 gap 关闭、chart 角接近 90° 与外推增强。</p></article>
+          <article class="figure-card"><span class="fig">FIG 12</span><h3>为何 projector-first</h3><p>ordered modes 交换/不连续，对照 projector 距离连续。</p></article>
+          <article class="figure-card"><span class="fig">FIG 13</span><h3>Quantum metric / Wilson-loop</h3><p>先展示局部 probe，再给 symmetry-closed reference 的 K 邻域/路径图与神经误差；Wilson-loop 仅在外部 gap 与参考信号都稳定时加入。</p></article>
+          <article class="figure-card"><span class="fig">FIG 14</span><h3>Risk–coverage 与校准</h3><p>AU-risk–coverage、Spearman/Kendall、coverage@固定风险、置信区间，以及触发 PWE fallback 后的真实成本。</p></article>
+        </div>
+      </section>
+
+      <section class="section" id="roadmap">
+        <div class="section-head">
+          <div><p class="eyebrow">Execution roadmap</p><h2>先证伪，后扩矩阵</h2></div>
+          <p>每一步都设置停止线，避免把更多 GPU 时间投入到一个仍被 PWE 和强子空间基线压制的方法。</p>
+        </div>
+        <div class="timeline">
+          <div class="phase"><b>工程闭环已完成</b><span>独立 sampling RNG、统计、resume、checkpoint/cache provenance；45/45 测试通过</span><em>VERIFIED</em></div>
+          <div class="phase"><b>参考解闭环</b><span>封存脚本/配置/哈希；K-centered symmetry-closed shells；P²−P、Hermiticity、有限差分与 cutoff 收敛</span><em>REFERENCE GATE</em></div>
+          <div class="phase"><b>P3 方法原型</b><span>M-orthogonal multi-chart Grassmann、可计算风险估计与 fallback；接入 quantum-metric 神经评价</span><em>LOCAL SMOKE</em></div>
+          <div class="phase"><b>两势族 P3 pilot</b><span>3 seed、500–1000 steps、强 block baseline；5090 估 2–4 h / 4090 估 3–6 h / 4060 估 6–12 h</span><em>UNRUN · CALIBRATE</em></div>
+          <div class="phase"><b>GO / STOP</b><span>两势族同时满足相对与绝对误差线；risk–coverage 有置信区间收益；量子几何 reference 稳定</span><em>DECISION</em></div>
+          <div class="phase"><b>路线 B 正式矩阵</b><span>10-seed 主结果、消融、risk–coverage、quantum geometry、效率与图表</span><em>5090 25–45 H · 4090 35–60 H · EST.</em></div>
+        </div>
+        <div class="callout"><p><strong>如果 pilot 失败：</strong>不包装成“只是还要调参”。若 Gaussian 不改善、与 OMM/Wang–Xie 持平，或 PWE 在目标 many-query 场景仍全面占优，应停止 SCI 三区主张并重设任务。</p></div>
+      </section>
+
+      <section class="section" id="files">
+        <div class="section-head">
+          <div><p class="eyebrow">Local deliverables</p><h2>报告、论文草稿与机器可读证据</h2></div>
+          <p>以下链接均为本地相对路径；数值结论可追溯到报告、CSV 或附录，不以页面文案替代原始证据。</p>
+        </div>
+        <div class="resource-list">
+          <a class="resource" href="00_执行摘要与投稿判断.md"><span><b>执行摘要与投稿判断</b><span>结论、旧证据、V2 门槛与 GO/STOP</span></span><i>↗</i></a>
+          <a class="resource" href="01_75篇文献真实性与重叠矩阵.csv"><span><b>75 篇文献真实性矩阵</b><span>逐篇 venue、状态、重叠、差异与角色</span></span><i>↗</i></a>
+          <a class="resource" href="02_文献综合_创新边界与写作参考.md"><span><b>文献综合与写作参考</b><span>危险近邻、创新边界与参考结构</span></span><i>↗</i></a>
+          <a class="resource" href="03_小范围可行性验测报告.md"><span><b>V2 小范围验测报告</b><span>协议、梯度修复、真实结果与限制</span></span><i>↗</i></a>
+          <a class="resource" href="04_正式实验_算力_成功线与发表图表.md"><span><b>正式实验基础计划</b><span>640 点、基线、统计与原始发表图规范</span></span><i>↗</i></a>
+          <a class="resource" href="05_开题报告与期刊论文提纲.md"><span><b>开题报告与论文提纲</b><span>问题定义、方法、理论、10 周计划与风险</span></span><i>↗</i></a>
+          <a class="resource" href="06_论文初稿_v0.2_证据门控版.md"><span><b>期刊论文初稿 v0.2</b><span>未完成结果用占位门控，不伪造结论</span></span><i>↗</i></a>
+          <a class="resource" href="07_代码协议审计与可复现性状态.md"><span><b>代码与协议审计</b><span>45/45 测试、true trace、独立 sampling RNG 与 formal 禁止项</span></span><i>↗</i></a>
+          <a class="resource" href="08_独立代码复审结论.md"><span><b>独立代码复审结论</b><span>Critical/Major/Minor 均为 0；仅批准 3-seed CUDA pilot</span></span><i>↗</i></a>
+          <a class="resource" href="09_2026最新论文增量审计与升级路线.md"><span><b>2026 最新论文增量审计</b><span>创新威胁、P3 路线 B、量子几何与算力估算</span></span><i>↗</i></a>
+          <a class="resource" href="10_2026增量文献矩阵.csv"><span><b>19 篇增量文献矩阵</b><span>正式状态、共同点、关键差异、威胁和行动</span></span><i>↗</i></a>
+          <a class="resource" href="11_projector量子几何参考探针.csv"><span><b>Projector 量子几何参考探针</b><span>Apple CPU float64 PWE；cutoff/Δk 收敛，非神经实验</span></span><i>↗</i></a>
+          <a class="resource" href="11_projector量子几何参考探针.metadata.json"><span><b>量子几何探针 metadata</b><span>设备、dtype、势参数、cutoff、差分步长与证据边界</span></span><i>↗</i></a>
+          <a class="resource" href="12_创新机制正式期刊证据链.md"><span><b>创新机制正式期刊证据链</b><span>五段同行评审依据、创新边界与仍需完成的 P3/CUDA 证据</span></span><i>↗</i></a>
+          <a class="resource" href="../../01_文献库/00_当前主线必读/10_创新机制期刊证据链/README.md"><span><b>本地创新机制论文包</b><span>公开 PDF、正式发表状态、机制对应与 SHA-256</span></span><i>↗</i></a>
+          <a class="resource" href="../../03_当前主线_BlockKyFanPINN/02_实验工程/scripts/probe_projector_quantum_geometry.py"><span><b>量子几何探针脚本</b><span>可复现 Apple CPU float64 PWE 局部可行性计算</span></span><i>↗</i></a>
+          <a class="resource" href="../../01_文献库/00_当前主线必读/09_2026_增量审计/README.md"><span><b>增量 PDF 与 SHA-256</b><span>公开原文、正式状态、本地版本、页数与文件哈希</span></span><i>↗</i></a>
+          <a class="resource" href="附录A_本地PDF清单_156份.json"><span><b>基础审计 PDF 清单</b><span>156 份文件、154 唯一版本；不含后续 14 份增量包</span></span><i>↗</i></a>
+          <a class="resource" href="附录B_DOI交叉核验.tsv"><span><b>DOI 交叉核验</b><span>批量响应与 429 限流边界</span></span><i>↗</i></a>
+          <a class="resource" href="附录E_独立文献真实性抽查_36篇.md"><span><b>独立真实性抽查</b><span>A/B 级 36 篇深核、NEO 状态更正与创新影响</span></span><i>↗</i></a>
+          <a class="resource" href="答辩用_深度评估与下一阶段.html"><span><b>HTML 答辩稿</b><span>16 页键盘/触控演示版</span></span><i>→</i></a>
+        </div>
+        <footer class="footer">本页为 2026-07-29 证据快照。核心判定：方向继续；当前不投稿；局部 PWE quantum-metric 可行性探针已 GO，但最终参考闭环、P3 两势族 CUDA pilot 与强基线仍未完成。全部通过后才进入 SCI 四区候选评估，SCI 三区仅作为冲刺目标。</footer>
+      </section>
+    </main>
+  </div>
+  <script>
+    const links = [...document.querySelectorAll('.side-nav a')];
+    const sections = [...document.querySelectorAll('main section[id]')];
+    const select = document.getElementById('section-select');
+    const setActive = id => {
+      links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+      if (select) select.value = `#${id}`;
+    };
+    let activeSyncQueued = false;
+    const syncActive = () => {
+      if (activeSyncQueued) return;
+      activeSyncQueued = true;
+      requestAnimationFrame(() => {
+        const marker = window.innerHeight * .32;
+        let current = sections[0];
+        for (const section of sections) {
+          if (section.getBoundingClientRect().top <= marker) current = section;
+          else break;
+        }
+        if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4) current = sections.at(-1);
+        setActive(current.id);
+        activeSyncQueued = false;
+      });
+    };
+    const observer = new IntersectionObserver(syncActive, { rootMargin: '-32% 0px -67% 0px', threshold: 0 });
+    sections.forEach(section => observer.observe(section));
+    select?.addEventListener('change', event => document.querySelector(event.target.value)?.scrollIntoView({behavior:'smooth'}));
+    window.addEventListener('scroll', syncActive, { passive: true });
+    window.addEventListener('resize', syncActive);
+    syncActive();
+  </script>
+</body>
+</html>

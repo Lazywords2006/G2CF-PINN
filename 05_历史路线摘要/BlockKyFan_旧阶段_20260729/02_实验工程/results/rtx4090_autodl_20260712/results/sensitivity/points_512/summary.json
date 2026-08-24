@@ -1,0 +1,89 @@
+{
+  "status": "COMPLETE",
+  "scope": "experiment_output_requires_scientific_gate_review",
+  "config": {
+    "name": "sensitivity_points_512",
+    "method": "block_kyfan",
+    "device": "cuda",
+    "seeds": [
+      11,
+      22,
+      33
+    ],
+    "steps": 3000,
+    "points": 512,
+    "parameter_batch": 8,
+    "width": 96,
+    "hidden_layers": 4,
+    "learning_rate": 0.001,
+    "anchor_kind": "correct",
+    "anchor_scale": 0.1,
+    "residual_weight": 0.01,
+    "residual_start_fraction": 0.8,
+    "eval_grid_side": 33,
+    "reference_cutoff": 8,
+    "checkpoint_every": 500,
+    "resume": true,
+    "output_dir": "results/sensitivity/points_512"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.8.0+cu128",
+    "cuda": "12.8",
+    "device_name": "NVIDIA GeForce RTX 4090"
+  },
+  "runs": [
+    {
+      "seed": 11,
+      "device": "cuda",
+      "initial_loss": -0.11265424638986588,
+      "final_loss": -0.2156139314174652,
+      "elapsed_seconds": 155.49724446050823,
+      "peak_memory_bytes": 1086103552,
+      "mean_projector_sine_error": 0.30224100861092273
+    },
+    {
+      "seed": 22,
+      "device": "cuda",
+      "initial_loss": -0.04567723721265793,
+      "final_loss": -0.1962883323431015,
+      "elapsed_seconds": 156.57305263727903,
+      "peak_memory_bytes": 1086456832,
+      "mean_projector_sine_error": 0.30162815103157303
+    },
+    {
+      "seed": 33,
+      "device": "cuda",
+      "initial_loss": -0.084074467420578,
+      "final_loss": -0.18857067823410034,
+      "elapsed_seconds": 156.15475720912218,
+      "peak_memory_bytes": 1086456832,
+      "mean_projector_sine_error": 0.3014701284268953
+    }
+  ],
+  "aggregate": [
+    {
+      "case": "interpolation",
+      "projector_mean": 0.20054136593203412,
+      "projector_std": 0.0006673956475038625,
+      "residual_mean": 0.17333470284938812,
+      "residual_std": 0.0010664361190641323
+    },
+    {
+      "case": "symmetric_cluster",
+      "projector_mean": 0.29454175805920396,
+      "projector_std": 0.00031645846509674056,
+      "residual_mean": 0.3019805649916331,
+      "residual_std": 0.0006169731429566391
+    },
+    {
+      "case": "extrapolation",
+      "projector_mean": 0.41025616407815296,
+      "projector_std": 0.001062731029922866,
+      "residual_mean": 0.4846511284510295,
+      "residual_std": 0.0005324531862473334
+    }
+  ],
+  "mean_projector_sine_error": 0.301779762689797,
+  "std_projector_sine_error": 0.0004071899258498587
+}

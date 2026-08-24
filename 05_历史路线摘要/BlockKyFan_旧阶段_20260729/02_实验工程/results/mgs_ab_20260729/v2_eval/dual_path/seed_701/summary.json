@@ -1,0 +1,56 @@
+{
+  "status": "COMPLETE",
+  "suite_id": "block_kyfan_falsification_smoke_v2",
+  "suite_sha256": "f703afe8e1595d5b1dad6aa9cbd1902dd1d7cb0ae1203c74f486b1c1df0e45e6",
+  "checkpoint": "results/mgs_ab_20260729/dual_path/seed_701/final.pt",
+  "config": "configs/smoke_mgs_dual_path_mps.json",
+  "potential_family": "harmonic_honeycomb",
+  "point_count": 12,
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.8.0",
+    "device": "mps"
+  },
+  "aggregate": [
+    {
+      "split": "exact_cluster",
+      "n": 3,
+      "mean": 0.10907545201244939,
+      "std": 0.04538902605907916,
+      "median": 0.10183197919010266,
+      "p95": 0.15206877345919478,
+      "maximum": 0.1576506394890939,
+      "cluster_failure_rate": 0.0
+    },
+    {
+      "split": "iid_hidden",
+      "n": 3,
+      "mean": 0.1255212289287119,
+      "std": 0.04502209261458555,
+      "median": 0.13339761692747057,
+      "p95": 0.162816623822126,
+      "maximum": 0.1660854023659766,
+      "cluster_failure_rate": 0.0
+    },
+    {
+      "split": "near_cluster",
+      "n": 3,
+      "mean": 0.10923266746146428,
+      "std": 0.0437199501636881,
+      "median": 0.10287344058940377,
+      "p95": 0.1504929253790317,
+      "maximum": 0.1557839792445459,
+      "cluster_failure_rate": 0.0
+    },
+    {
+      "split": "strict_ood",
+      "n": 3,
+      "mean": 0.16116792441674543,
+      "std": 0.056433257860617016,
+      "median": 0.14186581428849598,
+      "p95": 0.21643428077856613,
+      "maximum": 0.2247196659441295,
+      "cluster_failure_rate": 0.0
+    }
+  ]
+}

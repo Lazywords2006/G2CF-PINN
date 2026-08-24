@@ -1,0 +1,62 @@
+{
+  "status": "SMOKE_GATE_PASS_NOT_PAPER_RESULT",
+  "date": "2026-07-29",
+  "device": "Apple MPS",
+  "purpose": "Falsify whether correcting the stop-gradient MGS is worth a new CUDA pilot.",
+  "suite": {
+    "id": "block_kyfan_falsification_smoke_v2",
+    "sha256": "f703afe8e1595d5b1dad6aa9cbd1902dd1d7cb0ae1203c74f486b1c1df0e45e6",
+    "family": "harmonic_honeycomb",
+    "points": 12,
+    "splits": ["iid_hidden", "exact_cluster", "near_cluster", "strict_ood"],
+    "reference_cutoff": 6
+  },
+  "training": {
+    "seeds": [701, 702, 703],
+    "steps": 300,
+    "points_per_parameter_batch": 256,
+    "parameter_batch": 4,
+    "width": 48,
+    "hidden_layers": 3
+  },
+  "projector_sine_error": {
+    "anchor_only": 0.34669242016176227,
+    "pwe_cutoff_1_9_modes": 0.18326838526956063,
+    "pwe_cutoff_2_25_modes": 0.02447256394835282,
+    "stop_gradient_mgs": 0.22140647654485346,
+    "dual_path_mgs": 0.12777603230958987,
+    "dual_path_split_means": {
+      "iid_hidden": 0.12644646399887804,
+      "exact_cluster": 0.11089799139328095,
+      "near_cluster": 0.11084761609104558,
+      "strict_ood": 0.1629120577551549
+    }
+  },
+  "paired_result": {
+    "dual_path_relative_reduction_vs_stop_gradient": 0.42288936482982925,
+    "wins": 36,
+    "comparisons": 36,
+    "seed_level_dual_path_means": [0.12624931820484275, 0.12628464293330313, 0.13079413579062374],
+    "seed_level_stop_gradient_means": [0.21792086545918884, 0.22136474352143798, 0.22493382065393352]
+  },
+  "efficiency": {
+    "stop_gradient_total_training_seconds": 24.360432710003806,
+    "dual_path_total_training_seconds": 32.85021899896674,
+    "dual_path_time_multiplier": 1.3485049524679305,
+    "max_orthogonality_error_stop_gradient": 1.7204821523009173e-7,
+    "max_orthogonality_error_dual_path": 1.9498283121421878e-7
+  },
+  "decision": {
+    "continue_direction": true,
+    "run_new_cuda_pilot": true,
+    "submit_current_manuscript": false,
+    "reason": "Dual-path MGS improved every one of 36 seed-point comparisons and beat the 9-mode PWE smoke baseline, but 25-mode PWE remained about 5.2 times more accurate. A two-family CUDA pilot with strong neural and traditional baselines is still required."
+  },
+  "limitations": [
+    "This is a small local MPS smoke test, not a preregistered final experiment.",
+    "Only the harmonic potential family was trained.",
+    "The suite has 12 harmonic points and three seeds.",
+    "The plane-wave reference used cutoff 6; final work needs symmetry-closed modes and 8/12/16 convergence.",
+    "No formal confidence interval or corrected multi-comparison test is claimed here."
+  ]
+}

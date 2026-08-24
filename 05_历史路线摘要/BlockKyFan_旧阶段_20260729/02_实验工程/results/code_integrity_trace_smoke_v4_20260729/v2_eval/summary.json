@@ -1,0 +1,70 @@
+{
+  "status": "COMPLETE",
+  "suite_id": "block_kyfan_falsification_smoke_v2",
+  "suite_sha256": "f703afe8e1595d5b1dad6aa9cbd1902dd1d7cb0ae1203c74f486b1c1df0e45e6",
+  "suite": "benchmarks/falsification_smoke_v2.json",
+  "checkpoint": "results/code_integrity_trace_smoke_v4_20260729/seed_910/final.pt",
+  "checkpoint_sha256": "96ce8496a84b47ebdc3be52b1634090ba5a6f1973b8f87c4dd9875e414b17c2b",
+  "checkpoint_seed": 910,
+  "checkpoint_config_fingerprint": "af6eb769d4dc913a81a50e399bd13bbb0bdd83db2e2db6830b2a82bb19bee9e7",
+  "checkpoint_source_fingerprint": "4267343bd92df88a4eb3bf55ed34a727cef9a7ab25a86226671f606382f9ae60",
+  "config": "configs/code_integrity_trace_smoke_cpu_v4.json",
+  "config_sha256": "7ffb6c36696934c8b5005dc2d2b959d0d00be6521fd7dbf9b006801f36002f46",
+  "reference": {
+    "mode": "on_demand",
+    "cache": null,
+    "cache_sha256": null,
+    "metadata": null,
+    "actual_grid_side": 9,
+    "actual_cutoff": 3
+  },
+  "potential_family": "harmonic_honeycomb",
+  "point_count": 12,
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.8.0",
+    "device": "cpu"
+  },
+  "aggregate": [
+    {
+      "split": "exact_cluster",
+      "n": 3,
+      "mean": 0.32591839493935704,
+      "std": 0.07791782879448898,
+      "median": 0.33423266845328575,
+      "p95": 0.39283437987326625,
+      "maximum": 0.39934568114215296,
+      "cluster_failure_rate": 0.0
+    },
+    {
+      "split": "iid_hidden",
+      "n": 3,
+      "mean": 0.33993654574532917,
+      "std": 0.0626904878451076,
+      "median": 0.3370456716485524,
+      "p95": 0.3973247812858617,
+      "maximum": 0.40402246013445164,
+      "cluster_failure_rate": 0.0
+    },
+    {
+      "split": "near_cluster",
+      "n": 3,
+      "mean": 0.33462402582907796,
+      "std": 0.06478157326872193,
+      "median": 0.334264142899116,
+      "p95": 0.39305272603957625,
+      "maximum": 0.3995847908329607,
+      "cluster_failure_rate": 0.0
+    },
+    {
+      "split": "strict_ood",
+      "n": 3,
+      "mean": 0.3788676246497708,
+      "std": 0.05944698140159798,
+      "median": 0.3457519194138038,
+      "p95": 0.43732260141889895,
+      "maximum": 0.4474971216416873,
+      "cluster_failure_rate": 0.0
+    }
+  ]
+}

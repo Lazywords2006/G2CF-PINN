@@ -1,0 +1,50 @@
+10.1016/j.jcp.2024.112928	FAIL	<HTTPError 429: 'Too Many Requests'>	
+10.1016/j.cnsns.2026.110060	FAIL	<HTTPError 429: 'Too Many Requests'>	
+10.1002/nme.70209	OK	Solving Engineering Eigenvalue Problems With Neural Networks Using the Rayleigh Quotient	International Journal for Numerical Methods in Engineering
+10.1016/j.cnsns.2021.106041	OK	Conditional physics informed neural networks	Communications in Nonlinear Science and Numerical Simulation
+10.1016/j.ijmecsci.2025.110111	FAIL	<HTTPError 429: 'Too Many Requests'>	
+10.1145/3731148	FAIL	<HTTPError 429: 'Too Many Requests'>	
+10.1016/j.jcp.2023.112503	OK	Data-driven reduced order modeling for parametric PDE eigenvalue problems using Gaussian process regression	Journal of Computational Physics
+10.1007/s00211-022-01339-3	OK	Stochastic collocation method for computing eigenspaces of parameter-dependent operators	Numerische Mathematik
+10.1137/22M1529324	OK	On Uncertainty Quantification of Eigenvalues and Eigenspaces with Higher Multiplicity	SIAM Journal on Numerical Analysis
+10.1103/s3qz-xdgp	OK	Energy-embedded neural solvers for one-dimensional quantum systems	Physical Review A
+10.1109/IJCNN55064.2022.9891944	OK	Physics-Informed Neural Networks for Quantum Eigenvalue Problems	2022 International Joint Conference on Neural Networks (IJCNN)
+10.1016/j.jcp.2025.114605	OK	FieldTNN-based machine learning method for Maxwell eigenvalue problems	Journal of Computational Physics
+10.1016/j.jcp.2025.114311	FAIL	<HTTPError 429: 'Too Many Requests'>	
+10.1016/j.jcp.2025.114568	OK	A stable physics-guided neural networks approach for electromagnetic problems	Journal of Computational Physics
+10.1016/j.jcp.2024.113384	OK	Match-based solution of general parametric eigenvalue problems	Journal of Computational Physics
+10.1090/S0894-0347-2012-00745-0	OK	Honeycomb lattice potentials and Dirac points	Journal of the American Mathematical Society
+10.1007/s00205-018-1315-4	OK	Elliptic Operators with Honeycomb Symmetry: Dirac Points, Edge States and Applications to Photonic Graphene	Archive for Rational Mechanics and Analysis
+10.1016/j.jcp.2018.10.045	OK	Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations	Journal of Computational Physics
+10.1007/s40304-018-0127-z	FAIL	<HTTPError 429: 'Too Many Requests'>	
+10.52202/079017-2442	OK	PINNacle: A Comprehensive Benchmark of Physics-Informed Neural Networks for Solving PDEs	Advances in Neural Information Processing Systems 37
+10.1038/s42256-024-00897-5	OK	Weak baselines and reporting biases lead to overoptimism in machine learning for fluid-related partial differential equations	Nature Machine Intelligence
+10.1093/imamat/hxae011	OK	Can physics-informed neural networks beat the finite element method?	IMA Journal of Applied Mathematics
+10.1016/j.jcp.2021.110768	OK	When and why PINNs fail to train: A neural tangent kernel perspective	Journal of Computational Physics
+10.1137/20M1318043	OK	Understanding and Mitigating Gradient Flow Pathologies in Physics-Informed Neural Networks	SIAM Journal on Scientific Computing
+10.1016/j.cma.2021.114474	OK	A novel sequential method to train physics informed neural networks for Allen Cahn and Cahn Hilliard equations	Computer Methods in Applied Mechanics and Engineering
+10.1016/j.jcp.2023.112258	OK	Pre-training strategy for solving evolution equations based on physics-informed neural networks	Journal of Computational Physics
+10.1016/j.cma.2024.116813	OK	Respecting causality for training physics-informed neural networks	Computer Methods in Applied Mechanics and Engineering
+10.1016/j.jcp.2022.111722	OK	Self-adaptive physics-informed neural networks	Journal of Computational Physics
+10.4208/cicp.OA-2020-0086	OK	Solving Allen-Cahn and Cahn-Hilliard Equations Using the Adaptive Physics Informed Neural Networks	Communications in Computational Physics
+10.1016/j.jcp.2021.110683	OK	Parallel physics-informed neural networks via domain decomposition	Journal of Computational Physics
+10.1016/j.cma.2021.114333	OK	Exact imposition of boundary conditions with distance functions in physics-informed deep neural networks	Computer Methods in Applied Mechanics and Engineering
+10.1016/j.cma.2022.114823	OK	Gradient-enhanced physics-informed neural networks for forward and inverse PDE problems	Computer Methods in Applied Mechanics and Engineering
+10.1016/j.cma.2024.116805	OK	Residual-based attention in physics-informed neural networks	Computer Methods in Applied Mechanics and Engineering
+10.1016/j.jcp.2023.112265	OK	Physics-informed neural networks with adaptive localized artificial viscosity	Journal of Computational Physics
+10.52202/075280-1032	OK	Separable Physics-Informed Neural Networks	Advances in Neural Information Processing Systems 36
+10.1137/19M1274067	OK	DeepXDE: A Deep Learning Library for Solving Differential Equations	SIAM Review
+10.1038/s42256-021-00302-5	OK	Learning nonlinear operators via DeepONet based on the universal approximation theorem of operators	Nature Machine Intelligence
+10.1145/3648506	OK	Physics-Informed Neural Operator for Learning Partial Differential Equations	ACM / IMS Journal of Data Science
+10.1016/j.cma.2025.117785	OK	Variational Physics-informed Neural Operator (VINO) for solving partial differential equations	Computer Methods in Applied Mechanics and Engineering
+10.1016/j.cma.2023.116299	OK	Phase-Field DeepONet: Physics-informed deep operator neural network for fast simulations of pattern formation governed by gradient flows of free-energy functionals	Computer Methods in Applied Mechanics and Engineering
+10.1016/j.cma.2024.117586	OK	Separable physics-informed DeepONet: Breaking the curse of dimensionality in physics-informed machine learning	Computer Methods in Applied Mechanics and Engineering
+10.1016/j.cma.2024.117540	OK	Physics-Informed Geometry-Aware Neural Operator	Computer Methods in Applied Mechanics and Engineering
+10.1162/neco_a_01647	OK	Learning Only on Boundaries: A Physics-Informed Neural Operator for Solving Parametric Partial Differential Equations in Complex Geometries	Neural Computation
+10.1016/j.cma.2021.114199	OK	Derivative-informed projected neural networks for high-dimensional parametric maps governed by PDEs	Computer Methods in Applied Mechanics and Engineering
+10.1016/j.jcp.2023.112588	OK	Neural Galerkin schemes with active learning for high-dimensional evolution equations	Journal of Computational Physics
+10.1016/j.jcp.2024.112781	OK	Loss-attentional physics-informed neural networks	Journal of Computational Physics
+10.52202/079017-3508	OK	RoPINN: Region Optimized Physics-Informed Neural Networks	Advances in Neural Information Processing Systems 37
+10.1016/j.engappai.2024.107887	OK	Fourier warm start for physics-informed neural networks	Engineering Applications of Artificial Intelligence
+10.1016/j.engappai.2023.107183	OK	Augmented Physics-Informed Neural Networks (APINNs): A gating network-based soft domain decomposition methodology	Engineering Applications of Artificial Intelligence
+10.1016/j.cma.2025.117732	OK	D-FNO: A decomposed Fourier neural operator for large-scale parametric partial differential equations	Computer Methods in Applied Mechanics and Engineering

@@ -1,0 +1,12 @@
+{
+  "seed": 907,
+  "device": "cpu",
+  "initial_loss": -0.19838328659534454,
+  "final_loss": -0.1381996124982834,
+  "elapsed_seconds": 0.06793987500714138,
+  "peak_memory_bytes": null,
+  "current_memory_bytes": null,
+  "mean_projector_sine_error": 0.36767083650990146,
+  "objective": "ky_fan_trace",
+  "orthogonalization": "dual_path"
+}

@@ -1,0 +1,8 @@
+{
+  "family": "harmonic_honeycomb",
+  "count": 2,
+  "grid_side": 7,
+  "cutoff": 2,
+  "seed": 20260714,
+  "label_source": "plane_wave_eigh"
+}

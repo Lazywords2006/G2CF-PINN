@@ -37,3 +37,35 @@ build/
 
 # Sandbox cache
 .sandbox-home/
+.sandbox-tmp/
+
+# Pytest
+.pytest_cache/
+
+# ARIS
+aris
+.aris/
+.claude/sessions/
+
+# Project temp
+conversation.txt
+/results/
+.playwright-cli/
+.playwright-mcp/
+output/
+outputs/
+tmp/
+
+# Large reproducible artifacts stay local; summaries, hashes and indexes remain trackable.
+**/results/**/*.pt
+**/results/**/*.pth
+**/results/**/*.ckpt
+**/results/**/*.tgz
+**/results/**/*.tar
+**/results/**/*.tar.gz
+01_文献库/**/*.pdf
+01_文献库/**/*.zip
+01_文献库/**/*.tgz
+01_文献库/**/*.tar
+01_文献库/**/*.tar.gz
+**/all_results.json

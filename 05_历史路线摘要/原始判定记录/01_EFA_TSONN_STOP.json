@@ -1,0 +1,53 @@
+{
+  "decision": "stop",
+  "evidence_level": "insufficient",
+  "formal_claim_allowed": false,
+  "setting": "75d21188f203d5ae",
+  "candidate": "efa_tsonn",
+  "primary_metric": "relative_l2",
+  "primary_comparison_count": 2,
+  "paired_seed_count_min": 0,
+  "candidate_expected_runs": 3,
+  "candidate_success_runs": 0,
+  "candidate_completed_runs": 0,
+  "candidate_converged_runs": 0,
+  "candidate_plateau_runs": 0,
+  "candidate_stalled_runs": 3,
+  "candidate_failed_runs": 0,
+  "candidate_budget_exhausted_runs": 0,
+  "candidate_missing_runs": 0,
+  "candidate_other_status_runs": 0,
+  "candidate_unstable_runs": 3,
+  "instability_rate": 1.0,
+  "failure_stalled_missing_rate": 1.0,
+  "minimum_observed_median_improvement_pct": null,
+  "minimum_observed_direction_agreement": null,
+  "formal_holm_pass": false,
+  "thresholds": {
+    "exploratory_min_paired_seeds": 3,
+    "formal_min_paired_seeds": 10,
+    "minimum_median_improvement_pct": 20.0,
+    "minimum_direction_agreement": 0.6666666666666666,
+    "alpha": 0.05,
+    "maximum_failure_stalled_missing_rate": 0.1,
+    "stop_failure_stalled_missing_rate": 0.5
+  },
+  "reasons": [
+    "minimum paired seed count is 0",
+    "minimum median paired improvement is unavailable",
+    "minimum candidate-better fraction is unavailable",
+    "instability rate is 1"
+  ],
+  "claim_limit": "Insufficient paired seeds: no performance claim is supported.",
+  "input_run_directories": [
+    "/Users/lazywords/Paper/PINN&PNE/03_当前主线_TSONN/04_EFA_TSONN_实验工程/results/pilot_m4_v2/seed0_fixed_jac/pilot-m4-nu1e-4-t1-v2__seed-0",
+    "/Users/lazywords/Paper/PINN&PNE/03_当前主线_TSONN/04_EFA_TSONN_实验工程/results/pilot_m4_v2/seed-0-adaptive",
+    "/Users/lazywords/Paper/PINN&PNE/03_当前主线_TSONN/04_EFA_TSONN_实验工程/results/pilot_m4_v2/multiseed_core/pilot-m4-nu1e-4-t1-v2__seed-1",
+    "/Users/lazywords/Paper/PINN&PNE/03_当前主线_TSONN/04_EFA_TSONN_实验工程/results/pilot_m4_v2/multiseed_core/pilot-m4-nu1e-4-t1-v2__seed-2"
+  ],
+  "status_policy": {
+    "performance_statistics": "completed|converged|budget_exhausted",
+    "paired_comparisons": "both_valid_terminal_with_finite_metric",
+    "decision_stability": "plateau_failed_stalled_unknown_missing_count; budget_exhausted_separate"
+  }
+}
