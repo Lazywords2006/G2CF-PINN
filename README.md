@@ -20,5 +20,5 @@ PDE 的 rank-2 谱簇。
 - [历史路线索引](05_历史路线摘要/README.md)；
 - [投稿筛查说明](06_投稿筛查/README.md)。
 
-当前核心状态：`P5_PROMOTION_STOP`；frozen final 关闭；下一任务是独立风险开发集与无标签
-组合风险量，不是重跑低频 ROM。
+当前核心状态：`P5_PROMOTION_STOP` 与 `RISK_DEVELOPMENT_GO` 同时成立；frozen final
+关闭；下一任务是 P1 条件谱簇校正器设计，不是重跑低频 ROM 或直接启动大矩阵。

@@ -484,7 +484,8 @@
           <span class="pill good">36/36 正式运行完成</span>
           <span class="pill good">权威证据独立审计 PASS</span>
           <span class="pill stop">P5 科学判定 STOP</span>
-          <span class="pill pending">整个课题可换机制继续</span>
+          <span class="pill good">P0 风险开发 GO</span>
+          <span class="pill pending">下一步设计条件校正器</span>
         </div>
       </article>
 
@@ -502,6 +503,7 @@
           <tr><th>冻结 final</th><td>未打开；STOP 状态下继续保持关闭</td></tr>
         </tbody></table></div>
         <div class="callout" style="margin-top:14px"><p><strong>本机也已验证：</strong>2026-08-02 在 Apple M4 / MPS 上完成 6 方法 × 2 势族的 12/12 工程 smoke，核心运行约 1.42 秒，最大正交误差 3.08×10<sup>−7</sup>，状态为 <span class="mono">SMOKE_PASS</span>。MPS 不支持正式复核所需的 float64 和原生复数 QR，所以该结果只证明本机适合开发与小测，不进入论文 CUDA 主结果。</p></div>
+        <div class="callout green" style="margin-top:14px"><p><strong>P0 独立风险开发已通过：</strong>160 个新参数点、480 个配对行，held-out regression AUROC 0.869，95% CI 0.818–0.913；unsafe AUROC 0.844；harmonic/Gaussian 为 0.969/0.717。证据 SHA、manifest 和单独进程重算均通过。该 GO 只证明风险可检测，不证明条件校正已经有效。</p></div>
       </article>
 
       <article id="latest-results">
@@ -558,25 +560,25 @@
       </article>
 
       <article id="latest-next">
-        <div class="section-head"><div><p class="eyebrow">Next mechanism</p><h2>下一步不是继续堆 ROM，而是先识别失效</h2></div><span class="status pending">待小范围验证</span></div>
-        <p class="lead" style="font-size:18px">建议的新候选暂称“失效感知的条件谱簇校正器”：anchor 负责稳定主预测；只有在无标签风险信号表明局部校正可靠时才启用修正；高风险点回退 PWE。它现在只是研究假设，不是已经成立的创新。</p>
-        <div class="callout red"><p><strong>简单风险指标已经先被淘汰：</strong>PDE residual AUROC 0.541、外部谱隙倒数 0.411、内部谱隙倒数 0.457，均接近或差于随机；Gram condition AUROC 0.583、AP 0.535，只有弱信号。gap-scan 的候选退化率达到 75%。因此不能直接写“谱隙小就回退”，必须在独立开发集验证组合风险量。</p></div>
+        <div class="section-head"><div><p class="eyebrow">Next mechanism</p><h2>风险已经可检测，下一步设计条件校正</h2></div><span class="status pending">P1 待设计</span></div>
+        <p class="lead" style="font-size:18px">P0 已证明组合无标签风险信号在独立 audit 上有效。下一候选仍是“失效感知的条件谱簇校正器”：anchor 负责默认稳定预测；只有在风险分数和开发证据共同支持时才启用局部校正；高风险点回退 PWE。条件校正本身尚未实现，不能直接运行大矩阵。</p>
+        <div class="callout"><p><strong>必须保留的限制：</strong>parameter-only 基线 AUROC 已达到 0.708，组合无标签特征为 0.869，高约 0.161。这说明风险带有参数区域结构；P1 必须同时比较 parameter-only、单特征和组合风险，不能把 P0 GO 夸大成“纯物理残差发现了失效”。</p></div>
         <div class="plain-flow">
           <div class="flow-box"><b>Anchor 主预测</b><span>保留当前最稳定的神经 PDE 底座</span></div><div class="arrow">→</div>
           <div class="flow-box"><b>无标签风险分数</b><span>PDE residual、Gram、预测外部间隔、chart 角度、多视图不一致</span></div><div class="arrow">→</div>
           <div class="flow-box"><b>条件动作</b><span>低风险直接输出；可修正区域局部校正；高风险回退 PWE</span></div>
         </div>
         <div class="timeline" style="margin-top:18px">
-          <div class="step"><span class="when">小测 1</span><div><b>风险可检测性</b><span>建立独立 risk-development suite；不读取真值 projector，只用推理时可获得特征。建议 AUROC 至少 0.70 且两势族方向一致。</span></div><em>先做</em></div>
-          <div class="step"><span class="when">小测 2</span><div><b>条件路由</b><span>与 anchor、long-anchor、static ROM 公平比较；统一参数和 wall-clock 预算。</span></div><em>通过后做</em></div>
+          <div class="step"><span class="when">已完成</span><div><b>P0 风险可检测性</b><span>AUROC 0.869；两势族、gap-scan、证据和重算均过线。</span></div><em>GO</em></div>
+          <div class="step"><span class="when">当前</span><div><b>P1 条件路由设计与小测</b><span>与 parameter-only risk、anchor、long-anchor、static ROM 公平比较；统一参数和 wall-clock 预算。</span></div><em>先设计</em></div>
           <div class="step"><span class="when">成功线</span><div><b>三个门槛同时通过</b><span>near 相对 long-anchor 至少改善 5%；gap 不超过最佳基线 2%；每个势族均改善且至少 5/6 配对获胜。</span></div><em>GO / STOP</em></div>
         </div>
-        <div class="callout"><p><strong>停止条件：</strong>风险排序接近随机、只能依赖真值谱隙，或条件路由不能同时改善 near 与 gap，就停止这个方向，不打开 final。</p></div>
+        <div class="callout"><p><strong>停止条件：</strong>如果条件路由不能同时改善 near 与 gap，或优势只能来自参数位置、更多算力或更高回退率，就停止 P1，不生成 GPU 大实验提示词，也不打开 final。</p></div>
       </article>
 
       <article id="latest-compute">
         <div class="section-head"><div><p class="eyebrow">Compute plan</p><h2>还需要什么显卡，准备几张？</h2></div></div>
-        <div class="callout green"><p><strong>一张显卡即可，不需要多卡。</strong>下一步先做风险分析和小型机制验测，RTX 4060 8GB 已够；若小测明确 GO，再租一张 RTX 4090/5090 加速完整矩阵。MI300X 已完成 P5，不需要为旧方法再租。</p></div>
+        <div class="callout green"><p><strong>一张显卡即可，不需要多卡。</strong>P0 已在 M4 完成；下一步先在本机设计和 smoke 条件校正器。P1 小测明确 GO 后，才生成单独提示词并租一张 RTX 4090/5090。MI300X 已完成 P5，不需要为旧方法再租。</p></div>
         <div class="table-wrap"><table>
           <thead><tr><th>阶段</th><th>推荐设备</th><th>数量</th><th>预算口径</th></tr></thead>
           <tbody>
@@ -621,15 +623,16 @@
         <div class="resource-grid">
           <a class="resource" href="00_当前研究总档案.md"><span><b>当前研究总档案</b><small>阶段、下一步、缺口、实验与投稿的唯一文档</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/docs/P5-INDEPENDENT-AUDIT.zh-CN.md"><span><b>P5 独立审计报告</b><small>哈希、重算、逐点失败和下一步边界</small></span><i>↗</i></a>
+          <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/docs/RISK-DEVELOPMENT-RUNBOOK.zh-CN.md"><span><b>P0 风险开发实测</b><small>AUROC、risk–coverage、证据与限制</small></span><i>↗</i></a>
           <a class="resource" href="../01_文献库/README.md"><span><b>当前文献索引</b><small>核心期刊、平行工作和创新边界</small></span><i>↗</i></a>
           <a class="resource" href="../04_SCI三区投稿准备/README.md"><span><b>投稿准备入口</b><small>统一返回总档案，不再维护冲突初稿</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/README.md"><span><b>代码与复现入口</b><small>网络、PDE、脚本和设备说明</small></span><i>↗</i></a>
         </div>
-        <div class="callout green" style="margin-top:18px"><p><strong>最终判断：</strong>真实二维神经 PDE 课题成立，P5 数据与 STOP 结论可信；低频 ROM 不再作为主创新。下一笔算力只用于风险可检测性通过后的新机制，不再重复旧 P5。</p></div>
+        <div class="callout green" style="margin-top:18px"><p><strong>最终判断：</strong>真实二维神经 PDE 课题成立；P5 STOP 与 P0 风险 GO 同时成立。下一步是 P1 条件校正器设计，不重复旧 P5，也不直接启动大规模实验。</p></div>
       </article>
     </section>
     <footer>
-      本页更新至 2026-08-24，并严格区分“真实实测”“文献事实”和“待验证假设”。最终结论：课题没有跑题；P5 证据可信但科学结论为 STOP；低频 ROM 不再作为主创新；先验证无标签风险可检测性和条件校正，再决定是否租单张 GPU 扩大实验。
+      本页更新至 2026-08-24，并严格区分“真实实测”“文献事实”和“待验证假设”。最终结论：课题没有跑题；P5 低频 ROM 为 STOP；P0 风险可检测性为 GO；当前进入 P1 条件校正器设计，P1 小测通过前不生成或执行大规模 GPU 提示词。
     </footer>
   </main>
 
