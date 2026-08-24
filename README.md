@@ -1,24 +1,31 @@
 # 神经网络求解二维 Bloch–Schrödinger PDE
 
-本工作区只保留一条研究主线：无标签神经网络求解二维参数化 Bloch–Schrödinger 本征
-PDE 的 rank-2 谱簇。
+本工作区当前只保留一条论文主线：使用无标签神经网络求解二维参数化
+Bloch–Schrödinger 本征偏微分方程的最低 rank-2 谱簇。
 
-## 只需要阅读这一个文件
+## 先看这里
 
-[当前研究总档案](00_项目总览/00_当前研究总档案.md)
+- [HTML 总览：研究结果、论文初稿与补实验](00_项目总览/03_研究进展与实验结果.html)
+- [当前研究总档案](00_项目总览/00_当前研究总档案.md)
+- [中文论文初稿](03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.zh-CN.md)
+- [英文论文初稿](03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.en.md)
+- [核心数据与证据](03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/CORE_RESULTS.zh-CN.md)
 
-它记录：用了什么网络、求解什么 PDE、已经完成哪些实验、P5 为什么 STOP、当前进行到
-哪一步、下一步做什么、缺哪些代码/实验/图片、成功线、算力和投稿条件。
+## 当前结论
 
-通俗展示：[研究进展与实验结果 HTML](00_项目总览/03_研究进展与实验结果.html)。
+- P2 full-shell frozen final：`GO`；
+- SCI-Q3 independent supplement：`GO`；
+- 640 点、两个势族、3 seeds、10 方法、19,200 行已经完整回传并审计；
+- overall projector error：P2 `0.04532`，long-anchor `0.14719`；
+- SCI 四区：具备合理投稿基础；
+- SCI 三区：最近邻适配实验已补，当前重点是 external-gap/Ritz 理论、FLOPs 和成本摊销；
+- frozen final 永久关闭，当前不需要继续租 GPU。
 
-## 其他目录
+## 目录
 
-- [文献库索引](01_文献库/README.md)；
-- [当前代码入口](03_当前主线_BlockKyFanPINN/README.md)；
-- [投稿准备入口](04_SCI三区投稿准备/README.md)；
-- [历史路线索引](05_历史路线摘要/README.md)；
-- [投稿筛查说明](06_投稿筛查/README.md)。
-
-当前核心状态：`P5_PROMOTION_STOP` 与 `RISK_DEVELOPMENT_GO` 同时成立；frozen final
-关闭；下一任务是 P1 条件谱簇校正器设计，不是重跑低频 ROM 或直接启动大矩阵。
+- `00_项目总览/`：唯一面向读者的状态和 HTML；
+- `01_文献库/`：本地 PDF、主线必读包和 BibTeX；
+- `03_当前主线_BlockKyFanPINN/`：权威代码仓库快捷入口；
+- `04_SCI三区投稿准备/`：投稿补强入口；
+- `05_历史路线摘要/`：STOP 路线和负结果；
+- `06_投稿筛查/`：风险期刊初筛提示。

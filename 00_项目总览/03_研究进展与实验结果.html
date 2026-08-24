@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <meta name="description" content="二维 Bloch–Schrödinger 神经 PDE 谱簇求解器：P2 frozen-final GO、论文图表与投稿判断。">
+  <meta name="description" content="二维 Bloch–Schrödinger 神经 PDE 谱簇求解器：P2 frozen-final、双语论文初稿、投稿判断与补实验计划。">
   <link rel="icon" href="data:,">
-  <title>神经网络解二维 PDE｜P2 Frozen-Final 论文总报告</title>
+  <title>神经网络解二维 PDE｜论文初稿、最终数据与补实验总览</title>
   <style>
     :root {
       --paper: #f7f4ed;
@@ -439,7 +439,9 @@
       <a href="#latest-compute"><span>07</span><span>需要的算力</span></a>
       <a href="#latest-figures"><span>08</span><span>论文需要的图</span></a>
       <a href="#latest-papers"><span>09</span><span>期刊论文佐证</span></a>
-      <a href="#latest-files"><span>10</span><span>证据与材料</span></a>
+      <a href="#latest-drafts"><span>10</span><span>中英文论文初稿</span></a>
+      <a href="#latest-supplement"><span>11</span><span>Q3补实验结果</span></a>
+      <a href="#latest-files"><span>12</span><span>证据与材料</span></a>
     </nav>
     <div class="side-note">绿色＝已经真实完成；蓝色＝下一步计划；红色＝当前不能宣称。页面尽量先说结论，公式和完整证据放在链接材料中。</div>
   </aside>
@@ -455,7 +457,9 @@
       <option value="#latest-compute">07 · 需要的算力</option>
       <option value="#latest-figures">08 · 论文需要的图</option>
       <option value="#latest-papers">09 · 期刊论文佐证</option>
-      <option value="#latest-files">10 · 证据与材料</option>
+      <option value="#latest-drafts">10 · 中英文论文初稿</option>
+      <option value="#latest-supplement">11 · Q3补实验结果</option>
+      <option value="#latest-files">12 · 证据与材料</option>
     </select>
   </div>
 
@@ -468,8 +472,8 @@
         <div class="answer-grid">
           <article class="answer">
             <span class="label">神经网络</span>
-            <strong>P2 Neural-Augmented Ritz</strong>
-            <p>输入二维位置、Bloch 波矢和周期势参数；网络输出两个复值周期函数。训练不读取 PWE 本征函数或 projector 标签。</p>
+            <strong>3层 × 64宽度 SiLU MLP + Neural-Augmented Ritz</strong>
+            <p>输入二维位置、Bloch 波矢和周期势参数；网络输出两个复值周期函数。harmonic/Gaussian 版本约 9.2k 个可训练参数，训练不读取 PWE 本征函数或 projector 标签。</p>
             <span class="status good">Frozen final：GO</span>
           </article>
           <article class="answer">
@@ -486,6 +490,7 @@
           <span class="pill good">10 methods × 3 seeds</span>
           <span class="pill good">Evidence audit PASS</span>
           <span class="pill good">P2_FROZEN_FINAL_GO</span>
+          <span class="pill good">Q3_SUPPLEMENT_GO</span>
         </div>
       </article>
 
@@ -552,14 +557,15 @@
       <article id="latest-verdict">
         <div class="section-head"><div><p class="eyebrow">Publication verdict</p><h2>现在能不能发表？</h2></div></div>
         <div class="verdict-box">
-          <div class="verdict-big">Final GO<br>进入写作</div>
-          <div><h3>已经具备合理的 SCI 四区投稿基础</h3><p>真实二维 PDE、内部交叉谱簇、两个势族、3 seeds、640 点 frozen final、10 方法、完整消融、效率和 bootstrap 均已具备，实验不再是简单 smoke。</p><p><strong>SCI 四区：</strong>建议继续论文与复现材料准备。<br><strong>SCI 三区：</strong>有机会，但最好补最近邻 neural-subspace Galerkin 实现级对照或外部谱隙误差理论。</p></div>
+          <div class="verdict-big">Final GO<br>Q3 Supplement GO</div>
+          <div><h3>SCI 四区实验基础充分，SCI 三区可行性明显提高</h3><p>除640点 frozen final 外，160点独立期刊基线 supplement 也已完成：两个势族、3 seeds、3方法、1440行、双重审计。</p><p><strong>SCI 四区：</strong>进入定稿。<br><strong>SCI 三区：</strong>最近邻适配证据已补，当前重点转为 external-gap/Ritz 理论、FLOPs 和成本摊销。</p></div>
         </div>
         <div class="gate-list">
           <div class="gate pass"><b>精度门槛通过</b><span>overall/near/gap、两势族与 6/6 配对全部通过。</span></div>
           <div class="gate pass"><b>统计门槛通过</b><span>overall 与 near 的 bootstrap CI 下界均大于0。</span></div>
           <div class="gate pass"><b>效率门槛通过</b><span>107.8ms，约为同服务器 PWE 的34.4%。</span></div>
           <div class="gate pass"><b>证据门槛通过</b><span>one-shot marker、manifest、SHA、本地重算全部一致。</span></div>
+          <div class="gate pass"><b>期刊基线补强通过</b><span>P2 对两个适配基线均6/6 family×seed获胜。</span></div>
         </div>
       </article>
 
@@ -574,15 +580,16 @@
         </div>
         <div class="timeline" style="margin-top:18px">
           <div class="step"><span class="when">已完成</span><div><b>方法、pilot 与 frozen final</b><span>10 方法、3 seeds、640 点、bootstrap 和证据审计。</span></div><em>GO</em></div>
-          <div class="step"><span class="when">现在</span><div><b>论文与复现材料</b><span>方法图、相关工作、LaTeX/初稿、README、公开配置。</span></div><em>写作</em></div>
-          <div class="step"><span class="when">三区增强</span><div><b>最近邻对照或理论</b><span>直接复现 neural-subspace Galerkin；补外部谱隙误差说明。</span></div><em>可选增强</em></div>
+          <div class="step"><span class="when">已完成</span><div><b>中英文论文初稿 v0.2</b><span>已纳入独立 supplement 的真实数据与适配边界。</span></div><em>初稿</em></div>
+          <div class="step"><span class="when">已完成</span><div><b>三区最近邻 supplement</b><span>160点、3方法、3 seeds、1440行、GO。</span></div><em>GO</em></div>
+          <div class="step"><span class="when">现在</span><div><b>理论与论文定稿</b><span>external-gap/Ritz 命题、FLOPs、方法图和成本摊销。</span></div><em>定稿</em></div>
         </div>
         <div class="callout red"><p><strong>禁止：</strong>不得再用 frozen final 调参、增加模式后重跑 final、挑 seed 或删除失败路线。新增对照只能在非 final 数据上完成。</p></div>
       </article>
 
       <article id="latest-compute">
         <div class="section-head"><div><p class="eyebrow">Compute record</p><h2>用了什么算力，还需要租显卡吗？</h2></div></div>
-        <div class="callout green"><p><strong>GPU实验已完成，当前不需要继续租卡。</strong>正式 P2 pilot 和 frozen final 均在单张 RTX 5090 D 32GB 上完成；25 CPU 核和62GB内存用于 cutoff-24 PWE reference。服务器结果已回传并关机。</p></div>
+        <div class="callout green"><p><strong>GPU实验已完成，当前不需要继续租卡。</strong>P2 pilot、frozen final 和 Q3 supplement 均在单张 RTX 5090 D 32GB 上完成；最新服务器结果已回传、本地二次审计并关机。</p></div>
         <div class="table-wrap"><table>
           <thead><tr><th>阶段</th><th>推荐设备</th><th>数量</th><th>预算口径</th></tr></thead>
           <tbody>
@@ -590,6 +597,7 @@
             <tr><td>P2 independent pilot</td><td>RTX 5090 D 32GB</td><td>1 张</td><td>96点 × 3 seeds；GO</td></tr>
             <tr><td>Frozen final</td><td>RTX 5090 D + 25 CPU 核</td><td>1 张</td><td>640点 × 10方法 × 3 seeds；GO</td></tr>
             <tr><td>论文画图与写作</td><td>Mac M4 / CPU</td><td class="best">0 张</td><td>本地完成，无需继续计费</td></tr>
+            <tr><td>SCI三区独立 supplement</td><td>RTX 5090 D 32GB</td><td>1 张</td><td>约64分钟；160点×3方法×3 seeds；GO</td></tr>
           </tbody>
         </table></div>
         <p class="small" style="margin-top:12px">峰值显存远低于32GB，单卡足够。P2 production 平均107.8ms，PWE 313.4ms；P2定位为消费级GPU可复现的紧凑混合求解器。</p>
@@ -617,9 +625,38 @@
           <article class="paper"><b>Grubišić et al.<br><a href="https://doi.org/10.1007/s00211-022-01339-3">Numer. Math. 2023</a></b><p class="role">支持内部本征值可交叉、外部隔离谱簇仍良定的理论表述。</p><p>它是数学理论，不是神经求解器。</p></article>
           <article class="paper"><b>Chang et al.<br><a href="https://doi.org/10.1145/3731148">ACM TOG 2025</a></b><p class="role">参数化神经本征分析、重数与模态交换的高水平平行论文。</p><p>它动态重排具体模态；我们直接评价固定秩 Bloch projector。</p></article>
           <article class="paper"><b>Horger et al.<br><a href="https://doi.org/10.1051/m2an/2016025">M2AN 2017</a></b><p class="role">多重本征值与 reduced eigenspace 的误差评估依据。</p><p>可用于约束风险量的数学写法。</p></article>
-          <article class="paper"><b>Riffaud et al.<br><a href="https://doi.org/10.1016/j.jcp.2024.113677">JCP 2025</a></b><p class="role">误差指标触发高精度回退的期刊级相邻机制。</p><p>只能佐证 fallback 合理；不能替代我们自己的风险校准实验。</p></article>
-          <article class="paper"><b>Mera &amp; Mitscherling<br><a href="https://doi.org/10.1103/PhysRevB.106.165133">PRB 2022</a></b><p class="role">简并谱簇的 projector quantum geometry。</p><p>提供下游物理价值，而非神经训练方法。</p></article>
+          <article class="paper"><b>Rowan et al.<br><a href="https://doi.org/10.1002/nme.70209">IJNME 2025</a></b><p class="role">神经网络 + Rayleigh quotient + Gram–Schmidt 的期刊基线。</p><p>证明变分神经本征求解可行，但未专门解决 Bloch 内部交叉 projector。</p></article>
+          <article class="paper"><b>Pau<br><a href="https://doi.org/10.1103/PhysRevE.76.046704">PRE 2007</a></b><p class="role">Bloch band structure reduced-basis 的直接传统依据。</p><p>提醒我们不能把 Fourier/Ritz reduced basis 本身写成新发明。</p></article>
         </div>
+      </article>
+
+      <article id="latest-drafts">
+        <div class="section-head"><div><p class="eyebrow">Bilingual manuscript v0.2</p><h2>中英文论文初稿已经更新</h2></div><span class="status good">2 个完整版本</span></div>
+        <div class="compare">
+          <article class="panel"><h3>中文初稿</h3><p>包含摘要、引言、相关工作、方程、网络、完整方法、实验协议、主结果、消融、效率、讨论、局限、结论和投稿声明。</p><p><a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.zh-CN.md">打开中文论文初稿 ↗</a></p></article>
+          <article class="panel"><h3>English draft</h3><p>独立英文表述，已经纳入 Q3 supplement，同时明确公式级 Bloch 适配不等于作者官方实现。</p><p><a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.en.md">Open English manuscript ↗</a></p></article>
+        </div>
+        <div class="callout green"><p><strong>初稿能做什么：</strong>现在已经可以交给导师审阅研究问题、方法、frozen final 和最近邻 supplement。<strong>初稿还不等于投稿终稿：</strong>目标期刊未定，LaTeX 格式、完整引用审计、external-gap 命题与方法流程图仍需补齐。</p></div>
+        <div class="card-grid">
+          <article class="card"><div class="card-number">METHOD</div><h3>主张已收紧</h3><p>不宣称 Rayleigh–Ritz、Galerkin、Fourier 或 Ky Fan 首创，只主张 crossing-aware 的组合机制与严格冻结验证。</p></article>
+          <article class="card"><div class="card-number">EVIDENCE</div><h3>数字全部绑定</h3><p>论文表格来自同一个核心数据索引，final evidence SHA 为 <span class="mono">c653…5095</span>。</p></article>
+          <article class="card"><div class="card-number">CITATIONS</div><h3>14篇核心引用</h3><p>当前初稿使用正式期刊、ICLR、IJCNN 和明确标记的 NeurIPS workshop；完整参考文献库仍需逐条审计。</p></article>
+        </div>
+      </article>
+
+      <article id="latest-supplement">
+        <div class="section-head"><div><p class="eyebrow">Independent supplement completed</p><h2>最近邻补实验已经完成</h2></div><span class="status good">Q3_SUPPLEMENT_GO</span></div>
+        <div class="callout green"><p><strong>真实结果：</strong>新160点 suite 与所有旧决策集去重；P2 overall 0.04728，Wang–Xie trace adapted 0.13114，Dai Galerkin adapted 0.43367。P2 对 Wang–Xie 改善63.78%，95% CI 为59.58%–67.88%，并对两个基线均6/6 family×seed获胜。</p></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>方法</th><th>Overall</th><th>Near</th><th>Gap-scan</th><th>Mean latency</th></tr></thead>
+          <tbody>
+            <tr><td><strong>P2 full-shell</strong></td><td class="best">0.04728</td><td class="best">0.03804</td><td class="best">0.06727</td><td>193.75 ms</td></tr>
+            <tr><td>Wang–Xie trace adapted</td><td>0.13114</td><td>0.09056</td><td>0.15110</td><td class="best">2.47 ms</td></tr>
+            <tr><td>Dai Galerkin adapted</td><td>0.43367</td><td>0.42376</td><td>0.47148</td><td>205.56 ms</td></tr>
+          </tbody>
+        </table></div>
+        <div class="callout" style="margin-top:14px"><p><strong>正确解释：</strong>Wang–Xie 适配极快但精度较低；P2 与 Dai 适配延迟接近，P2 更准确。Dai 适配收敛较差，因此不能用它否定 Dai 原论文。两个基线都是统一 Bloch 框架中的公式级适配，不是作者官方代码结果。</p></div>
+        <div class="callout red"><p><strong>现在禁止：</strong>不能修改方法或门槛后重跑当前160点 supplement；不能把适配写成官方复现；不能重跑640点 final。剩余工作是理论、FLOPs、方法图和论文定稿。</p></div>
       </article>
 
       <article id="latest-files">
@@ -627,17 +664,20 @@
         <div class="resource-grid">
           <a class="resource" href="00_当前研究总档案.md"><span><b>当前研究总档案</b><small>阶段、下一步、缺口、实验与投稿的唯一文档</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/P2_FINAL_EXPERIMENT_REPORT.zh-CN.md"><span><b>P2 最终实验报告</b><small>方法、final 数值、统计、效率、限制和投稿判断</small></span><i>↗</i></a>
-          <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/P2_PAPER_OUTLINE.zh-CN.md"><span><b>期刊论文提纲</b><small>标题、章节、字数、贡献与不可过度宣称内容</small></span><i>↗</i></a>
+          <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/CORE_RESULTS.zh-CN.md"><span><b>核心数据与证据</b><small>唯一数值表、统计、哈希和写作边界</small></span><i>↗</i></a>
+          <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/Q3_SUPPLEMENT_REPORT.zh-CN.md"><span><b>Q3 supplement 报告</b><small>160点期刊基线对照、效率、限制和证据</small></span><i>↗</i></a>
+          <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.zh-CN.md"><span><b>中文论文初稿</b><small>完整 IMRaD 初稿 v0.1</small></span><i>↗</i></a>
+          <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.en.md"><span><b>英文论文初稿</b><small>Complete English manuscript draft v0.1</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/figures/p2_final/fig01_method_overall_error.svg"><span><b>论文图表目录</b><small>8组 PNG/SVG 与可复现生成脚本</small></span><i>↗</i></a>
           <a class="resource" href="../01_文献库/README.md"><span><b>当前文献索引</b><small>核心期刊、平行工作和创新边界</small></span><i>↗</i></a>
-          <a class="resource" href="../04_SCI三区投稿准备/README.md"><span><b>投稿准备入口</b><small>统一返回总档案，不再维护冲突初稿</small></span><i>↗</i></a>
+          <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/docs/KNOWN_GAPS.zh-CN.md"><span><b>投稿缺口与补实验</b><small>必补、建议补、算力和成功线</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/README.md"><span><b>代码与复现入口</b><small>网络、PDE、脚本和设备说明</small></span><i>↗</i></a>
         </div>
-        <div class="callout green" style="margin-top:18px"><p><strong>最终判断：</strong>真实二维神经 PDE 课题成立；P2 independent pilot 与唯一一次 frozen final 均 GO。当前建议以 SCI 四区为稳健目标，并通过最近邻期刊方法对照或理论分析冲击三区。</p></div>
+        <div class="callout green" style="margin-top:18px"><p><strong>最终判断：</strong>真实二维神经 PDE 课题成立；P2 frozen final 与 Q3 supplement 均 GO。SCI 四区实验基础充分，SCI 三区证据明显增强；当前重点是理论与论文定稿。</p></div>
       </article>
     </section>
     <footer>
-      本页更新至 2026-08-24，并严格区分“真实实测”“文献事实”和“待补论文工作”。最终结论：课题没有跑题；P5/P1 失败路线已保留；P2 full-shell independent pilot 与 640 点 frozen final 均为 GO；禁止重跑 final，当前进入论文与复现材料准备。
+      本页更新至 2026-08-25，并严格区分“真实实测”“文献事实”和“待补论文工作”。最终结论：课题没有跑题；P2 frozen final 与160点 Q3 supplement 均为 GO；中英文论文初稿 v0.2 已更新；SCI 四区实验基础充分，SCI 三区可行性明显增强；final 与 supplement 均禁止重跑调参。
     </footer>
   </main>
 
