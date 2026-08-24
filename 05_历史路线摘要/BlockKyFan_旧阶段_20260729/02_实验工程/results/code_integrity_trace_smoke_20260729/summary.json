@@ -1,0 +1,90 @@
+{
+  "status": "COMPLETE",
+  "scope": "experiment_output_requires_scientific_gate_review",
+  "objective_reduction": "batch_mean_of_rank_trace",
+  "config_fingerprint": "bc060d1fb25ec732f4cffdac664674c6d5c43b5827113aa2840b88d680eca9d2",
+  "config": {
+    "name": "code_integrity_true_trace_dual_path_20260729",
+    "method": "block_kyfan",
+    "device": "cpu",
+    "seeds": [
+      907
+    ],
+    "steps": 20,
+    "points": 64,
+    "parameter_batch": 2,
+    "width": 16,
+    "hidden_layers": 1,
+    "learning_rate": 0.001,
+    "anchor_kind": "correct",
+    "anchor_scale": 0.4,
+    "residual_weight": 0.0,
+    "residual_start_fraction": 0.8,
+    "eval_grid_side": 9,
+    "reference_cutoff": 3,
+    "checkpoint_every": 10,
+    "resume": false,
+    "output_dir": "results/code_integrity_trace_smoke_20260729",
+    "potential_family": "harmonic_honeycomb",
+    "parameter_lower": [
+      0.28,
+      0.28,
+      0.2,
+      -0.08
+    ],
+    "parameter_upper": [
+      0.38,
+      0.38,
+      0.8,
+      0.08
+    ],
+    "dtype": "float32",
+    "subspace_rank": 6,
+    "orthogonalization": "dual_path"
+  },
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.8.0",
+    "cuda": null,
+    "device_name": "cpu"
+  },
+  "runs": [
+    {
+      "seed": 907,
+      "device": "cpu",
+      "initial_loss": -0.19838328659534454,
+      "final_loss": -0.1381996124982834,
+      "elapsed_seconds": 0.06793987500714138,
+      "peak_memory_bytes": null,
+      "current_memory_bytes": null,
+      "mean_projector_sine_error": 0.36767083650990146,
+      "objective": "ky_fan_trace",
+      "orthogonalization": "dual_path"
+    }
+  ],
+  "aggregate": [
+    {
+      "case": "interpolation",
+      "projector_mean": 0.27455337543417524,
+      "projector_std": 0.0,
+      "residual_mean": 0.21241150796413422,
+      "residual_std": 0.0
+    },
+    {
+      "case": "symmetric_cluster",
+      "projector_mean": 0.36664451092589884,
+      "projector_std": 0.0,
+      "residual_mean": 0.3601866662502289,
+      "residual_std": 0.0
+    },
+    {
+      "case": "extrapolation",
+      "projector_mean": 0.4618146231696301,
+      "projector_std": 0.0,
+      "residual_mean": 0.5575686097145081,
+      "residual_std": 0.0
+    }
+  ],
+  "mean_projector_sine_error": 0.36767083650990146,
+  "std_projector_sine_error": 0.0
+}

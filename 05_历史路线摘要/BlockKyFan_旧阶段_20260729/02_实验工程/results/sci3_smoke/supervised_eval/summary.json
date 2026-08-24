@@ -1,0 +1,26 @@
+{
+  "status": "COMPLETE",
+  "suite_id": "sci3_frozen_test_v1",
+  "suite_sha256": "cff55c205d351e326a44bfe12459ca326eec530cfdd1770caa68433f8cdb83d3",
+  "checkpoint": "results/sci3_smoke/supervised/seed_101/final.pt",
+  "config": "configs/sci3_supervised_smoke_cpu.json",
+  "potential_family": "harmonic_honeycomb",
+  "point_count": 2,
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.8.0",
+    "device": "cpu"
+  },
+  "aggregate": [
+    {
+      "split": "iid",
+      "n": 2,
+      "mean": 0.5596009415046803,
+      "std": 0.00247877359368725,
+      "median": 0.5596009415046803,
+      "p95": 0.5611784233600906,
+      "maximum": 0.5613536991218028,
+      "cluster_failure_rate": 1.0
+    }
+  ]
+}

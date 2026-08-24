@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="P2 基底不变神经增强 Rayleigh–Ritz 二维神经 PDE 论文汇报">
+  <title>P2 神经 PDE 最终论文汇报</title>
+  <style>
+    :root {
+      --paper:#f6f4ef; --ink:#171b20; --muted:#656b73; --line:#d5d7d9;
+      --blue:#2f5d8a; --orange:#d8892b; --teal:#3b7f6d; --white:#fff;
+      --title-size:clamp(1.5rem,5vw,4rem); --h2-size:clamp(1.25rem,3.5vw,2.5rem);
+      --h3-size:clamp(1rem,2.5vw,1.75rem); --body-size:clamp(.75rem,1.5vw,1.125rem);
+      --small-size:clamp(.65rem,1vw,.875rem); --slide-padding:clamp(1rem,4vw,4rem);
+      --content-gap:clamp(.5rem,2vw,2rem); --element-gap:clamp(.25rem,1vw,1rem);
+    }
+    *{box-sizing:border-box} html,body{height:100%;margin:0;overflow-x:hidden;background:var(--paper);color:var(--ink)}
+    html{scroll-snap-type:y mandatory;scroll-behavior:smooth}
+    body{font-family:"Avenir Next","Helvetica Neue",sans-serif}
+    .slide{width:100vw;height:100vh;height:100dvh;overflow:hidden;scroll-snap-align:start;display:flex;flex-direction:column;position:relative;border-bottom:1px solid var(--line)}
+    .slide-content{flex:1;display:flex;flex-direction:column;justify-content:center;max-height:100%;overflow:hidden;padding:var(--slide-padding);gap:var(--content-gap)}
+    h1,h2,h3,p{margin:0} h1{font-family:"Futura","Avenir Next",sans-serif;font-size:var(--title-size);line-height:1.02;letter-spacing:-.035em;max-width:15ch}
+    h2{font-family:"Futura","Avenir Next",sans-serif;font-size:var(--h2-size);line-height:1.08;letter-spacing:-.025em}
+    h3{font-size:var(--h3-size)} p,li{font-size:var(--body-size);line-height:1.48}
+    .eyebrow{font-size:var(--small-size);font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--blue)}
+    .kicker{font-size:clamp(.9rem,2vw,1.35rem);color:var(--muted);max-width:52rem}
+    .num{position:absolute;right:var(--slide-padding);top:var(--slide-padding);font:800 clamp(2rem,8vw,7rem)/1 "Futura",sans-serif;color:rgba(47,93,138,.10)}
+    .rule{height:6px;width:min(24vw,240px);background:var(--orange)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:clamp(.5rem,1.5vw,1rem)}
+    .two{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(1rem,4vw,4rem);align-items:center;min-height:0}
+    .card{padding:clamp(.8rem,2vw,1.5rem);border:1px solid var(--line);background:rgba(255,255,255,.72);max-width:min(90vw,1000px);max-height:min(80vh,700px)}
+    .card strong{display:block;font:800 clamp(1.1rem,3vw,2rem)/1.1 "Futura",sans-serif;color:var(--blue);margin-bottom:.35rem}
+    .metric{font:800 clamp(2rem,7vw,6rem)/.95 "Futura",sans-serif;color:var(--orange);letter-spacing:-.04em}
+    .formula{font:600 clamp(.8rem,1.7vw,1.25rem)/1.55 "SFMono-Regular",Consolas,monospace;padding:clamp(.8rem,2vw,1.4rem);border-left:6px solid var(--orange);background:var(--white)}
+    .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:clamp(.4rem,1vw,1rem)}
+    .flow .box{min-height:clamp(92px,17vh,160px);display:flex;flex-direction:column;justify-content:center;padding:clamp(.7rem,2vw,1.4rem);border:1px solid var(--line);background:var(--white)}
+    .arrow{font-size:clamp(1.2rem,3vw,2.5rem);color:var(--orange)}
+    .timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;background:var(--line)}
+    .timeline div{background:var(--white);padding:clamp(.6rem,1.5vw,1.2rem);min-height:clamp(100px,19vh,180px)}
+    .timeline b{display:block;color:var(--blue);font-size:var(--small-size);margin-bottom:.4rem}
+    ul{margin:0;padding-left:1.25em;display:grid;gap:clamp(.3rem,1vh,.75rem)}
+    figure{margin:0;display:flex;align-items:center;justify-content:center;min-height:0}
+    figure img{max-width:100%;max-height:min(60vh,650px);object-fit:contain;background:white;border:1px solid var(--line)}
+    .chart-note{font-size:var(--small-size);color:var(--muted)}
+    .verdict{display:grid;grid-template-columns:.7fr 1.3fr;gap:clamp(1rem,4vw,4rem);align-items:center}
+    .go{padding:clamp(1rem,3vw,2.5rem);background:var(--orange);color:white;font:900 clamp(2rem,7vw,6rem)/.95 "Futura",sans-serif;text-transform:uppercase}
+    .footer{position:absolute;left:var(--slide-padding);right:var(--slide-padding);bottom:clamp(.4rem,1.4vh,1rem);display:flex;justify-content:space-between;font-size:var(--small-size);color:var(--muted)}
+    .progress{position:fixed;left:0;bottom:0;height:4px;background:var(--orange);width:0;z-index:20;transition:width .25s ease}
+    .dots{position:fixed;right:clamp(.5rem,1.5vw,1.2rem);top:50%;transform:translateY(-50%);display:grid;gap:7px;z-index:20}
+    .dots button{width:8px;height:8px;border:0;border-radius:50%;background:#aeb3b8;padding:0;cursor:pointer}.dots button.active{background:var(--orange);transform:scale(1.45)}
+    [data-reveal]{opacity:0;transform:translateY(18px);transition:.55s ease}.active [data-reveal]{opacity:1;transform:none}.active [data-reveal]:nth-child(2){transition-delay:.08s}.active [data-reveal]:nth-child(3){transition-delay:.16s}
+    @media(max-width:760px){.two,.verdict{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.flow .arrow{display:none}.timeline{grid-template-columns:1fr 1fr}.timeline div:last-child{display:none}.dots{display:none}figure img{max-height:42vh}}
+    @media(max-height:700px){:root{--slide-padding:clamp(.75rem,3vw,2rem);--content-gap:clamp(.4rem,1.5vw,1rem);--title-size:clamp(1.25rem,4.5vw,2.5rem);--h2-size:clamp(1rem,3vw,1.75rem)}}
+    @media(max-height:600px){:root{--slide-padding:clamp(.5rem,2.5vw,1.5rem);--content-gap:clamp(.3rem,1vw,.75rem);--title-size:clamp(1.1rem,4vw,2rem);--body-size:clamp(.7rem,1.2vw,.95rem)}.dots,.decorative{display:none}}
+    @media(max-height:500px){:root{--slide-padding:clamp(.4rem,2vw,1rem);--title-size:clamp(1rem,3.5vw,1.5rem);--h2-size:clamp(.9rem,2.5vw,1.25rem);--body-size:clamp(.65rem,1vw,.85rem)}figure img{max-height:48vh}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important}html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+<main aria-label="P2 神经 PDE 论文汇报">
+  <section class="slide" id="s1"><div class="slide-content"><span class="num">01</span><p class="eyebrow" data-reveal>Scientific machine learning · final report</p><h1 data-reveal>神经网络求解二维 Bloch 谱簇</h1><div class="rule" data-reveal></div><p class="kicker" data-reveal>P2 full-shell 基底不变神经增强 Rayleigh–Ritz｜640-point frozen-final GO</p></div><div class="footer"><span>PINN-PDE research</span><span>2026-08-24</span></div></section>
+  <section class="slide" id="s2"><div class="slide-content"><span class="num">02</span><p class="eyebrow">Network + PDE</p><div class="two"><div data-reveal><h2>到底用了什么网络，解什么方程？</h2><p class="kicker">无标签 anchored generalized-trace SiLU MLP 输出最低 rank-2 复谱簇；P2 用解析 shell 与紧凑 Ritz 做物理精化。</p></div><div class="formula" data-reveal>[½(−i∇+k)ᵀG(−i∇+k)+V<sub>μ</sub>(x)]u<sub>j</sub>=E<sub>j</sub>u<sub>j</sub><br>x∈[0,2π)² · periodic BC</div></div></div><div class="footer"><span>目标：谱投影，不是逐带标签</span><span>02 / 12</span></div></section>
+  <section class="slide" id="s3"><div class="slide-content"><span class="num">03</span><p class="eyebrow">Why spectral clusters</p><div class="two"><div><h2 data-reveal>能带交叉时，“第一条”和“第二条”会失去稳定身份</h2><p class="kicker" data-reveal>内部本征值可以精确相交，但只要与第三态之间的外部谱隙存在，整个 rank-2 projector 仍然良定。</p></div><div class="grid"><div class="card" data-reveal><strong>错误目标</strong><p>逐条追踪本征函数与编号。</p></div><div class="card" data-reveal><strong>本文目标</strong><p>学习基底旋转不变的固定秩谱簇。</p></div></div></div></div><div class="footer"><span>Basis-invariant target</span><span>03 / 12</span></div></section>
+  <section class="slide" id="s4"><div class="slide-content"><span class="num">04</span><p class="eyebrow">Falsification path</p><h2 data-reveal>不是一次“碰巧成功”，而是连续淘汰失败机制</h2><div class="timeline" data-reveal><div><b>P5 · STOP</b><p>低频 amortized ROM 不敌 long-anchor，gap 回退。</p></div><div><b>P0 · GO</b><p>风险 AUROC 0.869，但仅证明可检测。</p></div><div><b>P1 · STOP</b><p>路由降低 unsafe，却无法突破端点上限。</p></div><div><b>P2 outer · STOP</b><p>near 有效，gap 与效率不合格。</p></div><div><b>P2 full · GO</b><p>独立 pilot 与 frozen final 全部通过。</p></div></div></div><div class="footer"><span>负结果全部保留</span><span>04 / 12</span></div></section>
+  <section class="slide" id="s5"><div class="slide-content"><span class="num">05</span><p class="eyebrow">Method</p><h2 data-reveal>神经粗子空间 + 完整解析壳层 + 紧凑 Ritz</h2><div class="flow" data-reveal><div class="box"><h3>Neural coarse space</h3><p>rank-2 · label-free · physical anchor</p></div><div class="arrow">→</div><div class="box"><h3>Full shell</h3><p>19 analytic Fourier modes · dependency rejection</p></div><div class="arrow">→</div><div class="box"><h3>21D Ritz</h3><p>paired (W,HW) assembly · lowest rank-2 output</p></div></div><p class="chart-note" data-reveal>仅2个神经列使用自动微分；Fourier Hamiltonian 解析装配。无新增学习参数。</p></div><div class="footer"><span>Hybrid neural eigensolver</span><span>05 / 12</span></div></section>
+  <section class="slide" id="s6"><div class="slide-content"><span class="num">06</span><p class="eyebrow">Frozen protocol</p><div class="grid"><div class="card" data-reveal><strong>640</strong><p>从未用于方法选择的 frozen-final 参数点</p></div><div class="card" data-reveal><strong>10 × 3</strong><p>方法 × checkpoint seeds</p></div><div class="card" data-reveal><strong>19,200</strong><p>完整 paired rows</p></div><div class="card" data-reveal><strong>2,000</strong><p>参数点聚类 bootstrap</p></div><div class="card" data-reveal><strong>5 splits</strong><p>IID / exact / near / OOD / gap</p></div><div class="card" data-reveal><strong>2 families</strong><p>harmonic + Gaussian honeycomb</p></div></div></div><div class="footer"><span>One-shot marker · evidence audit</span><span>06 / 12</span></div></section>
+  <section class="slide" id="s7"><div class="slide-content"><span class="num">07</span><p class="eyebrow">Main result</p><figure data-reveal><img src="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/figures/p2_final/fig01_method_overall_error.png" alt="十种方法总体误差"></figure></div><div class="footer"><span>P2 overall 0.04532 · long-anchor 0.14719</span><span>07 / 12</span></div></section>
+  <section class="slide" id="s8"><div class="slide-content"><span class="num">08</span><p class="eyebrow">Generalization regimes</p><figure data-reveal><img src="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/figures/p2_final/fig02_split_comparison.png" alt="五种参数分区误差"></figure></div><div class="footer"><span>优势覆盖 OOD 与 gap，不只 near crossing</span><span>08 / 12</span></div></section>
+  <section class="slide" id="s9"><div class="slide-content"><span class="num">09</span><p class="eyebrow">Statistical evidence</p><div class="two"><figure data-reveal><img src="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/figures/p2_final/fig04_bootstrap_improvement.png" alt="Bootstrap置信区间"></figure><div><p class="metric" data-reveal>69.2%</p><p data-reveal>overall improvement<br>95% CI [67.7, 70.8]</p><p class="metric" style="font-size:clamp(1.6rem,5vw,4rem);margin-top:1rem" data-reveal>56.3%</p><p data-reveal>near improvement<br>95% CI [53.2, 59.2]</p></div></div></div><div class="footer"><span>6 / 6 family-seed wins</span><span>09 / 12</span></div></section>
+  <section class="slide" id="s10"><div class="slide-content"><span class="num">10</span><p class="eyebrow">Efficiency</p><figure data-reveal><img src="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/figures/p2_final/fig07_accuracy_latency.png" alt="精度延迟Pareto"></figure></div><div class="footer"><span>P2 107.8ms · PWE 313.4ms · RTX 5090 D</span><span>10 / 12</span></div></section>
+  <section class="slide" id="s11"><div class="slide-content"><span class="num">11</span><p class="eyebrow">Novelty boundary</p><div class="two"><div><h2 data-reveal>可以主张的，是组合机制</h2><ul data-reveal><li>参数化二维 Bloch 内部交叉谱簇</li><li>基底不变神经粗子空间</li><li>完整壳层紧凑物理精化</li><li>neural / analytic 配对 Hamiltonian 装配</li><li>frozen-final 与同秩 Fourier 控制</li></ul></div><div class="card" data-reveal><strong>不能写成首创</strong><p>Ky Fan、Rayleigh–Ritz、Galerkin、Fourier、PWE、MGS。</p><p style="margin-top:.8rem">最危险重叠：neural-subspace + Galerkin 期刊工作。需要在相关工作中正面比较。</p></div></div></div><div class="footer"><span>Honest hybrid positioning</span><span>11 / 12</span></div></section>
+  <section class="slide" id="s12"><div class="slide-content"><span class="num">12</span><p class="eyebrow">Publication verdict</p><div class="verdict"><div class="go" data-reveal>Final<br>GO</div><div data-reveal><h2>建议进入 SCI 论文准备</h2><ul><li>SCI 四区：实验基础已经合理</li><li>SCI 三区：补最近邻方法直接对照或理论分析</li><li>禁止再次运行或调节 frozen final</li><li>下一步：LaTeX 初稿、方法图、复现包与投稿选择</li></ul></div></div></div><div class="footer"><span>Evidence SHA c653d0ed…5095</span><span>12 / 12</span></div></section>
+</main>
+<nav class="dots" aria-label="幻灯片导航"></nav><div class="progress" aria-hidden="true"></div>
+<script>
+class PresentationController{
+  constructor(){this.slides=[...document.querySelectorAll('.slide')];this.index=0;this.lock=false;this.dots=document.querySelector('.dots');this.progress=document.querySelector('.progress');this.touchY=null;this.makeDots();this.bind();this.observe();}
+  makeDots(){this.slides.forEach((slide,i)=>{const b=document.createElement('button');b.setAttribute('aria-label',`跳转到第 ${i+1} 页`);b.addEventListener('click',()=>this.go(i));this.dots.appendChild(b);});}
+  bind(){document.addEventListener('keydown',e=>{if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();this.go(this.index+1)}if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();this.go(this.index-1)}if(e.key==='Home')this.go(0);if(e.key==='End')this.go(this.slides.length-1)});addEventListener('wheel',e=>{if(this.lock||Math.abs(e.deltaY)<18)return;this.lock=true;this.go(this.index+(e.deltaY>0?1:-1));setTimeout(()=>this.lock=false,600)},{passive:true});addEventListener('touchstart',e=>this.touchY=e.touches[0].clientY,{passive:true});addEventListener('touchend',e=>{if(this.touchY===null)return;const d=this.touchY-e.changedTouches[0].clientY;if(Math.abs(d)>45)this.go(this.index+(d>0?1:-1));this.touchY=null},{passive:true});}
+  observe(){const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>.55){this.index=this.slides.indexOf(e.target);this.update();e.target.classList.add('active')}}),{threshold:[.55]});this.slides.forEach(s=>o.observe(s));this.slides[0].classList.add('active');this.update();}
+  go(i){this.index=Math.max(0,Math.min(this.slides.length-1,i));this.slides[this.index].scrollIntoView({behavior:'smooth'});this.update();}
+  update(){[...this.dots.children].forEach((d,i)=>d.classList.toggle('active',i===this.index));this.progress.style.width=`${(this.index+1)/this.slides.length*100}%`;}
+}
+new PresentationController();
+</script>
+</body></html>

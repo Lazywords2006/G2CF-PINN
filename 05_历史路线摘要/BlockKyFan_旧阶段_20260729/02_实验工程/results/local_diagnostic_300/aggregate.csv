@@ -1,0 +1,4 @@
+case,projector_mean,projector_std,residual_mean,residual_std
+interpolation,0.5134435260624309,0.0,0.4865371584892273,0.0
+symmetric_cluster,0.4358390202241036,0.0,0.5510492920875549,0.0
+extrapolation,0.46526152318185954,0.0,0.7041681408882141,0.0

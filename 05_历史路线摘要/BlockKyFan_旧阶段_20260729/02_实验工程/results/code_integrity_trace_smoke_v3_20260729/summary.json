@@ -1,0 +1,95 @@
+{
+  "status": "COMPLETE",
+  "scope": "experiment_output_requires_scientific_gate_review",
+  "objective_reduction": "batch_mean_of_rank_trace",
+  "config_fingerprint": "425905daed32b4390c5de138f961ef7c5f8fb66791d50910f6c056e2107a0d19",
+  "source_fingerprint": "e7fba9a12d156bbb22e5a3665af42d76a3d59404a1a184c5927eaaf67502a5b9",
+  "config": {
+    "name": "code_integrity_true_trace_dual_path_v3_20260729",
+    "method": "block_kyfan",
+    "device": "cpu",
+    "seeds": [
+      909
+    ],
+    "steps": 10,
+    "points": 64,
+    "parameter_batch": 2,
+    "width": 16,
+    "hidden_layers": 1,
+    "learning_rate": 0.001,
+    "anchor_kind": "correct",
+    "anchor_scale": 0.4,
+    "residual_weight": 0.0,
+    "residual_start_fraction": 0.8,
+    "eval_grid_side": 9,
+    "reference_cutoff": 3,
+    "checkpoint_every": 5,
+    "resume": false,
+    "output_dir": "results/code_integrity_trace_smoke_v3_20260729",
+    "potential_family": "harmonic_honeycomb",
+    "parameter_lower": [
+      0.28,
+      0.28,
+      0.2,
+      -0.08
+    ],
+    "parameter_upper": [
+      0.38,
+      0.38,
+      0.8,
+      0.08
+    ],
+    "dtype": "float32",
+    "subspace_rank": 6,
+    "orthogonalization": "dual_path",
+    "sampling_stream": "cpu_generator_v2"
+  },
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.8.0",
+    "cuda": null,
+    "device_name": "cpu"
+  },
+  "runs": [
+    {
+      "seed": 909,
+      "device": "cpu",
+      "initial_loss": -0.15078113973140717,
+      "final_loss": -0.1402212381362915,
+      "elapsed_seconds": 0.04290404199855402,
+      "peak_memory_bytes": null,
+      "current_memory_bytes": null,
+      "mean_projector_sine_error": 0.37035184105968205,
+      "objective": "ky_fan_trace",
+      "orthogonalization": "dual_path",
+      "source_fingerprint": "e7fba9a12d156bbb22e5a3665af42d76a3d59404a1a184c5927eaaf67502a5b9",
+      "evaluation_seconds": 0.06091258398373611,
+      "finalized_from_completed_checkpoint": false
+    }
+  ],
+  "aggregate": [
+    {
+      "case": "interpolation",
+      "projector_mean": 0.27716806782942754,
+      "projector_std": 0.0,
+      "residual_mean": 0.2158236801624298,
+      "residual_std": 0.0
+    },
+    {
+      "case": "symmetric_cluster",
+      "projector_mean": 0.369433028210727,
+      "projector_std": 0.0,
+      "residual_mean": 0.36472734808921814,
+      "residual_std": 0.0
+    },
+    {
+      "case": "extrapolation",
+      "projector_mean": 0.4644544271388916,
+      "projector_std": 0.0,
+      "residual_mean": 0.56271892786026,
+      "residual_std": 0.0
+    }
+  ],
+  "mean_projector_sine_error": 0.37035184105968205,
+  "std_projector_sine_error": 0.0
+}
