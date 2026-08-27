@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="二维 Bloch–Schrödinger 神经 PDE 论文项目简明总结。">
+  <title>神经网络解二维 PDE｜全部工作简版</title>
+  <style>
+    :root {
+      --bg: #f5f6f3;
+      --paper: #ffffff;
+      --text: #1f2925;
+      --muted: #65706a;
+      --line: #dce2dd;
+      --green: #176b4d;
+      --green-bg: #e8f3ed;
+      --blue: #315f79;
+      --blue-bg: #eaf1f5;
+      --orange: #a44c27;
+      --orange-bg: #f8ece5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.65;
+    }
+    main { width: min(960px, calc(100% - 32px)); margin: 0 auto; padding: 36px 0 72px; }
+    section { margin: 18px 0; padding: 28px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); }
+    h1, h2, h3 { margin: 0; line-height: 1.25; }
+    h1 { font-size: clamp(34px, 6vw, 62px); letter-spacing: -.04em; }
+    h2 { margin-bottom: 18px; font-size: 25px; }
+    h3 { margin-bottom: 6px; font-size: 17px; }
+    p { margin: 10px 0; }
+    a { color: var(--blue); text-underline-offset: 3px; }
+    .hero { padding: 44px 36px; }
+    .kicker { margin-bottom: 10px; color: var(--green); font-weight: 750; }
+    .lead { max-width: 760px; color: var(--muted); font-size: 19px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .badge { padding: 6px 11px; border-radius: 999px; color: var(--green); background: var(--green-bg); font-size: 13px; font-weight: 750; }
+    .answers, .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+    .answer, .metric { padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: #fbfcfa; }
+    .answer span, .metric span { color: var(--muted); font-size: 13px; }
+    .answer strong, .metric strong { display: block; margin-top: 5px; font-size: 20px; }
+    .formula { margin-top: 18px; padding: 14px 16px; overflow-wrap: anywhere; border-radius: 10px; color: var(--blue); background: var(--blue-bg); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; }
+    .steps { display: grid; gap: 10px; }
+    .step { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .step:last-child { border-bottom: 0; }
+    .num { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; color: #fff; background: var(--green); font-weight: 800; }
+    .flow { display: flex; align-items: stretch; gap: 7px; overflow-x: auto; padding-bottom: 4px; }
+    .flow div { min-width: 150px; flex: 1; padding: 14px; border: 1px solid var(--line); border-radius: 10px; text-align: center; }
+    .arrow { min-width: auto !important; display: grid; place-items: center; padding: 0 !important; border: 0 !important; color: var(--muted); }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 11px 10px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+    th:first-child, td:first-child { text-align: left; }
+    th { color: var(--muted); font-weight: 650; }
+    .best { color: var(--green); font-weight: 800; }
+    .note { margin-top: 16px; padding: 15px 17px; border-radius: 10px; background: var(--orange-bg); color: #753a23; }
+    .done { background: var(--green-bg); color: #164f3b; }
+    .links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .links a { padding: 13px 15px; border: 1px solid var(--line); border-radius: 10px; text-decoration: none; background: #fbfcfa; }
+    ul { margin: 8px 0 0; padding-left: 22px; }
+    footer { padding: 20px 4px; color: var(--muted); font-size: 13px; text-align: center; }
+    @media (max-width: 680px) {
+      main { width: min(100% - 20px, 960px); padding-top: 10px; }
+      section, .hero { padding: 22px 18px; border-radius: 12px; }
+      .answers, .metrics, .links { grid-template-columns: 1fr; }
+      .flow { display: grid; }
+      .arrow { transform: rotate(90deg); }
+    }
+    @media print {
+      body { background: #fff; }
+      main { width: 100%; padding: 0; }
+      section { break-inside: avoid; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <p class="kicker">神经 PDE 论文项目 · 简版总览 · 2026-08-27</p>
+      <h1>总共做了什么？</h1>
+      <p class="lead">用一个轻量神经网络求解二维参数化 Bloch–Schrödinger 本征偏微分方程。重点不是分别追踪两条会相交的能带，而是直接求它们共同组成的 rank-2 谱簇。</p>
+      <div class="answers">
+        <div class="answer"><span>用了什么网络</span><strong>3层 × 64宽度 SiLU MLP</strong><p>无标签 generalized-trace 训练，约9.2k参数。</p></div>
+        <div class="answer"><span>解什么方程</span><strong>二维 Bloch–Schrödinger 本征 PDE</strong><p>周期边界，harmonic/Gaussian honeycomb 两个势族。</p></div>
+      </div>
+      <div class="formula">[ ½(−i∇ + k)ᵀG(−i∇ + k) + Vμ(x) ] uj = Ej uj,　x ∈ [0, 2π)²</div>
+      <div class="badges">
+        <span class="badge">P2 Frozen Final：GO</span>
+        <span class="badge">Q3 Supplement：GO</span>
+        <span class="badge">证据双重审计：PASS</span>
+        <span class="badge">服务器：已关机</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>方法一句话</h2>
+      <img src="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/figures/p2_final/fig09_method_pipeline.svg" alt="P2方法流程图" style="width:100%;margin-bottom:18px;border:1px solid var(--line);border-radius:12px">
+      <div class="flow">
+        <div><strong>神经粗解</strong><br><small>预测 rank-2 子空间</small></div>
+        <div class="arrow">→</div>
+        <div><strong>Fourier 扩充</strong><br><small>加入19个解析模式</small></div>
+        <div class="arrow">→</div>
+        <div><strong>配对正交化</strong><br><small>同步处理 W 与 HW</small></div>
+        <div class="arrow">→</div>
+        <div><strong>Rayleigh–Ritz</strong><br><small>约21维小问题</small></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>总共完成了哪些工作</h2>
+      <div class="steps">
+        <div class="step"><span class="num">1</span><div><h3>阅读和核查文献</h3><p>确认 Ky Fan、trace、Galerkin、Rayleigh–Ritz、Fourier reduced basis 都不是本文单独发明，并找到 Wang–Xie、Dai、Chang、Grubišić 等直接参考。</p></div></div>
+        <div class="step"><span class="num">2</span><div><h3>排除不可靠路线</h3><p>TSONN、HFNO、普通 PINN 组合、低频 ROM 和风险路由等路线没有达到门槛，负结果全部保留。</p></div></div>
+        <div class="step"><span class="num">3</span><div><h3>确定最终方法</h3><p>最终采用“神经粗子空间 + 完整二阶 Fourier shell + 快速 Rayleigh–Ritz”。</p></div></div>
+        <div class="step"><span class="num">4</span><div><h3>完成 Frozen Final</h3><p>640点、10方法、3 seeds、19,200行，点聚类 bootstrap 和证据审计全部通过。</p></div></div>
+        <div class="step"><span class="num">5</span><div><h3>完成 SCI 三区补实验</h3><p>新160点、3方法、3 seeds、1,440行。P2 对 Wang–Xie 和 Dai 公式级适配均通过预注册门槛。</p></div></div>
+        <div class="step"><span class="num">6</span><div><h3>补齐理论和成本</h3><p>给出 external-gap/Ritz 残差界、19.5M 网络前向 FLOPs、符号复杂度和206–354查询的 break-even 估算。</p></div></div>
+        <div class="step"><span class="num">7</span><div><h3>完成论文材料</h3><p>已有中英文初稿 v0.2、实验报告、核心数据、8组论文图、复现脚本和证据包。</p></div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Frozen Final 结果</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>方法</th><th>Overall</th><th>Near</th><th>Gap-scan</th></tr></thead>
+          <tbody>
+            <tr><td>Long-anchor 神经基线</td><td>0.14719</td><td>0.08924</td><td>0.15938</td></tr>
+            <tr><td>Fourier-only rank 21</td><td>0.13697</td><td>0.12249</td><td>0.13700</td></tr>
+            <tr><td><strong>P2 full-shell</strong></td><td class="best">0.04532</td><td class="best">0.03903</td><td class="best">0.04389</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="metrics">
+        <div class="metric"><span>相对 long-anchor overall 改善</span><strong>69.19%</strong><p>95% CI：67.66%–70.75%</p></div>
+        <div class="metric"><span>family × seed 获胜</span><strong>6 / 6</strong><p>两个势族和三个 seeds 全部获胜。</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>SCI 三区补实验结果</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>方法</th><th>Overall</th><th>Near</th><th>Gap-scan</th><th>平均延迟</th></tr></thead>
+          <tbody>
+            <tr><td><strong>P2 full-shell</strong></td><td class="best">0.04728</td><td class="best">0.03804</td><td class="best">0.06727</td><td>193.75 ms</td></tr>
+            <tr><td>Wang–Xie adapted</td><td>0.13114</td><td>0.09056</td><td>0.15110</td><td class="best">2.47 ms</td></tr>
+            <tr><td>Dai Galerkin adapted</td><td>0.43367</td><td>0.42376</td><td>0.47148</td><td>205.56 ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">注意：Wang–Xie 和 Dai 是统一 Bloch 框架中的公式级适配，不是作者官方代码。Dai 适配收敛较差，不能用来否定原论文。</p>
+    </section>
+
+    <section>
+      <h2>创新点是什么</h2>
+      <ul>
+        <li>在内部能带交叉处直接学习 rank-2 谱投影，不强行给单条能带编号。</li>
+        <li>把参数化神经粗子空间与完整六角 Fourier 壳层组合。</li>
+        <li>只对两个神经列做自动微分，19个 Fourier 列解析计算 Hamiltonian。</li>
+        <li>对试验空间和 Hamiltonian 像同步正交化，再做小型 Ritz 提取。</li>
+        <li>使用冻结数据、强控制、多个 seeds、bootstrap 和 SHA-256 证据审计。</li>
+      </ul>
+      <p class="note">不能写成创新：Ky Fan、trace、Galerkin、Fourier 或 Rayleigh–Ritz 本身。</p>
+    </section>
+
+    <section>
+      <h2>现在还差什么</h2>
+      <div class="note done">
+        <strong>主要实验、补充实验、理论和成本说明已经完成。</strong>
+        <ul>
+          <li>选择目标期刊并转换格式；</li>
+          <li>生成投稿版方法矢量图；</li>
+          <li>做最后一次引用与语言审校；</li>
+          <li>如果目标期刊强制要求，再补 CUDA profiler FLOPs。</li>
+        </ul>
+      </div>
+      <p>当前不需要继续租 GPU，也不能重跑 frozen final 或当前 supplement 调参。</p>
+    </section>
+
+    <section>
+      <h2>主要文件</h2>
+      <div class="links">
+        <a href="00_当前研究总档案.md">当前研究总档案</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.zh-CN.md">中文论文初稿</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.en.md">英文论文初稿</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/CORE_RESULTS.zh-CN.md">核心数据</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/Q3_SUPPLEMENT_REPORT.zh-CN.md">Q3 补实验报告</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/THEORY_AND_COST.zh-CN.md">理论与成本说明</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/CITATION_AUDIT.zh-CN.md">引用审计</a>
+      </div>
+    </section>
+
+    <footer>所有数字来自真实运行；final 与 supplement 均已关闭。页面只保留最重要结论。</footer>
+  </main>
+</body>
+</html>

@@ -558,7 +558,7 @@
         <div class="section-head"><div><p class="eyebrow">Publication verdict</p><h2>现在能不能发表？</h2></div></div>
         <div class="verdict-box">
           <div class="verdict-big">Final GO<br>Q3 Supplement GO</div>
-          <div><h3>SCI 四区实验基础充分，SCI 三区可行性明显提高</h3><p>除640点 frozen final 外，160点独立期刊基线 supplement 也已完成：两个势族、3 seeds、3方法、1440行、双重审计。</p><p><strong>SCI 四区：</strong>进入定稿。<br><strong>SCI 三区：</strong>最近邻适配证据已补，当前重点转为 external-gap/Ritz 理论、FLOPs 和成本摊销。</p></div>
+          <div><h3>SCI 四区实验基础充分，SCI 三区可行性明显提高</h3><p>除640点 frozen final 外，160点独立期刊基线 supplement 也已完成：两个势族、3 seeds、3方法、1440行、双重审计。</p><p><strong>SCI 四区：</strong>进入定稿。<br><strong>SCI 三区：</strong>最近邻适配、external-gap/Ritz 理论和成本摊销均已补，当前重点是方法图和期刊格式。</p></div>
         </div>
         <div class="gate-list">
           <div class="gate pass"><b>精度门槛通过</b><span>overall/near/gap、两势族与 6/6 配对全部通过。</span></div>
@@ -582,7 +582,8 @@
           <div class="step"><span class="when">已完成</span><div><b>方法、pilot 与 frozen final</b><span>10 方法、3 seeds、640 点、bootstrap 和证据审计。</span></div><em>GO</em></div>
           <div class="step"><span class="when">已完成</span><div><b>中英文论文初稿 v0.2</b><span>已纳入独立 supplement 的真实数据与适配边界。</span></div><em>初稿</em></div>
           <div class="step"><span class="when">已完成</span><div><b>三区最近邻 supplement</b><span>160点、3方法、3 seeds、1440行、GO。</span></div><em>GO</em></div>
-          <div class="step"><span class="when">现在</span><div><b>理论与论文定稿</b><span>external-gap/Ritz 命题、FLOPs、方法图和成本摊销。</span></div><em>定稿</em></div>
+          <div class="step"><span class="when">已完成</span><div><b>理论与成本说明</b><span>external-gap/Ritz 残差界、19.5M前向FLOPs、206–354查询 break-even。</span></div><em>完成</em></div>
+          <div class="step"><span class="when">现在</span><div><b>论文定稿</b><span>方法矢量图、目标期刊格式和完整引用审计。</span></div><em>定稿</em></div>
         </div>
         <div class="callout red"><p><strong>禁止：</strong>不得再用 frozen final 调参、增加模式后重跑 final、挑 seed 或删除失败路线。新增对照只能在非 final 数据上完成。</p></div>
       </article>
@@ -656,7 +657,7 @@
           </tbody>
         </table></div>
         <div class="callout" style="margin-top:14px"><p><strong>正确解释：</strong>Wang–Xie 适配极快但精度较低；P2 与 Dai 适配延迟接近，P2 更准确。Dai 适配收敛较差，因此不能用它否定 Dai 原论文。两个基线都是统一 Bloch 框架中的公式级适配，不是作者官方代码结果。</p></div>
-        <div class="callout red"><p><strong>现在禁止：</strong>不能修改方法或门槛后重跑当前160点 supplement；不能把适配写成官方复现；不能重跑640点 final。剩余工作是理论、FLOPs、方法图和论文定稿。</p></div>
+        <div class="callout red"><p><strong>现在禁止：</strong>不能修改方法或门槛后重跑当前160点 supplement；不能把适配写成官方复现；不能重跑640点 final。剩余工作是方法图、目标期刊格式和论文定稿。</p></div>
       </article>
 
       <article id="latest-files">
@@ -666,6 +667,7 @@
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/P2_FINAL_EXPERIMENT_REPORT.zh-CN.md"><span><b>P2 最终实验报告</b><small>方法、final 数值、统计、效率、限制和投稿判断</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/CORE_RESULTS.zh-CN.md"><span><b>核心数据与证据</b><small>唯一数值表、统计、哈希和写作边界</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/Q3_SUPPLEMENT_REPORT.zh-CN.md"><span><b>Q3 supplement 报告</b><small>160点期刊基线对照、效率、限制和证据</small></span><i>↗</i></a>
+          <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/THEORY_AND_COST.zh-CN.md"><span><b>理论与成本说明</b><small>external-gap/Ritz 界、复杂度、FLOPs 和 break-even</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.zh-CN.md"><span><b>中文论文初稿</b><small>完整 IMRaD 初稿 v0.1</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.en.md"><span><b>英文论文初稿</b><small>Complete English manuscript draft v0.1</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/figures/p2_final/fig01_method_overall_error.svg"><span><b>论文图表目录</b><small>8组 PNG/SVG 与可复现生成脚本</small></span><i>↗</i></a>
@@ -673,11 +675,11 @@
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/docs/KNOWN_GAPS.zh-CN.md"><span><b>投稿缺口与补实验</b><small>必补、建议补、算力和成功线</small></span><i>↗</i></a>
           <a class="resource" href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/README.md"><span><b>代码与复现入口</b><small>网络、PDE、脚本和设备说明</small></span><i>↗</i></a>
         </div>
-        <div class="callout green" style="margin-top:18px"><p><strong>最终判断：</strong>真实二维神经 PDE 课题成立；P2 frozen final 与 Q3 supplement 均 GO。SCI 四区实验基础充分，SCI 三区证据明显增强；当前重点是理论与论文定稿。</p></div>
+        <div class="callout green" style="margin-top:18px"><p><strong>最终判断：</strong>真实二维神经 PDE 课题成立；P2 frozen final 与 Q3 supplement 均 GO；理论和成本说明已补。SCI 四区实验基础充分，SCI 三区证据明显增强；当前重点是方法图和期刊定稿。</p></div>
       </article>
     </section>
     <footer>
-      本页更新至 2026-08-25，并严格区分“真实实测”“文献事实”和“待补论文工作”。最终结论：课题没有跑题；P2 frozen final 与160点 Q3 supplement 均为 GO；中英文论文初稿 v0.2 已更新；SCI 四区实验基础充分，SCI 三区可行性明显增强；final 与 supplement 均禁止重跑调参。
+      本页更新至 2026-08-27，并严格区分“真实实测”“文献事实”和“待补论文工作”。最终结论：课题没有跑题；P2 frozen final 与160点 Q3 supplement 均为 GO；中英文论文初稿 v0.2、理论与成本说明均已更新；SCI 四区实验基础充分，SCI 三区可行性明显增强；final 与 supplement 均禁止重跑调参。
     </footer>
   </main>
 
