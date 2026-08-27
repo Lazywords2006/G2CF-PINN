@@ -1,7 +1,0 @@
-doi	status	title	venue	official_or_registry_url	verified_at
-10.1016/j.jcp.2024.112928	OFFICIAL_PAGE_VERIFIED	Computing multi-eigenpairs of high-dimensional eigenvalue problems using tensor neural networks	Journal of Computational Physics	https://www.sciencedirect.com/science/article/abs/pii/S0021999124001773	2026-07-29
-10.1016/j.cnsns.2026.110060	OFFICIAL_PAGE_VERIFIED	Subspace method based on neural networks for solving eigenvalue problems	Communications in Nonlinear Science and Numerical Simulation	https://www.sciencedirect.com/science/article/abs/pii/S1007570426004193	2026-07-29
-10.1016/j.ijmecsci.2025.110111	OFFICIAL_PAGE_VERIFIED	A physics-informed neural network-based method for dispersion calculations	International Journal of Mechanical Sciences	https://www.sciencedirect.com/science/article/pii/S0020740325001973	2026-07-29
-10.1145/3731148	REGISTRY_AND_DOI_VERIFIED	Shape Space Spectra	ACM Transactions on Graphics	https://dl.acm.org/doi/10.1145/3731148	2026-07-29
-10.1016/j.jcp.2025.114311	OFFICIAL_PAGE_VERIFIED	FC-PINNs: Physics-informed neural networks for solving neutron diffusion eigenvalue problem with interface considerations	Journal of Computational Physics	https://www.sciencedirect.com/science/article/pii/S0021999125005947	2026-07-29
-10.1007/s40304-018-0127-z	OFFICIAL_DOI_VERIFIED	The Deep Ritz Method: A Deep Learning-Based Numerical Algorithm for Solving Variational Problems	Communications in Mathematics and Statistics	https://link.springer.com/article/10.1007/s40304-018-0127-z	2026-07-29
