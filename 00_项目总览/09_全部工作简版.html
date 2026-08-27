@@ -3,124 +3,176 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>P2 神经 PDE 论文最终工作台</title>
+  <title>SR-SC-NARR 神经 PDE 论文工作台</title>
   <style>
-    :root{--ink:#17202a;--muted:#65727f;--line:#dce3e8;--paper:#fff;--bg:#f3f6f8;--blue:#175cd3;--teal:#087e6b;--amber:#a65f00;--red:#b42318}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
-    .layout{display:grid;grid-template-columns:230px minmax(0,940px);gap:28px;max-width:1230px;margin:auto;padding:28px 22px 70px}.side{position:sticky;top:20px;align-self:start;background:#101828;color:#fff;border-radius:18px;padding:20px}.side strong{display:block;font-size:18px;margin-bottom:14px}.side a{display:block;color:#cbd5e1;text-decoration:none;padding:7px 0}.side a:hover{color:#fff}.main{min-width:0}.hero,.card,section{background:var(--paper);border:1px solid var(--line);border-radius:18px}.hero{padding:34px;margin-bottom:18px;background:linear-gradient(135deg,#0f2f5a,#175cd3);color:#fff}.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.82}.hero h1{font-size:36px;line-height:1.25;margin:8px 0 18px}.answer{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;background:rgba(255,255,255,.1);padding:18px;border-radius:14px}.answer b{display:block;font-size:18px}.arrow{font-size:28px}.hero p{margin:14px 0 0;color:#e8eefc}.status{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.card{padding:18px}.card strong{display:block;font-size:22px}.card span{color:var(--muted);font-size:14px}.go{color:var(--teal)}section{padding:28px;margin:18px 0}h2{font-size:24px;margin:0 0 14px}h3{font-size:17px;margin:20px 0 6px}p{margin:8px 0}.plain{font-size:18px;background:#eef5ff;border-left:5px solid var(--blue);padding:16px;border-radius:10px}.method{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.method div{padding:14px;border:1px solid var(--line);border-radius:12px}.method b{display:block;color:var(--blue)}table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child{text-align:left}th{background:#f7f9fb}.best{font-weight:700;color:var(--teal)}.warn{border-left:5px solid var(--amber);padding:14px 16px;background:#fff8e8;border-radius:10px}.bad{color:var(--red)}.files{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.files a{display:block;text-decoration:none;color:var(--blue);border:1px solid var(--line);border-radius:10px;padding:12px}.files a:hover{background:#f5f8ff}.figure{width:100%;border:1px solid var(--line);border-radius:12px;margin-top:12px;background:#fff}.small{font-size:13px;color:var(--muted)}ul{padding-left:22px}.footer{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
-    @media(max-width:860px){.layout{display:block;padding:12px}.side{position:relative;top:auto;margin-bottom:14px}.side a{display:inline-block;margin-right:12px}.hero h1{font-size:28px}.answer{grid-template-columns:1fr}.arrow{transform:rotate(90deg);text-align:center}.status,.method,.files{grid-template-columns:1fr 1fr}}
-    @media(max-width:520px){.status,.method,.files{grid-template-columns:1fr}section,.hero{padding:20px}}
+    :root{
+      --ink:#152019;--muted:#657168;--paper:#fffdf8;--cream:#f2eee5;--line:#d8d3c7;
+      --forest:#173f32;--green:#287a5a;--orange:#cc692c;--gold:#d8a033;--red:#9b332b;
+      --shadow:0 18px 50px rgba(34,48,39,.09)
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.28;background-image:radial-gradient(#173f3215 1px,transparent 1px);background-size:18px 18px}
+    .shell{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1290px;margin:auto;padding:24px 20px 80px}
+    aside{position:sticky;top:18px;align-self:start;background:var(--forest);color:#f9f4e9;border-radius:22px;padding:22px 18px;box-shadow:var(--shadow)}
+    .mark{font-family:Georgia,"Songti SC",serif;font-size:23px;line-height:1.15;margin:0 4px 18px}.mark small{display:block;margin-top:7px;font:12px/1.4 system-ui;color:#bfd0c5;letter-spacing:.08em;text-transform:uppercase}
+    label{display:block;font-size:12px;color:#b9c9bf;margin:0 4px 6px}.jump{width:100%;background:#f7f1e6;color:var(--ink);border:0;border-radius:11px;padding:10px 12px;font-size:14px;margin-bottom:16px}
+    nav a{display:flex;gap:10px;align-items:center;color:#c8d6cd;text-decoration:none;padding:8px 10px;border-radius:10px;font-size:14px;transition:.2s}nav a:before{content:"";width:6px;height:6px;border:1px solid #759484;border-radius:50%}nav a:hover,nav a.active{background:#ffffff12;color:#fff}nav a.active:before{background:var(--gold);border-color:var(--gold)}
+    .side-note{border-top:1px solid #ffffff24;margin-top:16px;padding:14px 7px 0;color:#aebfb4;font-size:12px}.side-note b{color:#fff}
+    main{min-width:0}.hero{position:relative;overflow:hidden;background:var(--paper);border:1px solid var(--line);border-radius:26px;padding:42px 42px 34px;box-shadow:var(--shadow)}
+    .hero:after{content:"";position:absolute;width:270px;height:270px;right:-70px;top:-100px;border-radius:50%;background:conic-gradient(from 30deg,var(--gold),var(--orange),var(--forest),var(--gold));opacity:.16}
+    .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);font-weight:750}.hero h1{font:700 42px/1.17 Georgia,"Songti SC",serif;max-width:760px;margin:8px 0 22px}.hero h1 em{color:var(--green);font-style:normal}
+    .answer{display:grid;grid-template-columns:1fr 60px 1fr;gap:14px;align-items:stretch}.answer article{padding:18px 20px;border:1px solid var(--line);border-radius:15px;background:#fff}.answer span{font-size:12px;color:var(--muted);letter-spacing:.08em}.answer strong{display:block;margin-top:4px;font-size:17px}.arrow{display:grid;place-items:center;color:var(--orange);font-size:30px}
+    .lead{font-size:17px;max-width:820px;color:#435047;margin:22px 0 0}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}.metric{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px 17px}.metric b{font:700 25px Georgia,serif;color:var(--forest);display:block}.metric small{color:var(--muted)}
+    section{background:var(--paper);border:1px solid var(--line);border-radius:20px;margin:17px 0;padding:30px;box-shadow:0 8px 28px rgba(34,48,39,.045)}h2{font:700 28px/1.25 Georgia,"Songti SC",serif;margin:0 0 14px}h3{font-size:17px;margin:22px 0 6px}.plain{background:#edf5f0;border-left:5px solid var(--green);padding:16px 18px;border-radius:10px;font-size:17px}.caution{background:#fff4df;border-left:5px solid var(--gold);padding:15px 17px;border-radius:10px}.danger{background:#fbecea;border-left:5px solid var(--red);padding:15px 17px;border-radius:10px}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:16px 0}.flow div{position:relative;border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px;min-height:98px}.flow div:not(:last-child):after{content:"→";position:absolute;right:-12px;top:34px;color:var(--orange);z-index:2}.flow b{display:block;color:var(--green);font-size:13px;margin-bottom:5px}
+    table{border-collapse:collapse;width:100%;font-size:13px;margin:12px 0}th,td{border-bottom:1px solid var(--line);padding:9px 7px;text-align:right}th:first-child,td:first-child{text-align:left}th{color:#405047;background:#f4f1e9}.best{font-weight:800;color:var(--green)}.subtle{color:var(--muted);font-size:13px}.split{display:grid;grid-template-columns:1fr 1fr;gap:12px}.route{padding:18px;border-radius:14px;border:1px solid var(--line)}.route b{font:700 22px Georgia,serif;display:block}.route.fourier{background:#eef4f8}.route.hybrid{background:#fff1e6}.route strong{font-size:28px;color:var(--forest)}
+    figure{margin:18px 0 4px}.figure{display:block;width:100%;border:1px solid var(--line);border-radius:14px;background:white}.caption{font-size:12px;color:var(--muted);margin-top:6px}
+    .claims{display:grid;grid-template-columns:1fr 1fr;gap:12px}.claims article{border:1px solid var(--line);border-radius:13px;padding:15px}.claims .yes{border-top:4px solid var(--green)}.claims .no{border-top:4px solid var(--red)}ul{padding-left:21px}.files{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.files a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:11px;text-decoration:none;color:var(--forest);background:#fff}.files a:hover{border-color:var(--green);transform:translateY(-1px)}code{font-family:"SFMono-Regular",Consolas,monospace;font-size:.91em;background:#efece5;padding:2px 5px;border-radius:5px}.hash{word-break:break-all;background:#19271f;color:#dce9df;padding:13px;border-radius:10px;font:12px/1.55 monospace}
+    .footer{text-align:center;font-size:12px;color:var(--muted);padding:20px}.reveal{animation:rise .55s ease both}@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    @media(max-width:900px){.shell{display:block;padding:12px}aside{position:relative;top:auto;margin-bottom:14px}nav{display:flex;flex-wrap:wrap}.hero{padding:28px}.hero h1{font-size:32px}.metrics{grid-template-columns:1fr 1fr}.flow{grid-template-columns:1fr 1fr}.flow div:after{display:none}}
+    @media(max-width:580px){.answer,.split,.claims,.files{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}.metrics,.flow{grid-template-columns:1fr}section{padding:21px}.hero h1{font-size:27px}}
   </style>
 </head>
 <body>
-<div class="layout">
-  <nav class="side">
-    <strong>论文最终工作台</strong>
-    <a href="#answer">一句话答案</a><a href="#method">方法</a><a href="#results">真实结果</a>
-    <a href="#novelty">创新与风险</a><a href="#journal">投稿判断</a><a href="#files">最终文件</a>
-    <a href="#todo">只剩什么</a><a href="#cleanup">清理结果</a>
-  </nav>
-  <main class="main">
-    <header class="hero" id="answer">
-      <div class="eyebrow">Final research dashboard · 2026-08-27</div>
-      <h1>我用了什么神经网络，解了什么偏微分方程？</h1>
+<div class="shell">
+  <aside>
+    <div class="mark">SR-SC-NARR<small>Neural PDE journal workspace</small></div>
+    <label for="jump">快速选择内容</label>
+    <select class="jump" id="jump">
+      <option value="#answer">先看一句话答案</option><option value="#method">方法与方程</option>
+      <option value="#results">正式实验结果</option><option value="#conditional">条件性真相</option>
+      <option value="#novelty">文献与创新</option><option value="#journal">投稿判断</option>
+      <option value="#files">论文与证据文件</option><option value="#next">还需要做什么</option>
+    </select>
+    <nav>
+      <a href="#answer">结论</a><a href="#method">网络 + PDE</a><a href="#results">真实结果</a>
+      <a href="#conditional">收益来自哪里</a><a href="#novelty">创新是否够</a><a href="#journal">能不能发表</a>
+      <a href="#files">最终文件</a><a href="#next">下一步</a>
+    </nav>
+    <div class="side-note"><b>状态：FORMAL GO</b><br>GPU 已关机，正式测试永久关闭。<br>更新：2026-08-28</div>
+  </aside>
+
+  <main>
+    <header class="hero reveal" id="answer">
+      <div class="kicker">Formal evidence ready · conditional neural augmentation</div>
+      <h1>我用什么神经网络，解什么<em>偏微分方程</em>？</h1>
       <div class="answer">
-        <div><b>网络</b>3层×64宽度的 anchored generalized-trace SiLU MLP</div>
+        <article><span>神经网络</span><strong>3层 × 64宽度的 SiLU 参数条件 MLP</strong>无标签 generalized-trace 训练</article>
         <div class="arrow">→</div>
-        <div><b>方程</b>二维参数化周期 Bloch–Schrödinger 本征 PDE 的最低 rank-2 谱簇</div>
+        <article><span>求解对象</span><strong>二维周期 Bloch–Schrödinger 本征 PDE</strong>最低 rank-2 谱投影</article>
       </div>
-      <p>网络无标签学习一个神经粗子空间；19个 Fourier 模式和 Rayleigh–Ritz 再做物理校正。它是真实的神经 PDE 本征求解器，但不是普通 residual PINN。</p>
+      <p class="lead">它是真实的神经 PDE 本征求解器，但不是普通 residual PINN。网络提供两个参数相关的低能方向，Fourier/Rayleigh–Ritz 完成算子一致的最终求解。</p>
     </header>
 
-    <div class="status">
-      <div class="card"><strong class="go">GO</strong><span>640点 frozen final</span></div>
-      <div class="card"><strong class="go">GO</strong><span>160点独立 supplement</span></div>
-      <div class="card"><strong>22页</strong><span>英文投稿 PDF</span></div>
-      <div class="card"><strong>0张</strong><span>现在还需要的 GPU</span></div>
+    <div class="metrics reveal">
+      <div class="metric"><b>GO</b><small>唯一一次 CUDA formal</small></div>
+      <div class="metric"><b>5,280</b><small>完整、唯一评价行</small></div>
+      <div class="metric"><b>66</b><small>核查文献，50篇期刊</small></div>
+      <div class="metric"><b>0</b><small>现在需要的 GPU 数量</small></div>
     </div>
 
-    <section>
-      <h2>先给结论</h2>
-      <p class="plain">方向可以继续，而且科研部分已经完成到“可以准备投稿”的阶段。SCI四区基础充分；SCI三区有现实机会，但任何期刊都不能保证录用。</p>
-      <p>现在不缺主实验，也不需要继续租服务器。真正未完成的是作者个人信息、学校分区复核和最终投稿操作。</p>
+    <section class="reveal">
+      <h2>先给最终判断</h2>
+      <p class="plain"><b>可以继续并进入投稿准备。</b>实验完整度达到 SCI 四区常见标准；SCI 三区可以冲，但必须把主张限制为“对谱复杂势函数的条件性神经增强”，不能写成神经网络普遍优于 Fourier。</p>
+      <p>正式实验、收敛审计、原始数据回传、中英文初稿、11张可复现图、DOCX/PDF 和66篇文献矩阵已经完成。现在不需要租 GPU，也不允许重跑正式测试。</p>
     </section>
 
-    <section id="method">
+    <section id="method" class="reveal">
       <h2>方法怎么工作</h2>
-      <div class="method">
-        <div><b>1 输入</b>位置、Bloch 波矢、势函数参数</div>
-        <div><b>2 神经粗解</b>无标签 trace 目标学习两个复值周期函数</div>
-        <div><b>3 解析校正</b>加入完整二阶六角 Fourier shell</div>
-        <div><b>4 最终解</b>在约21维空间中做 Rayleigh–Ritz</div>
+      <div class="flow">
+        <div><b>1 输入</b>周期位置、Bloch 波矢、势函数参数</div>
+        <div><b>2 神经方向</b>无标签网络输出两个复值低能方向</div>
+        <div><b>3 谱诊断</b>计算势函数第一 D6 shell 外的 Fourier 尾能量</div>
+        <div><b>4 条件分支</b>简单势走 Fourier；复杂势走 neural–Fourier</div>
+        <div><b>5 最终 PDE 解</b>成对正交化 + Hermitian Rayleigh–Ritz</div>
       </div>
-      <img class="figure" src="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/figures/p2_final/fig09_method_pipeline.png" alt="P2方法流程图">
-      <p class="small">为什么不逐条预测能带：Dirac 交叉处两条带可以交换身份；学习整个 rank-2 谱簇不会受列顺序、复相位或簇内旋转影响。</p>
+      <p>方程为：</p>
+      <p class="plain">[½(−i∇+k)ᵀG(−i∇+k)+V<sub>μ</sub>(x)]u<sub>j</sub>=E<sub>j</sub>u<sub>j</sub>，x∈[0,2π)²，周期边界。</p>
+      <p>Dirac 交叉处两条带可以交换身份，因此本文不分别追踪“第1/第2条带”，而直接学习它们共同张成的 rank-2 谱空间。projector 指标对列交换、复相位和簇内旋转不敏感。</p>
     </section>
 
-    <section id="results">
-      <h2>真实实验结果</h2>
-      <h3>主实验：640点、2势族、3 seeds、10方法、19,200行</h3>
-      <table><thead><tr><th>方法</th><th>Overall</th><th>Near</th><th>Gap scan</th></tr></thead><tbody>
-        <tr><td>Long-anchor 神经基线</td><td>0.14719</td><td>0.08924</td><td>0.15938</td></tr>
-        <tr><td>同秩 Fourier-only</td><td>0.13697</td><td>0.12249</td><td>0.13700</td></tr>
-        <tr class="best"><td>P2 完整壳层</td><td>0.04532</td><td>0.03903</td><td>0.04389</td></tr>
+    <section id="results" class="reveal">
+      <h2>唯一一次正式实验</h2>
+      <p>160物理点 × 3 checkpoint seeds × 11方法 = <b>5,280行</b>。包含 IID、exact crossing、near crossing、strict OOD 和 gap scan；参考解为 float64、D6 cutoff-24、65×65 PWE。</p>
+      <table><thead><tr><th>方法</th><th>Overall</th><th>Eigenvalue MAE</th><th>p95</th><th>A10 延迟</th></tr></thead><tbody>
+        <tr class="best"><td>SR-SC-NARR</td><td>0.030929</td><td>0.009837</td><td>0.105683</td><td>176.64 ms</td></tr>
+        <tr><td>Kinetic Fourier ≥25</td><td>0.043425</td><td>0.015996</td><td>0.146571</td><td>105.55 ms</td></tr>
+        <tr><td>Fixed neural–Fourier 25</td><td>0.031784</td><td>0.009890</td><td>0.105683</td><td>134.81 ms</td></tr>
+        <tr><td>D6 shell 3，rank 37</td><td>0.030799</td><td>0.011275</td><td>0.110973</td><td>220.37 ms</td></tr>
+        <tr><td>Long-anchor neural</td><td>0.139905</td><td>0.022595</td><td>0.325521</td><td>1.27 ms</td></tr>
       </tbody></table>
-      <p>P2 相对 long-anchor 的 overall 改善为69.19%，点聚类95%区间为 [67.66%, 70.75%]；两个势族、三个 seed 均获胜。</p>
-      <h3>独立期刊基线补实验：160点、1,440行</h3>
-      <table><thead><tr><th>方法</th><th>Overall</th><th>Near</th><th>Strict OOD</th></tr></thead><tbody>
-        <tr class="best"><td>P2 完整壳层</td><td>0.04728</td><td>0.03804</td><td>0.05796</td></tr>
-        <tr><td>Wang–Xie trace 适配</td><td>0.13114</td><td>0.09056</td><td>0.21776</td></tr>
-        <tr><td>Dai Galerkin 适配</td><td>0.43367</td><td>0.42376</td><td>0.43758</td></tr>
-      </tbody></table>
-      <p class="small">这些是已回传并审计的真实 CUDA 结果。两种期刊方法是公式级 Bloch 适配，不是作者官方代码复现；不能用 Dai 适配收敛差去否定原论文。</p>
+      <p>相对 Fourier-25，平均 projector error 降低 <b>28.76%</b>；family×split 分层物理点 bootstrap 95%区间为 <b>[28.08%, 29.44%]</b>。五种 split 全部不回退。</p>
+      <figure><img class="figure" src="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/figures/v3_formal/fig01_overall_error.png" alt="总体误差比较"><figcaption class="caption">正式总体误差；更低更好。</figcaption></figure>
     </section>
 
-    <section id="novelty">
-      <h2>创新点够不够</h2>
-      <p><b>有论文价值的部分：</b>交叉处不学单条能带，而学基底不变谱簇；神经参数方向与闭合 Fourier 壳层互补；对试验向量和 Hamiltonian 作用同步正交化；用同秩 Fourier-only 对照证明提升不是单纯增加模式。</p>
-      <p><b>已有相似工作：</b>Wang–Xie 已做 trace 多本征对，Dai 已做 neural-subspace + Galerkin，Rowan 已做 Rayleigh quotient + Gram–Schmidt，Chang 已处理参数化重数与 mode switching。本文只能声称完整组合及其 crossing-aware 验证有差异，不能把每个传统零件写成首创。</p>
-      <div class="warn"><b>最大审稿风险：</b>组合创新可能被认为数学原创性有限；最近邻基线不是作者官方实现；速度对照是 GPU P2 对 CPU PWE；目前只覆盖两个势族和 rank-2。论文已主动写入这些限制。</div>
+    <section id="conditional" class="reveal">
+      <h2>最重要的真相：提升不是在所有势族上发生</h2>
+      <div class="split">
+        <div class="route fourier"><b>Harmonic · 80点</b><strong>0% 神经提升</strong>全部走 Fourier 分支，与 Fourier-25 完全一致。</div>
+        <div class="route hybrid"><b>Gaussian · 80点</b><strong>31.75% 提升</strong>全部走 hybrid 分支，误差 0.07873 → 0.05374。</div>
+      </div>
+      <p class="caution"><b>这既是创新证据，也是局限。</b>当前 formal 只有两个相距很远的谱尾端点，0.1阈值附近没有样本。论文证明了“端点条件选择”，尚未证明通用 router。</p>
+      <figure><img class="figure" src="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/figures/v3_formal/fig11_family_specific_results.png" alt="分势族结果"><figcaption class="caption">整体收益完全来自谱复杂的 Gaussian 势族。</figcaption></figure>
+      <h3>为什么还要与 rank-37 Fourier 比？</h3>
+      <p>SR-SC-NARR 的 projector error 比 shell-3 高0.42%，但 eigenvalue MAE 低12.75%、延迟低19.84%、rank低10–12维；Gaussian 上 projector error 还低7.71%。所以应称为 <b>Pareto trade-off</b>，不能称为精度或速度无条件最优。</p>
     </section>
 
-    <section id="journal">
+    <section id="novelty" class="reveal">
+      <h2>66篇文献核查后的创新判断</h2>
+      <p>文献矩阵包含66篇真实来源：50篇正式期刊、11篇正式会议、1篇 workshop、3篇预印本和1篇硕士论文；55个 DOI 与11个官方 URL 均已核查。</p>
+      <div class="claims">
+        <article class="yes"><h3>可以主张</h3><ul><li>D6 对称一致 + tie closure；</li><li>势函数谱尾量驱动的无标签条件增强；</li><li>内部 crossing 的固定 rank-2 projector；</li><li>成对 (W,HW) 装配与冻结 CUDA 机制验证。</li></ul></article>
+        <article class="no"><h3>不能主张</h3><ul><li>Ky Fan、Ritz、谱投影或神经子空间本身首创；</li><li>优于 Wang–Xie/Dai 官方实现；</li><li>router 已跨势族泛化；</li><li>当前 router 是速度优化。</li></ul></article>
+      </div>
+      <p class="danger"><b>最危险的重叠：</b>Wang–Xie JCP 2024、Dai CNSNS 2026、Chang TOG 2025、Fanaskov ICLR 2026、Hsu workshop、Deep Eigenspace Network 预印本和 Pau 2007。论文已按“完整机制差异”而非“单零件首创”写作。</p>
+    </section>
+
+    <section id="journal" class="reveal">
       <h2>投稿判断</h2>
-      <p><b>主目标：</b>Wiley <i>Numerical Methods for Partial Differential Equations</i>。主题与参数化 PDE、学习型 PDE 数值算法、稳定性和收敛分析相符。</p>
       <table><tbody>
-        <tr><td>SCI四区</td><td class="best">具备合理投稿基础</td></tr>
-        <tr><td>SCI三区</td><td>有现实机会，创新与基线表述必须克制</td></tr>
-        <tr><td>实验标准</td><td>主实验、消融、OOD、3 seeds、bootstrap、效率和证据审计均有</td></tr>
-        <tr><td>是否继续补大实验</td><td>否；除非编辑明确要求</td></tr>
+        <tr><td>SCI 四区</td><td class="best">实验与复现标准已达到，可进入投稿</td></tr>
+        <tr><td>SCI 三区</td><td>可以冲，但 route/family 混淆是明显审稿风险</td></tr>
+        <tr><td>实验完整性</td><td>11方法、3 seeds、5 splits、OOD、消融、收敛、统计、效率、证据哈希</td></tr>
+        <tr><td>创新强度</td><td>机制与组合创新中等；数值证据强；外部有效性中等偏弱</td></tr>
+        <tr><td>是否还缺主实验</td><td>Q4 不缺；稳健 Q3 建议固定阈值的 roughness sweep</td></tr>
       </tbody></table>
-      <p class="small">公开官网不能替代学校订阅的2026年 JCR/中科院分区。投稿当天必须用学校账号复核分区、学校认定和预警名单。</p>
+      <p>最可能的审稿问题：路由是否只是识别 family、为什么不用 rank-37 Fourier、router 为何比 fixed hybrid 慢、bootstrap 是否覆盖训练随机性、适配基线是否公平。</p>
     </section>
 
-    <section id="files">
-      <h2>最终交付文件</h2>
+    <section id="files" class="reveal">
+      <h2>可以直接阅读的最终文件</h2>
       <div class="files">
-        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/submission_nmpde/final/NMPDE_manuscript.docx">英文投稿 DOCX</a>
-        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/submission_nmpde/final/NMPDE_manuscript.pdf">英文稿预览 PDF</a>
-        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/submission_nmpde/final/NMPDE_cover_letter.docx">Cover letter DOCX</a>
-        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/submission_nmpde/final/NMPDE_cover_letter.pdf">Cover letter PDF</a>
-        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/MANUSCRIPT.zh-CN.md">中文论文初稿</a>
-        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/CORE_RESULTS.zh-CN.md">核心数据与证据</a>
-        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/p2_final/THEORY_AND_COST.zh-CN.md">理论与成本说明</a>
-        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/submission_nmpde/SUBMISSION_CHECKLIST.zh-CN.md">投稿检查表</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/v3_submission/SR-SC-NARR_manuscript_en.docx">英文论文 DOCX</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/v3_submission/SR-SC-NARR_manuscript_en.pdf">英文论文 PDF</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/v3_submission/SR-SC-NARR_manuscript_zh-CN.docx">中文论文 DOCX</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/v3_submission/SR-SC-NARR_manuscript_zh-CN.pdf">中文论文 PDF</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/v3_manuscript/MANUSCRIPT.en.md">英文 Markdown 源稿</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/v3_manuscript/MANUSCRIPT.zh-CN.md">中文 Markdown 源稿</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/v3_formal/LITERATURE_MATRIX.md">66篇文献分析矩阵</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/v3_formal/REFERENCES_VERIFIED.bib">核验 BibTeX</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/paper/v3_formal/README.md">正式结果与证据说明</a>
+        <a href="../03_当前主线_BlockKyFanPINN/02_当前代码仓库/artifacts/v3-symmetry-formal-evidence.tar.gz">完整 evidence archive</a>
       </div>
+      <p class="subtle">正式 evidence SHA-256：</p>
+      <div class="hash">108a4b042549ead58f7b13f42b6ace4685e93a4e8a54e9563b044c03c29ad78c</div>
     </section>
 
-    <section id="todo">
-      <h2>只剩作者本人填写</h2>
-      <ul><li>作者姓名、顺序、单位、邮政地址；</li><li>通信作者邮箱和 ORCID；</li><li>CRediT 分工、资助和利益冲突确认；</li><li>学校账号复核2026年分区、预警名单与匿名审稿要求；</li><li>公开 GitHub 仓库前检查匿名信息。</li></ul>
-      <p class="bad"><b>不要做：</b>不要重跑 frozen final；不要拿 supplement 继续调参；不要把适配基线写成官方复现。</p>
+    <section id="next" class="reveal">
+      <h2>现在还需要什么</h2>
+      <h3>投稿前必须由作者填写</h3>
+      <ul><li>作者姓名、顺序、单位、地址、通信邮箱、ORCID；</li><li>CRediT 分工、基金与利益冲突；</li><li>用学校账号复核投稿当年的 JCR/中科院分区、学校认定和预警名单；</li><li>确定匿名审稿要求，再公开或匿名化仓库。</li></ul>
+      <h3>冲击更稳 Q3 的可选补充</h3>
+      <ul><li>固定现有0.1阈值，预注册连续 roughness sweep 或第三个中间谱复杂度势族；</li><li>拆分 tail-ratio、neural AD、Fourier assembly、orthogonalization、Ritz 的延迟；</li><li>增加 repeated timing 的 median/p95。</li></ul>
+      <p class="danger"><b>禁止：</b>不得重跑 formal、移动门槛、拿160点继续调参、恢复旧 P2 投稿包，或把公式级适配写成作者官方复现。</p>
     </section>
 
-    <section id="cleanup">
-      <h2>目录已经怎样清理</h2>
-      <p>只保留最新项目总览、当前 Bloch 主线、相关文献和权威代码入口。已删除旧路线工程快照、旧 HTML/PPT、过期 SCI 准备目录、2025 旧预警表、TSONN/Allen–Cahn/普通 PINN 文献副本和未核验 BibTeX。</p>
-      <p>为保证论文可复现，P2/Q3 原始结果、checkpoint、冻结 benchmark、CSV/JSON、哈希清单、测试与运行脚本仍完整保存在代码仓库。</p>
-    </section>
-    <div class="footer">P2 neural PDE paper workspace · final consolidated view · 2026-08-27</div>
+    <div class="footer">SR-SC-NARR neural PDE workspace · formal evidence ready · 2026-08-28</div>
   </main>
 </div>
+<script>
+  const jump=document.querySelector('#jump');jump.addEventListener('change',()=>document.querySelector(jump.value)?.scrollIntoView({behavior:'smooth'}));
+  const links=[...document.querySelectorAll('nav a')];const targets=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id));}),{rootMargin:'-25% 0px -65%'});targets.forEach(t=>observer.observe(t));
+</script>
 </body>
 </html>
